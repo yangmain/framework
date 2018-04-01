@@ -9,4 +9,11 @@
     <artifactId>framework-sequence-h2</artifactId>
     <name>framework-sequence-h2</name>
     <description>This is the framework4j-sequence-h2</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-sequence-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>
