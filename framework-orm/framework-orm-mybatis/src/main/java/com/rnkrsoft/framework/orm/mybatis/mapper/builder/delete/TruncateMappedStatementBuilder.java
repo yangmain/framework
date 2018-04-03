@@ -2,13 +2,11 @@ package com.rnkrsoft.framework.orm.mybatis.mapper.builder.delete;
 
 import com.rnkrsoft.framework.orm.Constants;
 import com.rnkrsoft.framework.orm.extractor.GenericityExtractor;
-import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.untils.EntityExtractorUtils;
-import com.rnkrsoft.framework.untils.KeywordsUtils;
-import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
+import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
+import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;

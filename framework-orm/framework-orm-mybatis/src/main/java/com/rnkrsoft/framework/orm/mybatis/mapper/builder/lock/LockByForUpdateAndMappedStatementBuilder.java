@@ -6,11 +6,9 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.untils.EntityExtractorUtils;
-import com.rnkrsoft.framework.untils.KeywordsUtils;
-import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
+import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.WhereSqlNode;
-import com.rnkrsoft.framework.untils.SqlScriptUtils;
+import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.rnkrsoft.framework.untils.KeywordsUtils.convert;
+import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
 
 /**
  * Created by devops4j on 2016/12/18.

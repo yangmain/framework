@@ -21,7 +21,7 @@ public class SpringManagedTransaction implements Transaction {
     private boolean autoCommit;
 
     public SpringManagedTransaction(DataSource dataSource) {
-        notNull(dataSource, "无数据源");
+        notNull(dataSource, "no dataSource");
         this.dataSource = dataSource;
     }
 
@@ -40,12 +40,7 @@ public class SpringManagedTransaction implements Transaction {
         this.isConnectionTransactional = DataSourceUtils.isConnectionTransactional(this.connection, this.dataSource);
 
         if (log.isDebugEnabled()) {
-            log.debug(
-                    "JDBC Connection ["
-                            + this.connection
-                            + "] will"
-                            + (this.isConnectionTransactional ? " " : " not ")
-                            + "be managed by Spring");
+            log.debug("JDBC Connection '{}' will {} be managed by spring!", this.connection, (this.isConnectionTransactional ? " " : " not "));
         }
     }
 

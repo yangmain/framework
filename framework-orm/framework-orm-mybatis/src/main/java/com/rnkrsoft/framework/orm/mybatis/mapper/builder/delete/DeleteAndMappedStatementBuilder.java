@@ -6,8 +6,7 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.untils.EntityExtractorUtils;
-import com.rnkrsoft.framework.untils.KeywordsUtils;
+import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.WhereSqlNode;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.rnkrsoft.framework.untils.KeywordsUtils.convert;
+import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
 
 
 /**

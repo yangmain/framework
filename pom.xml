@@ -23,9 +23,9 @@
     </licenses>
     <modules>
         <module>framework-annotation</module>
-        <module>framework-test</module>
         <module>framework-sequence</module>
         <module>framework-orm</module>
+        <module>framework-test</module>
         <module>framework-toolkit</module>
     </modules>
     <properties>

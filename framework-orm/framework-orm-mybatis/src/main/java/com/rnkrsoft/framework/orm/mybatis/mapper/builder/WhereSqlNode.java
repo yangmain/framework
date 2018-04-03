@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder;
 
 import com.rnkrsoft.framework.orm.WordMode;
-import com.rnkrsoft.framework.untils.KeywordsUtils;
+import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.scripting.xmltags.TrimSqlNode;
 import org.apache.ibatis.session.Configuration;

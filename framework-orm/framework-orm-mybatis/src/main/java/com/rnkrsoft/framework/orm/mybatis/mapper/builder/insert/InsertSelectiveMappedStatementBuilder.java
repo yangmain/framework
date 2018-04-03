@@ -12,11 +12,9 @@ import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
 import com.rnkrsoft.framework.sequence.SequenceService;
-import com.rnkrsoft.framework.untils.EntityExtractorUtils;
-import com.rnkrsoft.framework.untils.KeywordsUtils;
-import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
+import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
 import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.mybatis.sequnece.SequenceServiceConfigure;
+import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
@@ -33,7 +31,7 @@ import java.lang.reflect.Method;
 import java.sql.Statement;
 import java.util.*;
 
-import static com.rnkrsoft.framework.untils.KeywordsUtils.convert;
+import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
 
 /**
  * Created by devops4j on 2016/12/18.
