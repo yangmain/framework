@@ -8,7 +8,7 @@ import com.rnkrsoft.framework.orm.lock.LockMapper;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
 
 /**
- * Created by devops4j on 2016/12/18.
+ * Created by rnkrsoft on 2016/12/18.
  */
 public interface CrudMapper<Entity, PrimaryKey> extends
         CountMapper<Entity, PrimaryKey>,

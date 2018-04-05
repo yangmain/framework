@@ -15,10 +15,16 @@ public interface OrmConfig {
     String[] getDaoPackages();
 
     /**
-     * 是否启动懒加载初始化，主要用于开发模式下
-     * @return 是否进行懒加载
+     * 获取Mapper文件路径
+     * @return Mapper文件路径
      */
-    boolean isLazyInit();
+    String[] getMapperLocations();
+
+    /**
+     * 是否允许重复加载，通常用于开发模式
+     * @return 是否允许重复加载
+     */
+    boolean isAllowReload();
 
     /**
      * 获取关键字模式
@@ -49,4 +55,16 @@ public interface OrmConfig {
      * @param config 包路径对应配置信息集合
      */
     void setDaoConfigs(Map<String, ItemConfig> config);
+
+    /**
+     * 配置序号服务信息中的表所用的序号服务实现类
+     * @param sequenceMappings 序号服务配置
+     */
+    void setSequenceMappings(Map<String, String> sequenceMappings);
+
+    /**
+     * 获取序号服务配置信息
+     * @return 表-生成规则
+     */
+    Map<String, String> getSequenceMappings();
 }

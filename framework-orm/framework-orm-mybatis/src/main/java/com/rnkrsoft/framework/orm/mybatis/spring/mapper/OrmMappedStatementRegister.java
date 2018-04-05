@@ -48,14 +48,25 @@ import java.util.*;
  */
 @Slf4j
 public abstract class OrmMappedStatementRegister {
+    /**
+     * MAPPER建造器缓存
+     */
     static final Set<MappedStatementBuilder> MAPPER_BUILDER_CACHE = new HashSet();
-    static final Set<String> HAVE_LOADED_MAPPER_IDS = new HashSet();
-
+    /**
+     * 已经加载过的Mapper编号集合
+     */
+    static final Set<String> HAVE_LOADED_MAPPER_ID_SET = new HashSet();
     /**
      * 重新扫描自动生成的Mapper
      * @param configuration 配置对象
      * @param sqlMode SQL模式
      * @param keywordMode 关键字模式
+     * @param schemaMode 数据库模式类型
+     * @param schema 数据库模式
+     * @param prefixMode 前缀模式
+     * @param prefix 前缀
+     * @param suffixMode 后缀模式
+     * @param suffix 后缀
      */
     public static void rescan(Configuration configuration,
                               WordMode sqlMode,
@@ -73,7 +84,8 @@ public abstract class OrmMappedStatementRegister {
         } catch (Exception e) {
 
         }
-        for (String id : HAVE_LOADED_MAPPER_IDS){
+        //移除已经加载的MAPPER编号的语句对象
+        for (String id : HAVE_LOADED_MAPPER_ID_SET){
             mappedStatements.remove(id);
         }
         for (MappedStatementBuilder builder : MAPPER_BUILDER_CACHE) {
@@ -119,7 +131,13 @@ public abstract class OrmMappedStatementRegister {
      * @param daoInterface DAO接口
      * @param sqlMode SQL模式
      * @param keywordMode 关键字模式
-     * @param strictWing4j 是否严格Wing4j注解
+     * @param schemaMode 数据库模式类型
+     * @param schema 数据库模式
+     * @param prefixMode 前缀模式
+     * @param prefix 前缀
+     * @param suffixMode 后缀模式
+     * @param suffix 后缀
+     * @param strict 是否严格注解
      * @param sequenceConfigure 序号配置对象
      */
     public static void scan(Configuration configuration,
@@ -132,7 +150,7 @@ public abstract class OrmMappedStatementRegister {
                       String prefix,
                       TableNameMode suffixMode,
                       String suffix,
-                      boolean strictWing4j,
+                      boolean strict,
                       SequenceServiceConfigure sequenceConfigure) {
         List<MappedStatementBuilder> builders = new ArrayList();
         //---------------------------新增-----------------------------------------
@@ -216,14 +234,14 @@ public abstract class OrmMappedStatementRegister {
             builder.setPrefix(prefix);
             builder.setSuffixModed(suffixMode);
             builder.setSuffix(suffix);
-            builder.setStrictWing4j(strictWing4j);
+            builder.setStrict(strict);
             MappedStatement ms = builder.build();
             String id = ms.getId();
             if (configuration.hasStatement(id)) {
                 log.error("Mybatis has existed MappedStatement id:{0},but now override...", id);
             } else {
                 configuration.addMappedStatement(ms);
-                HAVE_LOADED_MAPPER_IDS.add(ms.getId());
+                HAVE_LOADED_MAPPER_ID_SET.add(ms.getId());
                 MAPPER_BUILDER_CACHE.add(builder);
             }
         }

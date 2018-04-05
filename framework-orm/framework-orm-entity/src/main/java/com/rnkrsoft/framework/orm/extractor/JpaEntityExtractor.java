@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 /**
- * Created by devops4j on 2017/1/7.
+ * Created by rnkrsoft on 2017/1/7.
  */
 @Slf4j
 public class JpaEntityExtractor {
@@ -250,7 +250,7 @@ public class JpaEntityExtractor {
                     + entityClass.getName()
                     + "."
                     + field.getName()
-                    + " 未按照约定标注javax.persistence.Column或com.devops4j.framework4j.orm.StringColumn或com.devops4j.framework4j.orm.NumberColumn或com.devops4j.framework4j.orm.DateColumn注解");
+                    + " 未按照约定标注javax.persistence.Column或com.rnkrsoft.framework4j.orm.StringColumn或com.rnkrsoft.framework4j.orm.NumberColumn或com.rnkrsoft.framework4j.orm.DateColumn注解");
         }
 
         if (count != 1) {
@@ -258,7 +258,7 @@ public class JpaEntityExtractor {
                     + entityClass.getName()
                     + "."
                     + field.getName()
-                    + " 未按照约定标注javax.persistence.Column或com.devops4j.framework4j.orm.StringColumn或com.devops4j.framework4j.orm.NumberColumn或com.devops4j.framework4j.orm.DateColumn注解");
+                    + " 未按照约定标注javax.persistence.Column或com.rnkrsoft.framework4j.orm.StringColumn或com.rnkrsoft.framework4j.orm.NumberColumn或com.rnkrsoft.framework4j.orm.DateColumn注解");
         }
         if (column != null) {
             if (columnMetadata.getJdbcName() == null) {

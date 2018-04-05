@@ -40,5 +40,9 @@ public class ItemConfig {
      * 表后缀
      */
     String suffix;
+    /**
+     * 自动创建表
+     */
+    boolean autoCreateTable = false;
 }
 

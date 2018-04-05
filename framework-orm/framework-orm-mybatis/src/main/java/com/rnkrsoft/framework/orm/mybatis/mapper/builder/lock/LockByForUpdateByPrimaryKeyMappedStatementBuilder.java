@@ -28,7 +28,7 @@ public class LockByForUpdateByPrimaryKeyMappedStatementBuilder extends MappedSta
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strictWing4j);
+        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         String select = KeywordsUtils.convert("SELECT", keywordMode);

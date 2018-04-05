@@ -32,7 +32,7 @@ public class UpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
 
     @Override
     public MappedStatement build() {
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strictWing4j);
+        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);

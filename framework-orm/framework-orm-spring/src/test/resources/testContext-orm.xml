@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <import resource="classpath*:testContext-dev.xml"/>
+
+    <bean id="ormScannerConfigurer" class="com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer">
+        <property name="ormMapperFactoryBean" ref="ssss"/>
+        <property name="ormConfig">
+            <bean class="com.rnkrsoft.framework.orm.config.ReleaseOrmConfig">
+                <property name="keywordMode" value="upperCase"/>
+                <property name="sqlMode" value="upperCase"/>
+                <!--是否允许重复加载DAO和MAPPER-->
+                <property name="allowReload" value="true"/>
+                <!--序号服务与表映射关系-->
+                <property name="sequenceMappings">
+                    <map>
+                        <!--表名和序号服务规则-->
+                        <entry key="TB_DEMO" value="com.rnkrsoft.framework.sequence.h2.H2SequenceService"/>
+                    </map>
+                </property>
+                <property name="daoPackages">
+                    <array>
+                        <value>com.rnkrsoft.framework.orm.dao</value>
+                    </array>
+                </property>
+                <property name="mapperLocations">
+                    <array>
+                        <value>com/rnkrsoft/framework/orm/mapper</value>
+                    </array>
+                </property>
+                <property name="globalConfig">
+                    <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
+                        <property name="useSchema" value="false"/>
+                        <property name="useEntityPrefix" value="true"/>
+                        <property name="useEntitySuffix" value="true"/>
+                        <property name="useEntitySchema" value="true"/>
+                        <property name="autoCreateTable" value="false"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="ssss" class="com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean">
+        <!--数据源-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    </bean>
+</beans>

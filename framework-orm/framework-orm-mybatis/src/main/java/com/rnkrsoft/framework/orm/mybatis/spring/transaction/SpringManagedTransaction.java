@@ -12,13 +12,13 @@ import static org.springframework.util.Assert.*;
 
 @Slf4j
 public class SpringManagedTransaction implements Transaction {
-    private final DataSource dataSource;
+    final DataSource dataSource;
 
-    private Connection connection;
+    Connection connection;
 
-    private boolean isConnectionTransactional;
+    boolean isConnectionTransactional;
 
-    private boolean autoCommit;
+    boolean autoCommit;
 
     public SpringManagedTransaction(DataSource dataSource) {
         notNull(dataSource, "no dataSource");

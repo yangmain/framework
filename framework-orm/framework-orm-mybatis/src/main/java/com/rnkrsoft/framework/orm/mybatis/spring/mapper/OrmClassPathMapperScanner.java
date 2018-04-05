@@ -4,6 +4,7 @@ import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionTemplate;
+import lombok.Getter;
 import lombok.Setter;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -35,33 +36,34 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     /**
      * 配置对象
      */
+    @Getter
     OrmConfig ormConfig;
     /**
      * SQL 语句大小写模式
      */
-    WordMode sqlMode;
+    WordMode sqlMode = WordMode.upperCase;
     /**
      * 关键词大小写模式
      */
-    WordMode keywordMode;
+    WordMode keywordMode = WordMode.upperCase;
     /**
      * 数据库类型
      */
-    DatabaseType databaseType;
+    DatabaseType databaseType = DatabaseType.MySQL;
     /**
      * 严格注解模式
      */
-    boolean strict;
+    boolean strict = true;
 
     private boolean addToConfig = true;
 
-    private SqlSessionFactory sqlSessionFactory;
+    private SqlSessionFactory ormSessionFactory;
 
     private OrmSessionTemplate ormSessionTemplate;
 
-    private String sqlSessionTemplateBeanName;
+    private String ormSessionTemplateBeanName;
 
-    private String sqlSessionFactoryBeanName;
+    private String ormSessionFactoryBeanName;
 
     private Class<? extends Annotation> annotationClass;
 
@@ -71,34 +73,6 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
     public OrmClassPathMapperScanner(BeanDefinitionRegistry registry) {
         super(registry, false);
-    }
-
-    public void setAddToConfig(boolean addToConfig) {
-        this.addToConfig = addToConfig;
-    }
-
-    public void setAnnotationClass(Class<? extends Annotation> annotationClass) {
-        this.annotationClass = annotationClass;
-    }
-
-    public void setMarkerInterface(Class<?> markerInterface) {
-        this.markerInterface = markerInterface;
-    }
-
-    public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
-        this.sqlSessionFactory = sqlSessionFactory;
-    }
-
-    public void setOrmSessionTemplate(OrmSessionTemplate ormSessionTemplate) {
-        this.ormSessionTemplate = ormSessionTemplate;
-    }
-
-    public void setSqlSessionTemplateBeanName(String sqlSessionTemplateBeanName) {
-        this.sqlSessionTemplateBeanName = sqlSessionTemplateBeanName;
-    }
-
-    public void setSqlSessionFactoryBeanName(String sqlSessionFactoryBeanName) {
-        this.sqlSessionFactoryBeanName = sqlSessionFactoryBeanName;
     }
 
     public void setOrmMapperFactoryBean(OrmMapperFactoryBean ormMapperFactoryBean) {
@@ -156,7 +130,7 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
 
         if (beanDefinitions.isEmpty()) {
-            logger.warn("No MyBatis mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
+            logger.warn("No ORM mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
         } else {
             processBeanDefinitions(beanDefinitions);
         }
@@ -186,19 +160,19 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
             definition.getPropertyValues().add("strict", this.strict);
 
             boolean explicitFactoryUsed = false;
-            if (StringUtils.hasText(this.sqlSessionFactoryBeanName)) {
-                definition.getPropertyValues().add("sqlSessionFactory", new RuntimeBeanReference(this.sqlSessionFactoryBeanName));
+            if (StringUtils.hasText(this.ormSessionFactoryBeanName)) {
+                definition.getPropertyValues().add("ormSessionFactory", new RuntimeBeanReference(this.ormSessionFactoryBeanName));
                 explicitFactoryUsed = true;
-            } else if (this.sqlSessionFactory != null) {
-                definition.getPropertyValues().add("sqlSessionFactory", this.sqlSessionFactory);
+            } else if (this.ormSessionFactory != null) {
+                definition.getPropertyValues().add("ormSessionFactory", this.ormSessionFactory);
                 explicitFactoryUsed = true;
             }
 
-            if (StringUtils.hasText(this.sqlSessionTemplateBeanName)) {
+            if (StringUtils.hasText(this.ormSessionTemplateBeanName)) {
                 if (explicitFactoryUsed) {
                     logger.warn("Cannot use both: ormSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
                 }
-                definition.getPropertyValues().add("ormSessionTemplate", new RuntimeBeanReference(this.sqlSessionTemplateBeanName));
+                definition.getPropertyValues().add("ormSessionTemplate", new RuntimeBeanReference(this.ormSessionTemplateBeanName));
                 explicitFactoryUsed = true;
             } else if (this.ormSessionTemplate != null) {
                 if (explicitFactoryUsed) {

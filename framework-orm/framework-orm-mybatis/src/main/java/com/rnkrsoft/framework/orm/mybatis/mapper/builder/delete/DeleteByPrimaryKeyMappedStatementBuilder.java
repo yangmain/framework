@@ -31,7 +31,7 @@ public class DeleteByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strictWing4j);
+        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
         String delete = KeywordsUtils.convert("DELETE FROM", keywordMode);
         String where = KeywordsUtils.convert("WHERE", keywordMode);

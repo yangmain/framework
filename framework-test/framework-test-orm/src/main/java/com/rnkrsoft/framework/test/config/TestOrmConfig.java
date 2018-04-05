@@ -14,10 +14,13 @@ public class TestOrmConfig implements OrmConfig {
      */
     @Setter
     String[] daoPackages;
+
+    @Setter
+    String[] mapperLocations;
     /**
-     * 启动懒加载初始化，主要用于开发模式下
+     * 是否允许重复加载
      */
-    boolean lazyInit = true;
+    boolean allowReload = true;
     /**
      * 获取关键字模式
      */
@@ -38,4 +41,6 @@ public class TestOrmConfig implements OrmConfig {
      */
     @Setter
     Map<String, ItemConfig> daoConfigs;
+    @Setter
+    Map<String, String> sequenceMappings;
 }

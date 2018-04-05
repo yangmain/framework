@@ -82,9 +82,9 @@ public abstract class MappedStatementBuilder {
      */
     protected WordMode keywordMode;
     /**
-     * 严格Wing4j注解
+     * 严格注解
      */
-    protected boolean strictWing4j;
+    protected boolean strict;
     /**
      * 将多个节点组装成组合节点
      * @param sqlNodes 节点数组

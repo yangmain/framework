@@ -18,13 +18,17 @@ import java.util.Map;
 @NoArgsConstructor
 public class ReleaseOrmConfig implements OrmConfig{
     /**
-     * DAO所在的包路径，MyBatis启动时扫描
+     * DAO所在的包路径
      */
     String[] daoPackages;
     /**
-     * 是否启动懒加载初始化，主要用于开发模式下
+     * MAPPER文件路径
      */
-    boolean lazyInit = false;
+    String[] mapperLocations;
+    /**
+     * 是否允许重复加载
+     */
+    boolean allowReload = false;
     /**
      * 获取关键字模式
      */
@@ -41,4 +45,6 @@ public class ReleaseOrmConfig implements OrmConfig{
      * 明细配置
      */
     Map<String, ItemConfig> daoConfigs;
+
+    Map<String, String> sequenceMappings;
 }

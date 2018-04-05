@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.update;
 
 /**
- * Created by devops4j on 2016/12/18.
+ * Created by rnkrsoft on 2016/12/18.
  */
 public interface UpdateByPrimaryKeyMapper<T,K> {
     /**

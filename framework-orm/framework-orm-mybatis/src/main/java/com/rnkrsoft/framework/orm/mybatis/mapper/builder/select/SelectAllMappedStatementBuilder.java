@@ -31,7 +31,7 @@ public class SelectAllMappedStatementBuilder extends MappedStatementBuilder {
 
     @Override
     public MappedStatement build() {
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strictWing4j);
+        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         String select = convert("SELECT", keywordMode);
         String from = convert("FROM", keywordMode);

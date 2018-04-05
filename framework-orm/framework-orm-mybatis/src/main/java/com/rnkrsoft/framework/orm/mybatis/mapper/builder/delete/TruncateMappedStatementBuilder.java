@@ -23,7 +23,7 @@ public class TruncateMappedStatementBuilder  extends MappedStatementBuilder {
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strictWing4j);
+        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
         String truncate = KeywordsUtils.convert("TRUNCATE TABLE ", keywordMode);
         String tableName = KeywordsUtils.convert(tableMetadata.getTableName(), keywordMode);
         StaticSqlSource sqlSource = new StaticSqlSource(config, truncate + tableName);

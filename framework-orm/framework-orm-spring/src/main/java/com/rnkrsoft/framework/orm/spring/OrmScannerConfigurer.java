@@ -10,6 +10,9 @@ import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMapperFactoryBean;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,6 +22,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.NestedIOException;
+import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -54,15 +59,17 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
      * SqlSessionFactory工厂Bean名称
      */
     @Setter
-    String sqlSessionFactoryBeanName;
+    String ormSessionFactoryBeanName;
+
+    @Setter
+    OrmMapperFactoryBean ormMapperFactoryBean;
     /**
      * 标记接口
      */
     @Setter
     Class<?> markerInterface = MapperMakerInterface.class;
 
-    @Setter
-    OrmMapperFactoryBean ormMapperFactoryBean;
+
     /**
      * Spring 上下文
      */
@@ -87,7 +94,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
         }
         OrmClassPathMapperScanner scanner = new OrmClassPathMapperScanner(registry);
         scanner.setOrmConfig(this.ormConfig);
-        scanner.setSqlSessionFactoryBeanName(this.sqlSessionFactoryBeanName);
+        scanner.setOrmSessionFactoryBeanName(this.ormSessionFactoryBeanName);
         scanner.setOrmMapperFactoryBean(this.ormMapperFactoryBean);
         scanner.setResourceLoader(this.applicationContext);
         scanner.setMarkerInterface(this.markerInterface);
@@ -153,9 +160,35 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
                         }
                     }
                 }
+
             }
         }
         ormConfig.setDaoConfigs(configMap);
+        //通过Spring容器获取
+        SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean(this.ormSessionFactoryBeanName);
+        Configuration configuration = sqlSessionFactory.getConfiguration();
+        for (String mapperLocation : ormConfig.getMapperLocations()){
+            if (mapperLocation == null) {
+                continue;
+            }
+            Resource resource = new PathResource(mapperLocation);
+            if (!resource.exists()) {
+                log.warn("mapper file [{}] is not exists!", resource.getFile().getName());
+                continue;
+            }
+            try {
+                XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(resource.getInputStream(), configuration, mapperLocation.toString(), configuration.getSqlFragments());
+                xmlMapperBuilder.parse();
+            } catch (Exception e) {
+                throw new NestedIOException("Failed to parse mapping resource: '" + mapperLocation + "'", e);
+            } finally {
+                ErrorContextFactory.instance().reset();
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Parsed mapper file: '" + mapperLocation + "'");
+            }
+        }
         if(ormConfig.getGlobalConfig() == null){
             throw ErrorContextFactory.instance()
                     .activity("OrmScannerConfigurer init")

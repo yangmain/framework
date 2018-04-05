@@ -1,13 +1,11 @@
 package com.rnkrsoft.framework.orm.spring;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage1Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage2Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.Configuration;
@@ -47,16 +45,12 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     public static final String DEFAULT_EXECUTOR_TYPE = "defaultExecutorType";
     public static final String DEFAULT_STATEMENT_TIMEOUT = "defaultStatementTimeout";
     /**
-     * Xml Mapper路径 例如:{@code classpath*:com/rnkrsoft/** &slash;*.xml}
-     */
-    @Setter
-    Resource[] mapperLocations;
-    /**
      * 数据源
      */
     @Autowired(required = false)
-    @Qualifier("dataSource")
+    @Qualifier("defaultDataSource")
     DataSource dataSource;
+
     @Setter
     Properties configurationProperties;//用动态配置对象替换
 
@@ -163,34 +157,6 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
             this.transactionFactory = new SpringManagedTransactionFactory();
         }
         configuration.setEnvironment(new Environment(this.environment, this.transactionFactory, this.dataSource));
-        if (!isEmpty(this.mapperLocations)) {
-            for (Resource mapperLocation : this.mapperLocations) {
-                if (mapperLocation == null) {
-                    continue;
-                }
-                if (!mapperLocation.exists()) {
-                    log.warn("mapper file [{}] is not exists!", mapperLocation.getFile().getName());
-                    continue;
-                }
-
-                try {
-                    XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperLocation.getInputStream(), configuration, mapperLocation.toString(), configuration.getSqlFragments());
-                    xmlMapperBuilder.parse();
-                } catch (Exception e) {
-                    throw new NestedIOException("Failed to parse mapping resource: '" + mapperLocation + "'", e);
-                } finally {
-                    ErrorContextFactory.instance().reset();
-                }
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Parsed mapper file: '" + mapperLocation + "'");
-                }
-            }
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Property 'mapperLocations' was not specified or no matching resources found");
-            }
-        }
         return new SqlSessionFactoryBuilder().build(configuration);
     }
 

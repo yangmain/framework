@@ -28,10 +28,10 @@ public abstract class EntityExtractorUtils {
      * 提取实体上的元信息
      *
      * @param entityClass  实体类
-     * @param strictWing4j 严格使用Wing4j注解
+     * @param strict 严格使用Wing4j注解
      * @return 元信息
      */
-    public static TableMetadata extractTable(Class entityClass, boolean strictWing4j) {
+    public static TableMetadata extractTable(Class entityClass, boolean strict) {
         //如果缓存包含则直接返回
         if (TABLES_CACHE.containsKey(entityClass)) {
             return TABLES_CACHE.get(entityClass);
@@ -53,7 +53,7 @@ public abstract class EntityExtractorUtils {
         }
         TableMetadata tableMetadata = TableMetadata.builder().entityClass(entityClass).className(entityClass.getSimpleName()).build();
         //严格模式下，只能使用Wing4j注解
-        if (strictWing4j) {
+        if (strict) {
             if (tableAnnWing4j == null) {
                 ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", entityClass)

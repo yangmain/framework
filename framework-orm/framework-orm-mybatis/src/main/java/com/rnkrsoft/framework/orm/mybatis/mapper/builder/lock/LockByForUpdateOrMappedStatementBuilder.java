@@ -31,7 +31,7 @@ public class LockByForUpdateOrMappedStatementBuilder extends MappedStatementBuil
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strictWing4j);
+        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         String select = KeywordsUtils.convert("SELECT", keywordMode);
         String from = KeywordsUtils.convert("FROM", keywordMode);
