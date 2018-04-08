@@ -21,7 +21,7 @@ public class JpaEntityExtractor {
      *
      * @param tableMetadata 表元信息
      */
-    public static void extractTableJPA(TableMetadata tableMetadata) {
+    public static void extractTable(TableMetadata tableMetadata) {
         javax.persistence.Table tableAnn = (javax.persistence.Table) tableMetadata.getEntityClass().getAnnotation(javax.persistence.Table.class);
         //提取表名
         if (tableAnn != null && tableAnn.name() != null && !tableAnn.name().trim().isEmpty()) {

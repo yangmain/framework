@@ -6,7 +6,7 @@ import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.Constants;
 import com.rnkrsoft.framework.orm.PrimaryKeyFeatureConstant;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
-import com.rnkrsoft.framework.orm.extractor.GenericityExtractor;
+import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
@@ -45,7 +45,7 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
     protected SequenceServiceConfigure sequenceConfigure;
 
     public InsertSelectiveMappedStatementBuilder(Configuration config, Class mapperClass, SequenceServiceConfigure sequenceConfigure) {
-        super(config, mapperClass.getName(), mapperClass, GenericityExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericityExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
         this.sequenceConfigure = sequenceConfigure;
     }
 

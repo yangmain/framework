@@ -15,14 +15,14 @@ import java.math.BigDecimal;
  * Created by rnkrsoft on 2017/1/7.
  */
 @Slf4j
-public class FrameworkEntityExtractor {
+public class OrmEntityExtractor {
 
     /**
      * 提取Wing4j提供的注解
      *
      * @param tableMetadata 表元信息
      */
-    public static void extractTableWing4j(TableMetadata tableMetadata) {
+    public static void extractTable(TableMetadata tableMetadata) {
         Table tableAnn = (Table) tableMetadata.getEntityClass().getAnnotation(Table.class);
         Comment commentAnn = (Comment) tableMetadata.getEntityClass().getAnnotation(Comment.class);
         DataEngine dataEngineAnn = (DataEngine) tableMetadata.getEntityClass().getAnnotation(DataEngine.class);

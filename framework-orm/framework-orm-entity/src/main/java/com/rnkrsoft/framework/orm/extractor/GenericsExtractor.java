@@ -4,9 +4,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
+ * Created by rnkrsoft on 2017/1/7.
  * 泛型提取工具类
  */
-public abstract class GenericityExtractor {
+public abstract class GenericsExtractor {
     /**
      * 提取接口声明的实体类对象
      * @param mapperClass 映射类

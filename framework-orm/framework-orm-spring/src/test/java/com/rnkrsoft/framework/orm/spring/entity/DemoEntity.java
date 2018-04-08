@@ -8,7 +8,7 @@ import com.rnkrsoft.framework.orm.Table;
 import java.io.Serializable;
 
 /**
- * Created by woate on 2018/4/5.
+ * Created by rnkrsoft on 2018/4/5.
  */
 @Table(name = "DEMO_INF")
 @Comment("演示信息表")

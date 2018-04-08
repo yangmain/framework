@@ -18,7 +18,7 @@ import org.springframework.test.context.web.ServletTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by woate on 2018/4/5.
+ * Created by rnkrsoft on 2018/4/5.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional

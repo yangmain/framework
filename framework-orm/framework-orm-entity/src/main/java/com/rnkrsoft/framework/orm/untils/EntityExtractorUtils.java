@@ -5,7 +5,7 @@ import com.devops4j.reflection4j.GlobalSystemMetadata;
 import com.devops4j.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.PrimaryKey;
 import com.rnkrsoft.framework.orm.Table;
-import com.rnkrsoft.framework.orm.extractor.FrameworkEntityExtractor;
+import com.rnkrsoft.framework.orm.extractor.OrmEntityExtractor;
 import com.rnkrsoft.framework.orm.extractor.JpaEntityExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -66,10 +66,10 @@ public abstract class EntityExtractorUtils {
 
         //解析JPA注解
         if (tableAnnWing4j != null) {
-            FrameworkEntityExtractor.extractTableWing4j(tableMetadata);
+            OrmEntityExtractor.extractTable(tableMetadata);
             //解析devops4j注解
         } else if (tableAnnJPA != null) {
-            JpaEntityExtractor.extractTableJPA(tableMetadata);
+            JpaEntityExtractor.extractTable(tableMetadata);
             //解析devops4j注解
         }
         //提取字段
@@ -126,7 +126,7 @@ public abstract class EntityExtractorUtils {
                     .build();
             //提取该字段元信息
             if (useWing4jAnn) {
-                if (!FrameworkEntityExtractor.extractField(columnMetadata)) {
+                if (!OrmEntityExtractor.extractField(columnMetadata)) {
                     continue;
                 }
             } else {

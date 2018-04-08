@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.test.datasource;
 
 /**
- * Created by woate on 2018/4/2.
+ * Created by rnkrsoft on 2018/4/2.
  */
 public class DataSourceScanner {
 

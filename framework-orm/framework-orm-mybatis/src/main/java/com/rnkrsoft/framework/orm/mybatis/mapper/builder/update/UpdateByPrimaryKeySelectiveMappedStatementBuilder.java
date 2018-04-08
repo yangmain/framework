@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.update;
 
 import com.rnkrsoft.framework.orm.Constants;
-import com.rnkrsoft.framework.orm.extractor.GenericityExtractor;
+import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
@@ -29,7 +29,7 @@ import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
 public class UpdateByPrimaryKeySelectiveMappedStatementBuilder extends MappedStatementBuilder {
 
     public UpdateByPrimaryKeySelectiveMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericityExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericityExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
