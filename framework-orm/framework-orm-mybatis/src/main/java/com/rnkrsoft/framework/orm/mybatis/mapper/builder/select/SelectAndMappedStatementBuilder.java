@@ -34,7 +34,8 @@ public class SelectAndMappedStatementBuilder extends MappedStatementBuilder {
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         String select = convert("SELECT", keywordMode);
         String from = convert("FROM", keywordMode);

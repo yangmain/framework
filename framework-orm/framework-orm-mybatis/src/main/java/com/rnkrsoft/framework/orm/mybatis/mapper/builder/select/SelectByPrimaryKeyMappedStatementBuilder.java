@@ -31,7 +31,8 @@ public class SelectByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);

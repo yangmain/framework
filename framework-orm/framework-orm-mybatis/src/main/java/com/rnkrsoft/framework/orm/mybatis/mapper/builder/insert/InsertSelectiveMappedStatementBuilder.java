@@ -51,7 +51,8 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
 
     @Override
     public MappedStatement build() {
-        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
         TextSqlNode insertIntoSqlNode = new TextSqlNode(convert("INSERT INTO ", keywordMode) + convert(tableMetadata.getTableName(), keywordMode) + "(");
         List<SqlNode> heads = new ArrayList();
         List<SqlNode> values = new ArrayList();

@@ -35,12 +35,12 @@ public class TestOrmConfig implements OrmConfig {
      * 全局配置
      */
     @Setter
-    ItemConfig globalConfig;
+    ItemConfig global;
     /**
      * 明细配置
      */
     @Setter
-    Map<String, ItemConfig> daoConfigs;
+    Map<String, ItemConfig> configs;
     @Setter
     Map<String, String> sequenceMappings;
 }
