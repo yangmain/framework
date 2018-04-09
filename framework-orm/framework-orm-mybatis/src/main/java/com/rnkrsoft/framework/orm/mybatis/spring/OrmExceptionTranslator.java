@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  *
  */
 public class OrmExceptionTranslator implements PersistenceExceptionTranslator {

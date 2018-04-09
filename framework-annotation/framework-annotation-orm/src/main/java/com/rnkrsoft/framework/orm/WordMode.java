@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 关键词类型
  */
 public enum WordMode {

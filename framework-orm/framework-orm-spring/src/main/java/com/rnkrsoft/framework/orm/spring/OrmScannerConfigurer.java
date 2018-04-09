@@ -40,7 +40,7 @@ import static org.springframework.util.Assert.notEmpty;
 import static org.springframework.util.Assert.notNull;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * ORM扫描配置对象
  */
 @Slf4j
@@ -121,12 +121,12 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
         notNull(this.ormConfig.getDaoPackages(), "Property 'ormConfig.daoPackages' is required");
         notEmpty(this.ormConfig.getDaoPackages(), "Property 'ormConfig.daoPackages' is empty");
         Map<String, ItemConfig> configMap = new HashMap();
-        if (ormConfig.getDaoConfigs() != null) {
-            for (String basePackage : ormConfig.getDaoConfigs().keySet()) {
+        if (ormConfig.getConfigs() != null) {
+            for (String basePackage : ormConfig.getConfigs().keySet()) {
                 if(log.isDebugEnabled()){
                     log.info("scanning daoPackage '{}'", basePackage);
                 }
-                ItemConfig itemConfig = ormConfig.getDaoConfigs().get(basePackage);
+                ItemConfig itemConfig = ormConfig.getConfigs().get(basePackage);
                 if(log.isDebugEnabled()){
                     log.info("scanning daoPackage '{}' '{}'", basePackage, itemConfig);
                 }
@@ -163,7 +163,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
 
             }
         }
-        ormConfig.setDaoConfigs(configMap);
+        ormConfig.setConfigs(configMap);
         //通过Spring容器获取
         SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean(this.ormSessionFactoryBeanName);
         Configuration configuration = sqlSessionFactory.getConfiguration();
@@ -189,11 +189,11 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
                 log.debug("Parsed mapper file: '" + mapperLocation + "'");
             }
         }
-        if(ormConfig.getGlobalConfig() == null){
+        if(ormConfig.getGlobal() == null){
             throw ErrorContextFactory.instance()
                     .activity("OrmScannerConfigurer init")
-                    .message("ormConfig.globalConfig is null")
-                    .solution("the property  which name is 'globalConfig' can not be null in the 'OrmScannerConfigurer'")
+                    .message("ormConfig.global is null")
+                    .solution("the property  which name is 'global' can not be null in the 'OrmScannerConfigurer'")
                     .runtimeException();
         }
     }

@@ -6,10 +6,11 @@
     <import resource="classpath*:testContext-dev.xml"/>
 
     <bean id="ormScannerConfigurer" class="com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer">
-        <property name="ormMapperFactoryBean" ref="ssss"/>
         <property name="ormConfig">
             <bean class="com.rnkrsoft.framework.orm.config.ReleaseOrmConfig">
+                <!--SQL关键字大小写模式，UPDATE，FORM，WHERE等-->
                 <property name="keywordMode" value="upperCase"/>
+                <!--SQL大小写模式 表名，字段名等-->
                 <property name="sqlMode" value="upperCase"/>
                 <!--是否允许重复加载DAO和MAPPER-->
                 <property name="allowReload" value="true"/>
@@ -20,31 +21,56 @@
                         <entry key="TB_DEMO" value="com.rnkrsoft.framework.sequence.h2.H2SequenceService"/>
                     </map>
                 </property>
+                <!--DAO包路径数组-->
                 <property name="daoPackages">
                     <array>
-                        <value>com.rnkrsoft.framework.orm.dao</value>
+                        <value>com.rnkrsoft.framework.orm.spring.dao</value>
                     </array>
                 </property>
+                <!--MAPPER文件路径数组-->
                 <property name="mapperLocations">
                     <array>
-                        <value>com/rnkrsoft/framework/orm/mapper</value>
+                        <value>com/rnkrsoft/framework/orm/spring/mapper</value>
                     </array>
                 </property>
-                <property name="globalConfig">
+                <!--全局配置-->
+                <property name="global">
                     <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
+                        <!--是否使用数据库模式-->
                         <property name="useSchema" value="false"/>
-                        <property name="useEntityPrefix" value="true"/>
-                        <property name="useEntitySuffix" value="true"/>
+                        <!--是否使用实体类上标注的数据库模式-->
                         <property name="useEntitySchema" value="true"/>
+                        <property name="schema" value=""/>
+                        <!--是否使用实体类上标注的表前缀-->
+                        <property name="useEntityPrefix" value="true"/>
+                        <property name="prefix" value=""/>
+                        <!--是否使用实体类上标注的表后缀-->
+                        <property name="useEntitySuffix" value="true"/>
+                        <property name="suffix" value=""/>
+                        <!--是否自动创建表-->
                         <property name="autoCreateTable" value="false"/>
                     </bean>
+                </property>
+                <!--配置信息-->
+                <property name="configs">
+                    <map>
+                        <entry key="com.rnkrsoft.framework.orm.spring.dao.subPackage">
+                            <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
+                                <property name="useSchema" value="false"/>
+                                <property name="useEntityPrefix" value="true"/>
+                                <property name="useEntitySuffix" value="true"/>
+                                <property name="useEntitySchema" value="true"/>
+                                <property name="autoCreateTable" value="false"/>
+                            </bean>
+                        </entry>
+                    </map>
                 </property>
             </bean>
         </property>
     </bean>
 
-    <bean id="ssss" class="com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean">
+    <bean class="com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean">
         <!--数据源-->
-        <!--<property name="dataSource" ref="dataSource"/>-->
+        <property name="dataSource" ref="defaultDataSource"/>
     </bean>
 </beans>

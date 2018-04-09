@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 /**
+ * Created by rnkrsoft.com on 2018/4/6.
  * 关键字工具，用于对关键字进行检查
  */
 @Slf4j
@@ -20,29 +21,28 @@ public abstract class KeywordsUtils {
     static {
         Enumeration<URL> keywordFiles = null;
         try {
-            keywordFiles = Thread.currentThread().getContextClassLoader().getResources("wing4.orm.keywords.properties");
+            keywordFiles = Thread.currentThread().getContextClassLoader().getResources("keywords.properties");
+            while (keywordFiles.hasMoreElements()){
+                URL keywordFile = keywordFiles.nextElement();
+                File file = new File(keywordFile.getPath());
+                if(file.exists()){
+                    try {
+                        KEYWORDS.load(keywordFile.openStream());
+                    } catch (IOException e) {
+                        log.error("加载关键字配置文件失败", e);
+                    }
+                }
+            }
         } catch (IOException e) {
             log.error("加载关键字配置文件失败", e);
         }
-        while (keywordFiles.hasMoreElements()){
-            URL keywordFile = keywordFiles.nextElement();
-            File file = new File(keywordFile.getPath());
-            if(file.exists()){
-                try {
-                    KEYWORDS.load(keywordFile.openStream());
-                } catch (IOException e) {
-                    log.error("加载关键字配置文件失败", e);
-                }
-            }
-        }
-
     }
     /**
      * 进行关键词校验
      *
      * @param columnMetadata 字段元信息
      */
-    public static void vlidateKeyword(ColumnMetadata columnMetadata) {
+    public static void validateKeyword(ColumnMetadata columnMetadata) {
         if ("true".equals(KEYWORDS.getProperty(columnMetadata.getJdbcName().toUpperCase()))) {
             log.error( "实体{} 中字段 {} 所标注的JPA注解包含不能使用的关键字 [{}] "
                     , columnMetadata.getEntityClass()

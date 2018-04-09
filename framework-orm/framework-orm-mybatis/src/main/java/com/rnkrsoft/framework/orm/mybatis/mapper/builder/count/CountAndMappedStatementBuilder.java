@@ -6,7 +6,7 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.WhereSqlNode;
 import org.apache.ibatis.mapping.*;
@@ -32,7 +32,7 @@ public class CountAndMappedStatementBuilder extends MappedStatementBuilder {
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
+        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         String select = KeywordsUtils.convert("SELECT", keywordMode);
         String from = KeywordsUtils.convert("FROM", keywordMode);

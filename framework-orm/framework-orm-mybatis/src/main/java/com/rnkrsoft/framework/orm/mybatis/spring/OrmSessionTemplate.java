@@ -15,7 +15,7 @@ import static java.lang.reflect.Proxy.newProxyInstance;
 import static org.apache.ibatis.reflection.ExceptionUtil.unwrapThrowable;
 import static org.springframework.util.Assert.notNull;
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * SqlSession方式集成
  */
 public class OrmSessionTemplate implements SqlSession {

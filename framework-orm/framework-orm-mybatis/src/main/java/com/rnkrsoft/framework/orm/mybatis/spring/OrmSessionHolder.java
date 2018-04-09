@@ -8,7 +8,7 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 import static org.springframework.util.Assert.notNull;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * 会话持有器
  */
 public final class OrmSessionHolder extends ResourceHolderSupport {

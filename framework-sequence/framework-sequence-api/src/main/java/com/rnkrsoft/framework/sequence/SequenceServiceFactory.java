@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * 序号服务工厂类
  */
 public class SequenceServiceFactory {

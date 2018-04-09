@@ -4,7 +4,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Created by rnkrsoft on 2017/1/7.
+ * Created by rnkrsoft.com on 2017/1/7.
  * 泛型提取工具类
  */
 public abstract class GenericsExtractor {

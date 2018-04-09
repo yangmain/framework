@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 标注该注解的字段是主键，支持多个主键，但是数据访问对象只支持一个物理主键
  */
 @Target({ElementType.FIELD})

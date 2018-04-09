@@ -12,17 +12,13 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 /**
- * Created by rnkrsoft on 2017/1/7.
+ * Created by rnkrsoft.com on 2017/1/7.
+ * 提取标注ORM注解的实体类
  */
 @Slf4j
-public class OrmEntityExtractor {
+public class OrmEntityExtractor implements EntityExtractor{
 
-    /**
-     * 提取Wing4j提供的注解
-     *
-     * @param tableMetadata 表元信息
-     */
-    public static void extractTable(TableMetadata tableMetadata) {
+    public EntityExtractor extractTable(TableMetadata tableMetadata) {
         Table tableAnn = (Table) tableMetadata.getEntityClass().getAnnotation(Table.class);
         Comment commentAnn = (Comment) tableMetadata.getEntityClass().getAnnotation(Comment.class);
         DataEngine dataEngineAnn = (DataEngine) tableMetadata.getEntityClass().getAnnotation(DataEngine.class);
@@ -43,18 +39,14 @@ public class OrmEntityExtractor {
                 tableMetadata.setDataEngine(dataEngineAnn.value().name());
             }
         }
+        return this;
     }
 
 
-    /**
-     * 提取字符串类型元信息
-     *
-     * @param columnMetadata 元信息
-     */
-    static void extractFieldString(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldString(ColumnMetadata columnMetadata) {
         StringColumn stringColumn = columnMetadata.getColumnField().getAnnotation(StringColumn.class);
         if (stringColumn == null) {
-            return;
+            return this;
         }
         Class fieldClass = columnMetadata.getJavaType();
         if (fieldClass != String.class) {
@@ -98,19 +90,14 @@ public class OrmEntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
-
+        return this;
     }
 
 
-    /**
-     * 提取字段上的数字元信息
-     *
-     * @param columnMetadata 元信息
-     */
-    static void extractFieldNumber(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldNumber(ColumnMetadata columnMetadata) {
         NumberColumn numberColumn = columnMetadata.getColumnField().getAnnotation(NumberColumn.class);
         if (numberColumn == null) {
-            return;
+            return this;
         }
         Class fieldClass = columnMetadata.getJavaType();
         String dataType = null;
@@ -269,7 +256,7 @@ public class OrmEntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
-
+        return this;
     }
 
 
@@ -278,10 +265,10 @@ public class OrmEntityExtractor {
      *
      * @param columnMetadata 元信息
      */
-    static void extractFieldDate(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldDate(ColumnMetadata columnMetadata) {
         DateColumn dateColumn = columnMetadata.getColumnField().getAnnotation(DateColumn.class);
         if (dateColumn == null) {
-            return;
+            return this;
         }
         Class fieldClass = columnMetadata.getJavaType();
         if (fieldClass != java.util.Date.class && fieldClass != java.sql.Date.class && fieldClass != java.sql.Time.class && fieldClass != java.sql.Timestamp.class) {
@@ -361,21 +348,16 @@ public class OrmEntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
+        return this;
     }
 
-
-    /**
-     * 提取字段上的主键信息
-     *
-     * @param columnMetadata 元信息
-     */
-    static void extractFieldPrimaryKey(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldPrimaryKey(ColumnMetadata columnMetadata) {
         Field field = columnMetadata.getColumnField();
         PrimaryKey primaryKey = columnMetadata.getColumnField().getAnnotation(PrimaryKey.class);
         PrimaryKeyStrategy primaryKeyStrategy = PrimaryKeyStrategy.AUTO;
         if (primaryKey == null) {
             columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
-            return;
+            return this;
         }
         if (primaryKey.strategy() == PrimaryKeyStrategy.AUTO) {
             if (columnMetadata.getJavaType() == Integer.class || columnMetadata.getJavaType() == Integer.TYPE) {
@@ -409,7 +391,7 @@ public class OrmEntityExtractor {
         }
         columnMetadata.getTableMetadata().getPrimaryKeys().add(columnMetadata.getJdbcName());
         columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
-
+        return this;
     }
 
 
@@ -419,7 +401,7 @@ public class OrmEntityExtractor {
      * @param columnMetadata 字段元信息
      * @return 是否处理
      */
-    public static boolean extractField(ColumnMetadata columnMetadata) {
+    public boolean extractField(ColumnMetadata columnMetadata) {
         Field field = columnMetadata.getColumnField();
         Class entityClass = columnMetadata.getEntityClass();
         NumberColumn numberColumn = field.getAnnotation(NumberColumn.class);

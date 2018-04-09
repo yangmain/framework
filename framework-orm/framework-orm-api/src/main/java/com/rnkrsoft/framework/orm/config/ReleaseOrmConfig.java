@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * 基于ORM配置对象的正式实现
  */
 @Data
@@ -40,11 +40,11 @@ public class ReleaseOrmConfig implements OrmConfig{
     /**
      * 全局配置
      */
-    ItemConfig globalConfig;
+    ItemConfig global;
     /**
      * 明细配置
      */
-    Map<String, ItemConfig> daoConfigs;
+    Map<String, ItemConfig> configs;
 
     Map<String, String> sequenceMappings;
 }

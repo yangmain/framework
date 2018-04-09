@@ -6,7 +6,7 @@ import org.springframework.dao.support.DaoSupport;
 
 import static org.springframework.util.Assert.notNull;
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * DaoSupport集成方式实现
  */
 public abstract class OrmSessionDaoSupport extends DaoSupport {

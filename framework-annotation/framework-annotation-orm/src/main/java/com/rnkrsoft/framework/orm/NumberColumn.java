@@ -6,7 +6,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 数字类型的字段定义
  */
 @Target({ElementType.FIELD})

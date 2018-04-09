@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.select;
 
 /**
- * Created by rnkrsoft on 2016/12/18.
+ * Created by rnkrsoft.com on 2016/12/18.
  */
 public interface SelectMapper<Entity, PrimaryKey> extends
         SelectAllMapper<Entity, PrimaryKey>,

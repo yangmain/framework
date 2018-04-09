@@ -4,7 +4,7 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 
 /**
- * Created by rnkrsoft on 2018/4/6.
+ * Created by rnkrsoft.com on 2018/4/6.
  * 实体提取器接口
  */
 public interface EntityExtractor {

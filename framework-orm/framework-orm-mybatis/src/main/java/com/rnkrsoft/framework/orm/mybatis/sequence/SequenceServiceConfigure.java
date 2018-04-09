@@ -4,7 +4,7 @@ package com.rnkrsoft.framework.orm.mybatis.sequence;
 import com.rnkrsoft.framework.sequence.SequenceService;
 
 /**
- * Created by rnkrsoft on 2017/1/8.
+ * Created by rnkrsoft.com on 2017/1/8.
  * 序号服务配置接口
  */
 public interface SequenceServiceConfigure {

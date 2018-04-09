@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 该注解标注在实体类上，用于声明对应表名等信息
  */
 @Target({ElementType.TYPE})

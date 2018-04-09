@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 主键生成特征字符串常量
  */
 public interface PrimaryKeyFeatureConstant {

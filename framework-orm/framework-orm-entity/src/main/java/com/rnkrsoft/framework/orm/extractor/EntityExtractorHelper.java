@@ -1,14 +1,13 @@
-package com.rnkrsoft.framework.orm.untils;
+package com.rnkrsoft.framework.orm.extractor;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.reflection4j.GlobalSystemMetadata;
 import com.devops4j.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.PrimaryKey;
 import com.rnkrsoft.framework.orm.Table;
-import com.rnkrsoft.framework.orm.extractor.OrmEntityExtractor;
-import com.rnkrsoft.framework.orm.extractor.JpaEntityExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.annotation.Annotation;
@@ -20,44 +19,46 @@ import java.util.Map;
  * 实体信息提取器
  */
 @Slf4j
-public abstract class EntityExtractorUtils {
+public final class EntityExtractorHelper {
+
+    EntityExtractor extractor;
 
     public static final Map<Class, TableMetadata> TABLES_CACHE = new HashMap<Class, TableMetadata>();
 
     /**
      * 提取实体上的元信息
      *
-     * @param entityClass  实体类
-     * @param strict 严格使用Wing4j注解
+     * @param entityClass 实体类
+     * @param strict      严格使用Wing4j注解
      * @return 元信息
      */
-    public static TableMetadata extractTable(Class entityClass, boolean strict) {
+    public TableMetadata extractTable(Class entityClass, boolean strict) {
         //如果缓存包含则直接返回
         if (TABLES_CACHE.containsKey(entityClass)) {
             return TABLES_CACHE.get(entityClass);
         }
         javax.persistence.Table tableAnnJPA = (javax.persistence.Table) entityClass.getAnnotation(javax.persistence.Table.class);
-        Table tableAnnWing4j = (Table) entityClass.getAnnotation(Table.class);
-        if (tableAnnJPA == null && tableAnnWing4j == null) {
+        Table tableAnnORM = (Table) entityClass.getAnnotation(Table.class);
+        if (tableAnnJPA == null && tableAnnORM == null) {
             ErrorContextFactory.instance().activity("提取实体类{}的元信息", entityClass)
-                    .message("没有使用JPA注解{}，也没使用Wing4j注解{}", javax.persistence.Table.class, Table.class)
+                    .message("没有使用JPA注解{}，也没使用ORM注解{}", javax.persistence.Table.class, Table.class)
                     .solution("建议使用{}注解", Table.class)
                     .throwError();
         }
-        if (tableAnnJPA != null && tableAnnWing4j != null) {
+        if (tableAnnJPA != null && tableAnnORM != null) {
             ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", entityClass)
-                    .message("同时使用JPA注解{}和使用Wing4j注解{}", javax.persistence.Table.class, Table.class)
+                    .message("同时使用JPA注解{}和使用ORM注解{}", javax.persistence.Table.class, Table.class)
                     .solution("建议使用{}注解，也可以使用JPA注解{}", Table.class, javax.persistence.Table.class)
                     .throwError();
         }
         TableMetadata tableMetadata = TableMetadata.builder().entityClass(entityClass).className(entityClass.getSimpleName()).build();
         //严格模式下，只能使用Wing4j注解
         if (strict) {
-            if (tableAnnWing4j == null) {
+            if (tableAnnORM == null) {
                 ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", entityClass)
-                        .message("由于已开启强制使用Wing4j注解，但是实际使用Wing4j注解{}", javax.persistence.Table.class)
+                        .message("由于已开启强制使用ORM注解，但是实际使用ORM注解{}", javax.persistence.Table.class)
                         .solution("必须强制使用Wing4j注解", Table.class)
                         .throwError();
             }
@@ -65,21 +66,20 @@ public abstract class EntityExtractorUtils {
         }
 
         //解析JPA注解
-        if (tableAnnWing4j != null) {
-            OrmEntityExtractor.extractTable(tableMetadata);
-            //解析devops4j注解
-        } else if (tableAnnJPA != null) {
-            JpaEntityExtractor.extractTable(tableMetadata);
-            //解析devops4j注解
+        if (tableAnnJPA != null) {
+            extractor = new JpaEntityExtractor();
+        } else if (tableAnnORM != null) {
+            extractor = new OrmEntityExtractor();
         }
+        extractor.extractTable(tableMetadata);
         //提取字段
-        extractFields(tableMetadata, tableAnnWing4j != null);
+        extractFields(tableMetadata);
         if (tableMetadata.getPrimaryKeys().isEmpty()) {
-            ErrorContextFactory.instance()
+            throw ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", entityClass)
                     .message("不允许无物理主键的实体")
                     .solution("建议在主键字段标注{}注解，也可以使用JPA注解{}", PrimaryKey.class, javax.persistence.Id.class)
-                    .throwError();
+                    .runtimeException();
         }
         return tableMetadata;
     }
@@ -89,7 +89,7 @@ public abstract class EntityExtractorUtils {
      *
      * @param tableMetadata 表元信息
      */
-    public static void checkCouldNotUseJpaAnnotation(TableMetadata tableMetadata) {
+    public void checkCouldNotUseJpaAnnotation(TableMetadata tableMetadata) {
         Reflector reflector = GlobalSystemMetadata.reflector(tableMetadata.getEntityClass());
         for (Field field : reflector.getFields()) {
             Annotation[] annotations = field.getAnnotations();
@@ -97,11 +97,11 @@ public abstract class EntityExtractorUtils {
                 Class annClazz = annotation.annotationType();
                 boolean useJpa = annClazz.getName().startsWith("javax.persistence.");
                 if (useJpa) {
-                    ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", tableMetadata.getEntityClass())
-                            .message("已开启严格Wing4j模式，禁止使用JPA注解，当前使用了{}注解", annClazz.getName())
+                            .message("已开启严格ORM模式，禁止使用JPA注解，当前使用了{}注解", annClazz.getName())
                             .solution("将所有字段标注JPA注解转换成等价的Wing4j注解")
-                            .throwError();
+                            .runtimeException();
                 }
             }
         }
@@ -111,9 +111,8 @@ public abstract class EntityExtractorUtils {
      * 提取实体类的所有字段
      *
      * @param tableMetadata 表元信息
-     * @param useWing4jAnn  用devops4j注解
      */
-    public static void extractFields(TableMetadata tableMetadata, boolean useWing4jAnn) {
+    public void extractFields(TableMetadata tableMetadata) {
         Reflector reflector = GlobalSystemMetadata.reflector(tableMetadata.getEntityClass());
         for (Field field : reflector.getFields()) {
             //任意使用了一个字段注解的
@@ -125,16 +124,10 @@ public abstract class EntityExtractorUtils {
                     .javaType(field.getType())
                     .build();
             //提取该字段元信息
-            if (useWing4jAnn) {
-                if (!OrmEntityExtractor.extractField(columnMetadata)) {
-                    continue;
-                }
-            } else {
-                if (!JpaEntityExtractor.extractField(columnMetadata)) {
-                    continue;
-                }
+            if (!extractor.extractField(columnMetadata)) {
+                continue;
             }
-            KeywordsUtils.vlidateKeyword(columnMetadata);
+            KeywordsUtils.validateKeyword(columnMetadata);
             //保存有序的字段
             tableMetadata.getOrderColumns().add(columnMetadata.getJdbcName());
             tableMetadata.getColumnMetadatas().put(columnMetadata.getJdbcName(), columnMetadata);

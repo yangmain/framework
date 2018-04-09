@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.WordMode;
 import java.util.Map;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  */
 public interface OrmConfig {
     /**
@@ -42,19 +42,19 @@ public interface OrmConfig {
      * 获取全局配置
      * @return 全局配置
      */
-    ItemConfig getGlobalConfig();
+    ItemConfig getGlobal();
 
     /**
      * 获取对每个具体包或者带掩码的包路径单独的配置
      * @return 包路径对应配置信息集合
      */
-    Map<String, ItemConfig> getDaoConfigs();
+    Map<String, ItemConfig> getConfigs();
 
     /**
      * 设置每个具体包或者带掩码的包路径配置信息
      * @param config 包路径对应配置信息集合
      */
-    void setDaoConfigs(Map<String, ItemConfig> config);
+    void setConfigs(Map<String, ItemConfig> config);
 
     /**
      * 配置序号服务信息中的表所用的序号服务实现类

@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.spring;
 
+import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage1Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage2Interceptor;
@@ -18,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.NestedIOException;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
 import javax.sql.DataSource;
@@ -29,10 +28,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static org.springframework.util.StringUtils.isEmpty;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * ORM会话工厂Bean
  */
 @Slf4j
@@ -66,7 +64,7 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     Interceptor[] plugins;
 
     @Setter
-    String environment = OrmSessionFactoryBean.class.getSimpleName();
+    String environment = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
 
     @Setter
     String beanName;

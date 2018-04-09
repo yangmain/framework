@@ -11,32 +11,23 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 
 /**
- * Created by rnkrsoft on 2017/1/7.
+ * Created by rnkrsoft.com on 2017/1/7.
+ * 提取标注JPA注解的实体类
  */
 @Slf4j
-public class JpaEntityExtractor {
+public class JpaEntityExtractor implements EntityExtractor {
 
-    /**
-     * 提取JPA提供的注解
-     *
-     * @param tableMetadata 表元信息
-     */
-    public static void extractTable(TableMetadata tableMetadata) {
+    public EntityExtractor extractTable(TableMetadata tableMetadata) {
         javax.persistence.Table tableAnn = (javax.persistence.Table) tableMetadata.getEntityClass().getAnnotation(javax.persistence.Table.class);
         //提取表名
         if (tableAnn != null && tableAnn.name() != null && !tableAnn.name().trim().isEmpty()) {
             tableMetadata.setTableName(tableAnn.name().trim());
             tableMetadata.setSchema(tableAnn.schema());
         }
+        return this;
     }
 
-
-    /**
-     * 提取字符串类型元信息
-     *
-     * @param columnMetadata 元信息
-     */
-    static void extractFieldString(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldString(ColumnMetadata columnMetadata) {
         Column column = columnMetadata.getColumnField().getAnnotation(Column.class);
         String dataType = null;
         String jdbcType = null;
@@ -62,16 +53,11 @@ public class JpaEntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
-
+        return this;
     }
 
 
-    /**
-     * 提取字段上的数字元信息
-     *
-     * @param columnMetadata 元信息
-     */
-    static void extractFieldNumber(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldNumber(ColumnMetadata columnMetadata) {
         Column column = columnMetadata.getColumnField().getAnnotation(Column.class);
         Class fieldClass = columnMetadata.getJavaType();
         String dataType = null;
@@ -122,16 +108,11 @@ public class JpaEntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
-
+        return this;
     }
 
 
-    /**
-     * 提取字段上的日期元信息
-     *
-     * @param columnMetadata 元信息
-     */
-    static void extractFieldDate(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldDate(ColumnMetadata columnMetadata) {
         Column column = columnMetadata.getColumnField().getAnnotation(Column.class);
         Class fieldClass = columnMetadata.getJavaType();
         String dataType = null;
@@ -173,6 +154,7 @@ public class JpaEntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
+        return this;
     }
 
 
@@ -181,13 +163,13 @@ public class JpaEntityExtractor {
      *
      * @param columnMetadata 元信息
      */
-    static void extractFieldPrimaryKey(ColumnMetadata columnMetadata) {
+    public EntityExtractor extractFieldPrimaryKey(ColumnMetadata columnMetadata) {
         Field field = columnMetadata.getColumnField();
         Id id = columnMetadata.getColumnField().getAnnotation(Id.class);
         PrimaryKeyStrategy primaryKeyStrategy = PrimaryKeyStrategy.AUTO;
         if (id == null) {
             columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
-            return;
+            return this;
         }
         GeneratedValue generatedValue = field.getAnnotation(GeneratedValue.class);
         if (generatedValue != null) {
@@ -224,6 +206,7 @@ public class JpaEntityExtractor {
         }
         columnMetadata.getTableMetadata().getPrimaryKeys().add(columnMetadata.getJdbcName());
         columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
+        return this;
     }
 
 
@@ -233,7 +216,7 @@ public class JpaEntityExtractor {
      * @param columnMetadata 字段元信息
      * @return 是否处理
      */
-    public static boolean extractField(ColumnMetadata columnMetadata) {
+    public boolean extractField(ColumnMetadata columnMetadata) {
         Field field = columnMetadata.getColumnField();
         Class entityClass = columnMetadata.getEntityClass();
         Column column = field.getAnnotation(Column.class);

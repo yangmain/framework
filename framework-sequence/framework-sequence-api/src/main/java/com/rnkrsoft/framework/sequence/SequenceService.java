@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.sequence;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 序号服务，用于提供连续自增序列
  */
 public interface SequenceService {

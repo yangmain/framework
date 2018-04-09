@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.spring;
 
+import com.rnkrsoft.framework.orm.spring.dao.DemoDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.test.context.web.ServletTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by rnkrsoft on 2018/4/5.
+ * Created by rnkrsoft.com on 2018/4/5.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -32,9 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class TestDemo{
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    DemoDAO demoDAO;
     @Test
     public void test1(){
         jdbcTemplate.execute("create table DEMO_INF(serialNo varchar(36), age int, PRIMARY  KEY(serialNo))");
-
+        demoDAO.countAll();
     }
 }

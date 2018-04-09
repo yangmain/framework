@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.StaticSqlSource;
@@ -23,7 +23,7 @@ public class TruncateMappedStatementBuilder  extends MappedStatementBuilder {
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
+        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
         String truncate = KeywordsUtils.convert("TRUNCATE TABLE ", keywordMode);
         String tableName = KeywordsUtils.convert(tableMetadata.getTableName(), keywordMode);
         StaticSqlSource sqlSource = new StaticSqlSource(config, truncate + tableName);

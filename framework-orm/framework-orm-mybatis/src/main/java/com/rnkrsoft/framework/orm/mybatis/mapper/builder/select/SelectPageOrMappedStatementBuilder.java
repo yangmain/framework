@@ -6,7 +6,7 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.WhereSqlNode;
 import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class SelectPageOrMappedStatementBuilder extends MappedStatementBuilder {
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
+        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
         String select = convert("SELECT", keywordMode);
         String from = convert("FROM", keywordMode);
         StringBuilder sqlBuilder = new StringBuilder();

@@ -8,7 +8,7 @@ import javax.activation.DataSource;
 import java.lang.reflect.Method;
 
 /**
- * Created by rnkrsoft on 2017/1/8.
+ * Created by rnkrsoft.com on 2017/1/8.
  * 基于classpath的序号服务配置
  */
 public class ClasspathSequenceServiceConfigure extends AbstractSequenceServiceConfigure {

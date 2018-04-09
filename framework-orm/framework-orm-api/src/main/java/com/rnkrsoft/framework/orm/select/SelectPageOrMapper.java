@@ -3,7 +3,7 @@ package com.rnkrsoft.framework.orm.select;
 import com.rnkrsoft.framework.orm.Pagination;
 
 /**
- * Created by rnkrsoft on 2016/12/18.
+ * Created by rnkrsoft.com on 2016/12/18.
  */
 public interface SelectPageOrMapper<T,K> {
     /**

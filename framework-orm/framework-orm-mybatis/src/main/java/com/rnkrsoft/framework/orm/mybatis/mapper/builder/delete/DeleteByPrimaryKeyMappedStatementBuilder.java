@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
@@ -31,7 +31,7 @@ public class DeleteByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
+        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
         String delete = KeywordsUtils.convert("DELETE FROM", keywordMode);
         String where = KeywordsUtils.convert("WHERE", keywordMode);

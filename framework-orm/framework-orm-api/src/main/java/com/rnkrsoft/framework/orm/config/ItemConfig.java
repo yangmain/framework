@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.config;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  */
 
 import lombok.*;

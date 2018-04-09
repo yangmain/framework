@@ -3,6 +3,7 @@ package com.rnkrsoft.framework.orm.untils;
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.test.TableNameMode;
@@ -42,7 +43,8 @@ public abstract class SqlScriptUtils {
                                              WordMode sqlMode,
                                              WordMode keywordMode,
                                              boolean createBeforeTest) {
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, false);
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        TableMetadata tableMetadata = helper.extractTable(entityClass, false);
         if (schemaMode == TableNameMode.AUTO) {
             if (schema != null) {
                 tableMetadata.setSchema(schema);
@@ -187,7 +189,8 @@ public abstract class SqlScriptUtils {
                                            WordMode sqlMode,
                                            WordMode keywordMode,
                                            boolean dropBeforeTest) {
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, false);
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        TableMetadata tableMetadata = helper.extractTable(entityClass, false);
         if (schemaMode == TableNameMode.AUTO) {
             if (schema != null) {
                 tableMetadata.setSchema(schema);
@@ -318,7 +321,8 @@ public abstract class SqlScriptUtils {
      * @return 列名
      */
     public static String genreateSqlHead(Class<?> entityClass, WordMode keywordMode, WordMode sqlMode, boolean newline) {
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, false);
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        TableMetadata tableMetadata = helper.extractTable(entityClass, false);
         StringBuilder builder = new StringBuilder();
         int index = 0;
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
@@ -352,8 +356,9 @@ public abstract class SqlScriptUtils {
                                           WordMode sqlMode,
                                           WordMode keywordMode,
                                           Class... entities) throws IOException {
-        for (Class entity : entities) {
-            TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entity, false);
+        for (Class entityClass : entities) {
+            EntityExtractorHelper helper = new EntityExtractorHelper();
+            TableMetadata tableMetadata = helper.extractTable(entityClass, false);
             generateDropTable(os, tableMetadata, sqlMode, keywordMode, false);
             os.write("\n".getBytes("UTF-8"));
             generateCreateTable(os, tableMetadata, sqlMode, keywordMode, false);
@@ -372,8 +377,9 @@ public abstract class SqlScriptUtils {
                                    WordMode keywordMode,
                                    Class... entities) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
-        for (Class entity : entities) {
-            TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entity, false);
+        for (Class entityClass : entities) {
+            EntityExtractorHelper helper = new EntityExtractorHelper();
+            TableMetadata tableMetadata = helper.extractTable(entityClass, false);
             generateDropTable(os, tableMetadata, sqlMode, keywordMode, false);
             os.write("\n".getBytes("UTF-8"));
             generateCreateTable(os, tableMetadata, sqlMode, keywordMode, false);

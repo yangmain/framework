@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 日期类型定义
  */
 public enum DateType {

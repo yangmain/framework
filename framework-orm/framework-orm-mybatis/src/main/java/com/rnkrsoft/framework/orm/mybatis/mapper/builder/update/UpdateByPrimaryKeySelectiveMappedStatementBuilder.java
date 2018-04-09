@@ -6,7 +6,7 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
-import com.rnkrsoft.framework.orm.untils.EntityExtractorUtils;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMap;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -34,7 +34,7 @@ public class UpdateByPrimaryKeySelectiveMappedStatementBuilder extends MappedSta
 
     @Override
     public MappedStatement build() {
-        TableMetadata tableMetadata = EntityExtractorUtils.extractTable(entityClass, strict);
+        TableMetadata tableMetadata = EntityExtractorHelper.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
         Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);

@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Created by rnkrsoft on 2018/4/2.
+ * Created by rnkrsoft.com on 2018/4/2.
  * classpath Mapper扫描器
  */
 @Setter

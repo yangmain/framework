@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.test;
 
 /**
- * Created by rnkrsoft on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 测试时使用的表名模式
  */
 public enum TableNameMode {

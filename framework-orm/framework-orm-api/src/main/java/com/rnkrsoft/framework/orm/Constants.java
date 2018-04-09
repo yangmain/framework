@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm;
 
 /**
- * Created by rnkrsoft on 2016/12/18.
+ * Created by rnkrsoft.com on 2016/12/18.
  * 这个类定义了ORM使用到的方法名称
  */
 public interface Constants {
