@@ -45,7 +45,7 @@ public class SelectPageOrMappedStatementBuilder extends MappedStatementBuilder {
         sqlBuilder.append(convert(tableMetadata.getTableName(), sqlMode)).append(" ");
         List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
         List<SqlNode> wheres = new ArrayList<SqlNode>();
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
             String whereSql = convert(" OR ", keywordMode) + convert(columnMetadata.getJdbcName(), sqlMode) + " = #{entity." + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";

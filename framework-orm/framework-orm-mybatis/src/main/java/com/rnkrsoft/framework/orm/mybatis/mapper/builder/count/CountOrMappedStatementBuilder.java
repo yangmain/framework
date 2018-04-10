@@ -33,18 +33,17 @@ public class CountOrMappedStatementBuilder extends MappedStatementBuilder {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         String select = KeywordsUtils.convert("SELECT", keywordMode);
-        String from = KeywordsUtils.convert("FROM", keywordMode);
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
         sqlBuilder.append(KeywordsUtils.convert("COUNT(1) AS", keywordMode)).append(" ");
         sqlBuilder.append(KeywordsUtils.convert("CNT", sqlMode)).append(" ");
-        sqlBuilder.append(from).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("FROM", keywordMode)).append(" ");
         sqlBuilder.append(KeywordsUtils.convert(tableMetadata.getTableName(), sqlMode)).append(" ");
         //创建结果映射
-        List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
-        List<SqlNode> wheres = new ArrayList<SqlNode>();
+        List<ParameterMapping> parameterMappings = new ArrayList();
+        List<SqlNode> wheres = new ArrayList();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
             String whereSql = KeywordsUtils.convert(" OR ", keywordMode) + KeywordsUtils.convert(columnMetadata.getJdbcName(), sqlMode) + " = #{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
@@ -60,11 +59,11 @@ public class CountOrMappedStatementBuilder extends MappedStatementBuilder {
         //创建参数映射
         msBuilder.parameterMap(paramBuilder.build());
         //创建结果映射
-        List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+        List<ResultMapping> resultMappings = new ArrayList();
         ResultMapping.Builder builder = new ResultMapping.Builder(config, "count", "CNT", int.class);
         resultMappings.add(builder.build());
         final ResultMap resultMap = new ResultMap.Builder(config, "BaseResultMap", int.class, resultMappings).build();
-        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+        List<ResultMap> resultMaps = new ArrayList();
         resultMaps.add(resultMap);
         msBuilder.resultMaps(resultMaps);
         //建造出MappedStatement

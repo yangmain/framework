@@ -31,7 +31,7 @@ public class LockByForUpdateByPrimaryKeyMappedStatementBuilder extends MappedSta
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         String select = KeywordsUtils.convert("SELECT", keywordMode);
         String from = KeywordsUtils.convert("FROM", keywordMode);
         String where = KeywordsUtils.convert("WHERE", keywordMode);

@@ -24,12 +24,12 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
      * SQL 语句大小写模式
      */
     @Setter
-    String sqlMode = WordMode.lowerCase.name();
+    WordMode sqlMode = WordMode.lowerCase;
     /**
      * 关键词大小写模式
      */
     @Setter
-    String keywordMode = WordMode.lowerCase.name();
+    WordMode keywordMode = WordMode.lowerCase;
     @Setter
     String schemaMode = TableNameMode.AUTO.name();
     @Setter
@@ -52,12 +52,12 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
      */
     @Setter
     @Autowired(required = false)
-    SequenceServiceConfigure sequenceConfigure;
+    SequenceServiceConfigure sequenceServiceConfigure;
     /**
      * 数据库类型
      */
     @Setter
-    String databaseType = DatabaseType.MySQL.name();
+    DatabaseType databaseType = DatabaseType.MySQL;
 
     public OrmMapperFactoryBean(Class<T> mapperInterface) {
         this.mapperInterface = mapperInterface;
@@ -80,10 +80,10 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
         TableNameMode prefixMode0 = null;
         TableNameMode suffixMode0 = null;
         DatabaseType databaseType0 = null;
-        if ((sqlMode0 = WordMode.valueOf(sqlMode)) == null) {
+        if ((sqlMode0 = sqlMode) == null) {
             throw new IllegalArgumentException("Property 'sqlMode' must is lowerCase or upperCase ");
         }
-        if ((keywordMode0 = WordMode.valueOf(keywordMode)) == null) {
+        if ((keywordMode0 = keywordMode) == null) {
             throw new IllegalArgumentException("Property 'keywordMode' must is lowerCase or upperCase ");
         }
         if ((schemaMode0 = TableNameMode.valueOf(schemaMode)) == null) {
@@ -95,7 +95,7 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
         if ((suffixMode0 = TableNameMode.valueOf(suffixMode)) == null) {
             throw new IllegalArgumentException("Property 'suffixMode' must is auto 、entity or createTable");
         }
-        if ((databaseType0 = DatabaseType.valueOf(databaseType)) == null) {
+        if ((databaseType0 = databaseType) == null) {
             throw new IllegalArgumentException("Property 'databaseType' must is lowerCase or upperCase ");
         }
         super.checkDaoConfig();
@@ -104,7 +104,7 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
         configuration.addInterceptor(new PaginationStage1Interceptor(databaseType0));
         configuration.addInterceptor(new PaginationStage2Interceptor());
 
-        OrmMappedStatementRegister.scan(configuration, this.mapperInterface, sqlMode0, keywordMode0, schemaMode0, schema, prefixMode0, prefix, suffixMode0, suffix, strict, sequenceConfigure);
+        OrmMappedStatementRegister.scan(configuration, this.mapperInterface, sqlMode0, keywordMode0, schemaMode0, schema, prefixMode0, prefix, suffixMode0, suffix, strict, sequenceServiceConfigure);
         if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {
             try {
                 configuration.addMapper(this.mapperInterface);

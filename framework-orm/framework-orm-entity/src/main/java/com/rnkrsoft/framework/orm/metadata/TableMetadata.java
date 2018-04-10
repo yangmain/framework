@@ -40,7 +40,7 @@ public class TableMetadata {
     /**
      * 字段缓存
      */
-    final Map<String, ColumnMetadata> columnMetadatas = new HashMap();
+    final Map<String, ColumnMetadata> columnMetadataSet = new HashMap();
     /**
      * 有序的字段名，和实体上定义的顺序一致
      */

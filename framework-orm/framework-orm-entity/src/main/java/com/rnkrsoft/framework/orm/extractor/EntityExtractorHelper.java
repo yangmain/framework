@@ -130,7 +130,7 @@ public final class EntityExtractorHelper {
             KeywordsUtils.validateKeyword(columnMetadata);
             //保存有序的字段
             tableMetadata.getOrderColumns().add(columnMetadata.getJdbcName());
-            tableMetadata.getColumnMetadatas().put(columnMetadata.getJdbcName(), columnMetadata);
+            tableMetadata.getColumnMetadataSet().put(columnMetadata.getJdbcName(), columnMetadata);
         }
     }
 }

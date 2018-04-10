@@ -37,7 +37,7 @@ public class DeleteOrMappedStatementBuilder extends MappedStatementBuilder {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         String delete = KeywordsUtils.convert("DELETE FROM", keywordMode);
         //headBuilder是前半段
         StringBuilder headBuilder = new StringBuilder();

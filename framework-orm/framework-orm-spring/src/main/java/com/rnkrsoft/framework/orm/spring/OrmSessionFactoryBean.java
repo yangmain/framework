@@ -67,7 +67,7 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     String environment = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
 
     @Setter
-    String beanName;
+    String beanName = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
 
     public void setDataSource(DataSource dataSource) {
         if (dataSource instanceof TransactionAwareDataSourceProxy) {

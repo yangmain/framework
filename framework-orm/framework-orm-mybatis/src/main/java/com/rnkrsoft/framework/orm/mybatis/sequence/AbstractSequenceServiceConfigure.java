@@ -26,15 +26,18 @@ public abstract class AbstractSequenceServiceConfigure implements SequenceServic
             return sequenceService;
         }
         synchronized (this) {
-            String clazzName = mappings.getProperty(tableName.toUpperCase());
-            if (clazzName == null || clazzName.isEmpty()) {
+            if ((sequenceService = TABLE_INSTANCES.get(tableName.toUpperCase())) != null) {
+                return sequenceService;
+            }
+            String sequenceServiceClassName = mappings.getProperty(tableName);
+            if (sequenceServiceClassName == null || sequenceServiceClassName.isEmpty()) {
                 ErrorContextFactory.instance()
                         .activity("初始化表{}序号服务", tableName.toUpperCase())
                         .message("获取序号服务发生错误，因为属性'mappings'中没有配置序号服务映射")
                         .solution("在序号服务'mappings'中配置表名->序号服务类的映射").throwError();
                 return null;
             }
-            sequenceService = register(tableName.toUpperCase(), clazzName);
+            sequenceService = register(tableName.toUpperCase(), sequenceServiceClassName);
             TABLE_INSTANCES.put(tableName.toUpperCase(), sequenceService);
             return sequenceService;
         }
@@ -46,6 +49,18 @@ public abstract class AbstractSequenceServiceConfigure implements SequenceServic
      * @return 序号服务
      */
     protected SequenceService initDataSource(SequenceService sequenceService){
+        for (String tableName : mappings.stringPropertyNames()){
+            String sequenceServiceClassName = mappings.getProperty(tableName);
+            if (sequenceServiceClassName == null || sequenceServiceClassName.isEmpty()) {
+                ErrorContextFactory.instance()
+                        .activity("初始化表{}序号服务", tableName.toUpperCase())
+                        .message("获取序号服务发生错误，因为属性'mappings'中没有配置序号服务映射")
+                        .solution("在序号服务'mappings'中配置表名->序号服务类的映射").throwError();
+                return null;
+            }
+            sequenceService = register(tableName.toUpperCase(), sequenceServiceClassName);
+            TABLE_INSTANCES.put(tableName.toUpperCase(), sequenceService);
+        }
         return sequenceService;
     }
 }

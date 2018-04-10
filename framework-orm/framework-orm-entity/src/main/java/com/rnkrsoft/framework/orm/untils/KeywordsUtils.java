@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.untils;
 
+import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +58,10 @@ public abstract class KeywordsUtils {
             return sql.toLowerCase();
         }else if(mode == WordMode.upperCase){
             return sql.toUpperCase();
-        }else{
+        }else if (mode == WordMode.none){
             return sql;
+        }else {
+            throw ErrorContextFactory.instance().message("转换 SQL '{}' 发生错误", sql).runtimeException();
         }
     }
 }

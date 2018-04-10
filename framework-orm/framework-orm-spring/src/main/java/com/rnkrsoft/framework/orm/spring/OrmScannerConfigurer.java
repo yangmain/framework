@@ -2,6 +2,7 @@ package com.rnkrsoft.framework.orm.spring;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.message.MessageFormatter;
+import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.MapperMakerInterface;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
@@ -31,7 +32,6 @@ import org.springframework.core.type.ClassMetadata;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
      * SqlSessionFactory工厂Bean名称
      */
     @Setter
-    String ormSessionFactoryBeanName;
+    String ormSessionFactoryBeanName = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
 
     @Setter
     OrmMapperFactoryBean ormMapperFactoryBean;
@@ -67,7 +67,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
      * 标记接口
      */
     @Setter
-    Class<?> markerInterface = MapperMakerInterface.class;
+    Class<?> markerInterface;
 
 
     /**
@@ -140,7 +140,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
                 }
                 String basePackage_path = basePackage.replaceAll("\\.", "/");
                 //进行数组拆分
-                String[] basePackages = StringUtils.tokenizeToStringArray(basePackage_path, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+                String[] basePackages = org.springframework.util.StringUtils.tokenizeToStringArray(basePackage_path, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
                 //检测key是否为通配符
                 for (String basePackage0 : basePackages) {
                     ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();

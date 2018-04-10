@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.spring;
 
 import com.rnkrsoft.framework.orm.spring.dao.DemoDAO;
+import com.rnkrsoft.framework.orm.spring.entity.DemoEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.context.web.ServletTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 /**
  * Created by rnkrsoft.com on 2018/4/5.
@@ -37,7 +40,20 @@ public class TestDemo{
     DemoDAO demoDAO;
     @Test
     public void test1(){
-        jdbcTemplate.execute("create table DEMO_INF(serialNo varchar(36), age int, PRIMARY  KEY(serialNo))");
-        demoDAO.countAll();
+        jdbcTemplate.execute("create table DEMO_INF(SERIAL_NO varchar(36), AGE int, PRIMARY  KEY(SERIAL_NO))");
+        System.out.println(demoDAO.countAll());
+        {
+            DemoEntity entity = new DemoEntity();
+//        entity.setSerial(UUID.randomUUID().toString());
+            entity.setAge(12);
+            demoDAO.insertSelective(entity);
+        }
+        {
+            DemoEntity entity = new DemoEntity();
+//        entity.setSerial(UUID.randomUUID().toString());
+            entity.setAge(12);
+            demoDAO.insertSelective(entity);
+        }
+        System.out.println(demoDAO.countAll());
     }
 }

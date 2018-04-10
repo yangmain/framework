@@ -115,7 +115,7 @@ public abstract class SqlScriptUtils {
         sql.append("(\n");
         int autoIncrementCnt = 0;
         for (String name : tableMetadata.getOrderColumns()) {
-            ColumnMetadata columnMetadata = tableMetadata.getColumnMetadatas().get(name);
+            ColumnMetadata columnMetadata = tableMetadata.getColumnMetadataSet().get(name);
             sql.append(" ")
                     .append(convert(name, sqlMode))
                     .append(" ")
@@ -325,7 +325,7 @@ public abstract class SqlScriptUtils {
         TableMetadata tableMetadata = helper.extractTable(entityClass, false);
         StringBuilder builder = new StringBuilder();
         int index = 0;
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         for (String column : tableMetadata.getOrderColumns()) {
             ColumnMetadata columnMetadata = fields.get(column);
             index++;
@@ -336,7 +336,7 @@ public abstract class SqlScriptUtils {
             builder.append(convert(columnMetadata.getJdbcName(), sqlMode))
                     .append(convert(" AS ", keywordMode))
                     .append(columnMetadata.getJavaName());
-            if (index != tableMetadata.getColumnMetadatas().size()) {
+            if (index != tableMetadata.getColumnMetadataSet().size()) {
                 builder.append(", ");
             }
         }

@@ -138,7 +138,7 @@ public abstract class OrmMappedStatementRegister {
      * @param suffixMode 后缀模式
      * @param suffix 后缀
      * @param strict 是否严格注解
-     * @param sequenceConfigure 序号配置对象
+     * @param ssc 序号配置对象
      */
     public static void scan(Configuration configuration,
                       Class daoInterface,
@@ -151,14 +151,14 @@ public abstract class OrmMappedStatementRegister {
                       TableNameMode suffixMode,
                       String suffix,
                       boolean strict,
-                      SequenceServiceConfigure sequenceConfigure) {
+                      SequenceServiceConfigure ssc) {
         List<MappedStatementBuilder> builders = new ArrayList();
         //---------------------------新增-----------------------------------------
         if (InsertSelectiveMapper.class.isAssignableFrom(daoInterface)) {
-            builders.add(new InsertSelectiveMappedStatementBuilder(configuration, daoInterface, sequenceConfigure));
+            builders.add(new InsertSelectiveMappedStatementBuilder(configuration, daoInterface, ssc));
         }
         if (InsertAllMapper.class.isAssignableFrom(daoInterface)) {
-            builders.add(new InsertMappedStatementBuilder(configuration, daoInterface, sequenceConfigure));
+            builders.add(new InsertMappedStatementBuilder(configuration, daoInterface, ssc));
         }
         //---------------------------删除-----------------------------------------
         if (DeleteAndMapper.class.isAssignableFrom(daoInterface)) {

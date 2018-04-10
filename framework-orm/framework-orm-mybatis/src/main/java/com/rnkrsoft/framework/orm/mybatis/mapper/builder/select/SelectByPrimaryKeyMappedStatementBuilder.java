@@ -34,7 +34,7 @@ public class SelectByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
         String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);
         String select = convert("SELECT", keywordMode);
         String from = convert("FROM", keywordMode);

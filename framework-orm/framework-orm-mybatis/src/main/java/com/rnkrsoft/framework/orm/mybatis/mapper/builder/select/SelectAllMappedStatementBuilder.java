@@ -33,7 +33,7 @@ public class SelectAllMappedStatementBuilder extends MappedStatementBuilder {
     public MappedStatement build() {
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         String select = convert("SELECT", keywordMode);
         String from = convert("FROM", keywordMode);
         StringBuilder sqlBuilder = new StringBuilder();

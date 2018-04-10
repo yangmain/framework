@@ -97,7 +97,7 @@ public class ReverseEntityUtils {
                 builder.primaryKeyStrategy(PrimaryKeyStrategy.IDENTITY);
             }
             tableMetadata.getOrderColumns().add(column_name);
-            tableMetadata.getColumnMetadatas().put(column_name, builder.build());
+            tableMetadata.getColumnMetadataSet().put(column_name, builder.build());
         }
 
     }

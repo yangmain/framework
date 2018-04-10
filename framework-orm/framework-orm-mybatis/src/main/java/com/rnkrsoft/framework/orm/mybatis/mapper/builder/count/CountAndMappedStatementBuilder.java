@@ -34,14 +34,13 @@ public class CountAndMappedStatementBuilder extends MappedStatementBuilder {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadatas();
+        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
         String select = KeywordsUtils.convert("SELECT", keywordMode);
-        String from = KeywordsUtils.convert("FROM", keywordMode);
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
         sqlBuilder.append(KeywordsUtils.convert("COUNT(1) AS", keywordMode)).append(" ");
         sqlBuilder.append(KeywordsUtils.convert("CNT", sqlMode)).append(" ");
-        sqlBuilder.append(from).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("FROM", keywordMode)).append(" ");
         sqlBuilder.append(KeywordsUtils.convert(tableMetadata.getTableName(), sqlMode)).append(" ");
         //创建结果映射
         List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();

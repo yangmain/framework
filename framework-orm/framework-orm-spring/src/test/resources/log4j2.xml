@@ -1,24 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--设置log4j2的自身log级别为warn-->
-<configuration status="warn">
-
+<configuration status="WARN">
+    <Properties>
+        <Property name="FILE_SIZE">300M</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} sessionId1[%X{sessionId}] [%thread] %-5level %logger{36} - %msg%n</Property>
+        <Property name="rolling_file_name">-%d{yyyy-MM-dd}.%i.zip</Property>
+        <Property name="rollover_strategy_max">30</Property>
+    </Properties>
     <appenders>
-        <console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-        </console>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
     </appenders>
-    <loggers>
-        <logger name="org.springframework" level="OFF" additivity="false"/>
-        <logger name="com.rnkrsoft.framework" level="DEBUG" additivity="false"/>
-        <logger name="jdbc.sqlonly" level="OFF" additivity="false"/>
-        <logger name="jdbc.sqltiming" level="DEBUG" additivity="false"/>
-        <logger name="jdbc.audit" level="OFF" additivity="false"/>
-        <logger name="jdbc.resultset" level="OFF" additivity="false"/>
-        <logger name="jdbc.resultsettable" level="DEBUG" additivity="false"/>
-        <logger name="jdbc.connection" level="OFF" additivity="false"/>
-        <root level="all">
-            <appender-ref ref="Console"/>
-        </root>
-    </loggers>
 
+    <loggers>
+        <AsyncRoot level="debug">
+            <appender-ref ref="Console"/>
+        </AsyncRoot>
+        <!--
+            additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍。
+            -->
+        <logger name="org.springframework" level="info" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.rnkrsoft.framework" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.zbj.finance.framework" level="info" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.zbj.finance.creditpremit" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="log4jdbc" level="info" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.audit" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.sqlonly" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.sqltiming" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.connection" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.resultset" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.resultsettable" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+    </loggers>
 </configuration>

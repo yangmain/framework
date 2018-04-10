@@ -10,13 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 /**
  * Created by rnkrsoft.com on 2017/1/7.
  * 提取标注ORM注解的实体类
  */
 @Slf4j
-public class OrmEntityExtractor implements EntityExtractor{
+public class OrmEntityExtractor implements EntityExtractor {
 
     public EntityExtractor extractTable(TableMetadata tableMetadata) {
         Table tableAnn = (Table) tableMetadata.getEntityClass().getAnnotation(Table.class);
@@ -115,7 +116,7 @@ public class OrmEntityExtractor implements EntityExtractor{
         }
         if (numberColumn != null) {
             if (numberColumn.type() != null) {
-                if(numberColumn.type() == NumberType.AUTO){
+                if (numberColumn.type() == NumberType.AUTO) {
                     if (fieldClass == Integer.TYPE) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
@@ -140,7 +141,7 @@ public class OrmEntityExtractor implements EntityExtractor{
                                     .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
                                     .solution("nullable属性需要设置为{}", false).throwError();
                         }
-                    }else if(fieldClass == BigDecimal.class){
+                    } else if (fieldClass == BigDecimal.class) {
                         if (numberColumn.scale() > 0 && numberColumn.precision() > 0 && numberColumn.precision() > numberColumn.scale()) {
                             dataType = "DECIMAL(" + numberColumn.precision() + "," + numberColumn.scale() + ")";
                         } else if (numberColumn.precision() > 0 && numberColumn.scale() == 0) {
@@ -151,7 +152,7 @@ public class OrmEntityExtractor implements EntityExtractor{
                             dataType = "DECIMAL(18,2)";
                         }
                     }
-                }else if (numberColumn.type() == NumberType.INTEGER) {
+                } else if (numberColumn.type() == NumberType.INTEGER) {
                     if (fieldClass == Integer.TYPE) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
@@ -334,10 +335,11 @@ public class OrmEntityExtractor implements EntityExtractor{
                     dataType = "TIMESTAMP";
                     jdbcType = "TIMESTAMP";
                 } else {
-                    ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}数据类型和注解类型支持的映射数据不一致", columnMetadata.getJavaName())
-                            .solution("将字段{}的类型从{}修改为[{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Date.class, java.sql.Time.class, java.sql.Timestamp.class).throwError();
+                            .solution("将字段{}的类型从{}修改为[{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Date.class, java.sql.Time.class, java.sql.Timestamp.class)
+                            .runtimeException();
                 }
             }
             columnMetadata.setDefaultValue(dateColumn.defaultValue());
@@ -354,43 +356,58 @@ public class OrmEntityExtractor implements EntityExtractor{
     public EntityExtractor extractFieldPrimaryKey(ColumnMetadata columnMetadata) {
         Field field = columnMetadata.getColumnField();
         PrimaryKey primaryKey = columnMetadata.getColumnField().getAnnotation(PrimaryKey.class);
-        PrimaryKeyStrategy primaryKeyStrategy = PrimaryKeyStrategy.AUTO;
+        PrimaryKeyStrategy strategy = null;
         if (primaryKey == null) {
-            columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
             return this;
-        }
-        if (primaryKey.strategy() == PrimaryKeyStrategy.AUTO) {
-            if (columnMetadata.getJavaType() == Integer.class || columnMetadata.getJavaType() == Integer.TYPE) {
-                primaryKeyStrategy = PrimaryKeyStrategy.IDENTITY;
-            }
+        } else if (primaryKey.strategy() == PrimaryKeyStrategy.AUTO) {
+            strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.IDENTITY) {
-            if (columnMetadata.getJavaType() != Integer.class && columnMetadata.getJavaType() != Integer.TYPE) {
-                ErrorContextFactory.instance()
-                        .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                        .message("字段{}使用了自增主键，类型必须为整数", field.getName())
-                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
-            }
-            primaryKeyStrategy = PrimaryKeyStrategy.IDENTITY;
+            strategy = PrimaryKeyStrategy.IDENTITY;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.SEQUENCE_SERVICE) {
-            if (columnMetadata.getJavaType() != Integer.class && columnMetadata.getJavaType() != Integer.TYPE) {
-                ErrorContextFactory.instance()
+            strategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
+        }
+        if (strategy == PrimaryKeyStrategy.IDENTITY) {
+            if (columnMetadata.getJavaType() != Integer.class
+                    && columnMetadata.getJavaType() != Integer.TYPE
+                    && columnMetadata.getJavaType() != Long.class
+                    && columnMetadata.getJavaType() != Long.TYPE
+                    ) {
+                throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                         .message("字段{}使用了自增主键，类型必须为整数", field.getName())
-                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
+                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int")
+                        .runtimeException();
             }
-            columnMetadata.setPrimaryKeyFeature(primaryKey.feature());
-            primaryKeyStrategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
-        } else if (primaryKey.strategy() == PrimaryKeyStrategy.UUID) {
-            primaryKeyStrategy = PrimaryKeyStrategy.UUID;
+        } else if (strategy == PrimaryKeyStrategy.SEQUENCE_SERVICE) {
+            if (columnMetadata.getJavaType() == String.class) {
+
+            } else if (columnMetadata.getJavaType() == Integer.class || columnMetadata.getJavaType() == Integer.TYPE) {
+
+            } else {
+                throw ErrorContextFactory.instance()
+                        .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                        .message("字段{}使用了序号服务，类型必须为整数", field.getName())
+                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int")
+                        .runtimeException();
+            }
+        } else if (strategy == PrimaryKeyStrategy.UUID) {
+            if (columnMetadata.getJavaType() != String.class) {
+                throw ErrorContextFactory.instance()
+                        .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                        .message("字段{}使用了自增主键，类型必须为字符串", field.getName())
+                        .solution("将字段{}的类型从{}修改为{}", field.getName(), columnMetadata.getJavaType(), String.class)
+                        .runtimeException();
+            }
         }
         if (columnMetadata.getNullable() != null && columnMetadata.getNullable()) {
-            ErrorContextFactory.instance()
+            throw ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                     .message("字段{}是主键，该字段不允许为空", field.getName())
-                    .solution("在字段{}将{}属性修改为{}", field.getName(), "nullabe", false).throwError();
+                    .solution("在字段{}将{}属性修改为{}", field.getName(), "nullabe", false)
+                    .runtimeException();
         }
         columnMetadata.getTableMetadata().getPrimaryKeys().add(columnMetadata.getJdbcName());
-        columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
+        columnMetadata.setPrimaryKeyStrategy(strategy);
         return this;
     }
 
@@ -427,18 +444,20 @@ public class OrmEntityExtractor implements EntityExtractor{
             count++;
         }
         if (count == 0) {
-            ErrorContextFactory.instance()
+            throw ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", entityClass)
                     .message("字段{}未按照约定标注{}或{}或{}注解", field.getName(), StringColumn.class, NumberColumn.class, DateColumn.class)
-                    .solution("在字段{}上标注{}或{}或{}注解", field.getName(), StringColumn.class, NumberColumn.class, DateColumn.class).throwError();
+                    .solution("在字段{}上标注{}或{}或{}注解", field.getName(), StringColumn.class, NumberColumn.class, DateColumn.class)
+                    .runtimeException();
 
         }
 
         if (count != 1) {
-            ErrorContextFactory.instance()
+            throw ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", entityClass)
                     .message("字段{}同时标注{}或{}或{}注解的组合", field.getName(), StringColumn.class, NumberColumn.class, DateColumn.class)
-                    .solution("在字段{}上只能标注{}或{}或{}注解中的一种", field.getName(), StringColumn.class, NumberColumn.class, DateColumn.class).throwError();
+                    .solution("在字段{}上只能标注{}或{}或{}注解中的一种", field.getName(), StringColumn.class, NumberColumn.class, DateColumn.class)
+                    .runtimeException();
 
         }
         if (stringColumn != null) {

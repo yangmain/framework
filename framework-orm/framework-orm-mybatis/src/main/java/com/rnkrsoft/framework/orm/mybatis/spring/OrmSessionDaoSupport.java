@@ -15,13 +15,13 @@ public abstract class OrmSessionDaoSupport extends DaoSupport {
 
   private boolean externalSqlSession;
 
-  public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+  public void setOrmSessionFactory(SqlSessionFactory sqlSessionFactory) {
     if (!this.externalSqlSession) {
       this.sqlSession = new OrmSessionTemplate(sqlSessionFactory);
     }
   }
 
-  public void setSqlSessionTemplate(OrmSessionTemplate ormSessionTemplate) {
+  public void setOrmSessionTemplate(OrmSessionTemplate ormSessionTemplate) {
     this.sqlSession = ormSessionTemplate;
     this.externalSqlSession = true;
   }
