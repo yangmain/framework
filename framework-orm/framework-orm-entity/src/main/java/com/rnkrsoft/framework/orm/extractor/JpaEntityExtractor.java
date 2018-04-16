@@ -233,7 +233,7 @@ public class JpaEntityExtractor implements EntityExtractor {
                     + entityClass.getName()
                     + "."
                     + field.getName()
-                    + " 未按照约定标注javax.persistence.Column或com.rnkrsoft.framework4j.orm.StringColumn或com.rnkrsoft.framework4j.orm.NumberColumn或com.rnkrsoft.framework4j.orm.DateColumn注解");
+                    + " 未按照约定标注javax.persistence.Column或com.rnkrsoft.framework.orm.StringColumn或com.rnkrsoft.framework.orm.NumberColumn或com.rnkrsoft.framework.orm.DateColumn注解");
         }
 
         if (count != 1) {
@@ -241,7 +241,7 @@ public class JpaEntityExtractor implements EntityExtractor {
                     + entityClass.getName()
                     + "."
                     + field.getName()
-                    + " 未按照约定标注javax.persistence.Column或com.rnkrsoft.framework4j.orm.StringColumn或com.rnkrsoft.framework4j.orm.NumberColumn或com.rnkrsoft.framework4j.orm.DateColumn注解");
+                    + " 未按照约定标注javax.persistence.Column或com.rnkrsoft.framework.orm.StringColumn或com.rnkrsoft.framework.orm.NumberColumn或com.rnkrsoft.framework.orm.DateColumn注解");
         }
         if (column != null) {
             if (columnMetadata.getJdbcName() == null) {

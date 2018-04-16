@@ -5,6 +5,5 @@ package com.rnkrsoft.framework.orm;
  * 主键生成特征字符串常量
  */
 public interface PrimaryKeyFeatureConstant {
-    String YYYY_MM_DD_HH_MM_SS_SSS_PREFIX = "${yyyyMMddHHmmssSSS}${seqNo}";
-    String YYYY_MM_DD_HH_MM_SS_SSS_SUFFIX = "${seqNo}${yyyyMMddHHmmssSSS}";
+    String YYYY_MM_DD_HH_MM_SS_SSS = "yyyyMMddHHmmssSSS";
 }

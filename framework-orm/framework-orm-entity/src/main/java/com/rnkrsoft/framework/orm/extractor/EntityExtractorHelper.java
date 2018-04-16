@@ -100,7 +100,7 @@ public final class EntityExtractorHelper {
                     throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", tableMetadata.getEntityClass())
                             .message("已开启严格ORM模式，禁止使用JPA注解，当前使用了{}注解", annClazz.getName())
-                            .solution("将所有字段标注JPA注解转换成等价的Wing4j注解")
+                            .solution("将所有字段标注JPA注解转换成等价的ORM注解")
                             .runtimeException();
                 }
             }

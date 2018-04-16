@@ -31,11 +31,11 @@ public class SpringSequenceServiceConfigure extends AbstractSequenceServiceConfi
         if(this.mappings == null){
             Assert.notNull(this.mappings, "Property 'mappings' is required");
         }else{
-            for (String key : mappings.stringPropertyNames()){
+            for (String key : this.mappings.stringPropertyNames()){
                 String key0 = key.toUpperCase();
-                String val = mappings.getProperty(key);
-                mappings.remove(key);
-                mappings.setProperty(key0, val);
+                String val = this.mappings.getProperty(key);
+                this.mappings.remove(key);
+                this.mappings.setProperty(key0, val);
             }
         }
         if (this.parameters == null) {

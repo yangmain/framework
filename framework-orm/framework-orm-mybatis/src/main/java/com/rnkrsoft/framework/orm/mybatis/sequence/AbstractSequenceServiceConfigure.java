@@ -17,6 +17,7 @@ public abstract class AbstractSequenceServiceConfigure implements SequenceServic
     protected Properties mappings;
     @Setter
     protected Properties parameters;
+
     protected static Map<String, SequenceService> TABLE_INSTANCES = new ConcurrentHashMap();
 
     @Override
@@ -38,7 +39,6 @@ public abstract class AbstractSequenceServiceConfigure implements SequenceServic
                 return null;
             }
             sequenceService = register(tableName.toUpperCase(), sequenceServiceClassName);
-            TABLE_INSTANCES.put(tableName.toUpperCase(), sequenceService);
             return sequenceService;
         }
     }
@@ -58,7 +58,6 @@ public abstract class AbstractSequenceServiceConfigure implements SequenceServic
                         .solution("在序号服务'mappings'中配置表名->序号服务类的映射").throwError();
                 return null;
             }
-            sequenceService = register(tableName.toUpperCase(), sequenceServiceClassName);
             TABLE_INSTANCES.put(tableName.toUpperCase(), sequenceService);
         }
         return sequenceService;

@@ -18,7 +18,7 @@
                 <property name="sequenceMappings">
                     <map>
                         <!--表名和序号服务规则-->
-                        <entry key="TB_DEMO" value="com.rnkrsoft.framework.sequence.h2.H2SequenceService"/>
+                        <entry key="TB_DEMO" value="com.rnkrsoft.framework.sequence.jnjvm.InjvmSequenceService"/>
                     </map>
                 </property>
                 <!--DAO包路径数组-->
@@ -71,7 +71,7 @@
     <bean class="com.rnkrsoft.framework.orm.mybatis.sequence.SpringSequenceServiceConfigure">
         <property name="mappings">
             <props>
-                <prop key="DEMO_INF">com.rnkrsoft.framework.sequence.h2.H2SequenceService</prop>
+                <prop key="DEMO_INF">com.rnkrsoft.framework.sequence.jnjvm.InjvmSequenceService</prop>
             </props>
         </property>
         <property name="parameters">

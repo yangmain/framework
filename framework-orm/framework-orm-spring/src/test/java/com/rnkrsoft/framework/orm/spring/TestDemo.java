@@ -40,7 +40,7 @@ public class TestDemo{
     DemoDAO demoDAO;
     @Test
     public void test1(){
-        jdbcTemplate.execute("create table DEMO_INF(SERIAL_NO varchar(36), AGE int, PRIMARY  KEY(SERIAL_NO))");
+        jdbcTemplate.execute("CREATE TABLE DEMO_INF(SERIAL_NO VARCHAR(36), AGE INT, PRIMARY  KEY(SERIAL_NO))");
         System.out.println(demoDAO.countAll());
         {
             DemoEntity entity = new DemoEntity();

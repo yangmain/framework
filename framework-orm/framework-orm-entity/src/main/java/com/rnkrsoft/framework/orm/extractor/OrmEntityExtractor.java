@@ -363,6 +363,8 @@ public class OrmEntityExtractor implements EntityExtractor {
             strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.IDENTITY) {
             strategy = PrimaryKeyStrategy.IDENTITY;
+        } else if (primaryKey.strategy() == PrimaryKeyStrategy.UUID) {
+            strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.SEQUENCE_SERVICE) {
             strategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
         }
@@ -408,6 +410,7 @@ public class OrmEntityExtractor implements EntityExtractor {
         }
         columnMetadata.getTableMetadata().getPrimaryKeys().add(columnMetadata.getJdbcName());
         columnMetadata.setPrimaryKeyStrategy(strategy);
+        columnMetadata.setPrimaryKeyFeature(primaryKey.feature());
         return this;
     }
 

@@ -22,7 +22,6 @@ public @interface PrimaryKey {
     /**
      * 用于指定主键生成的特征
      * <ol>
-     * <li>${new Date()}</li>
      * <li>${yyyyMMdd}</li>
      * <li>${yyyyMMddHH}</li>
      * <li>${yyyyMMddHHmm}</li>
@@ -35,4 +34,15 @@ public @interface PrimaryKey {
      * @return 主键特征
      */
     String feature() default "";
+
+    /**
+     * 序号是否作为前缀
+     * @return 默认作为后缀
+     */
+    boolean seqNoPrefix() default false;
+    /**
+     * 填充长度
+     * @return 长度
+     */
+    int fillLength() default 5;
 }

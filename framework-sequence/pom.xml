@@ -13,5 +13,6 @@
     <modules>
         <module>framework-sequence-api</module>
         <module>framework-sequence-h2</module>
+        <module>framework-sequence-injvm</module>
     </modules>
 </project>
