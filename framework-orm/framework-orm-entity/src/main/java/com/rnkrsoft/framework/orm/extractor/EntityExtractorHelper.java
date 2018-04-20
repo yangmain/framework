@@ -29,7 +29,7 @@ public final class EntityExtractorHelper {
      * 提取实体上的元信息
      *
      * @param entityClass 实体类
-     * @param strict      严格使用Wing4j注解
+     * @param strict      严格使用ORM注解
      * @return 元信息
      */
     public TableMetadata extractTable(Class entityClass, boolean strict) {
@@ -59,7 +59,7 @@ public final class EntityExtractorHelper {
                 ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", entityClass)
                         .message("由于已开启强制使用ORM注解，但是实际使用ORM注解{}", javax.persistence.Table.class)
-                        .solution("必须强制使用Wing4j注解", Table.class)
+                        .solution("必须强制使用ORM注解", Table.class)
                         .throwError();
             }
             checkCouldNotUseJpaAnnotation(tableMetadata);

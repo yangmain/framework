@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.config;
 
+import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.WordMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,14 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReleaseOrmConfig implements OrmConfig{
+    /**
+     * 是否是严格模式
+     */
+    boolean strict;
+    /**
+     * 数据库类型
+     */
+    DatabaseType databaseType = DatabaseType.MySQL;
     /**
      * DAO所在的包路径
      */

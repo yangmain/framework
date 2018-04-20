@@ -28,6 +28,7 @@ public @interface PrimaryKey {
      * <li>${yyyyMMddHHmmss}</li>
      * <li>${yyyyMMddHHmmssSSS}</li>
      * <li>固定字符串
+     * <li>复杂表达式
      * <p>
      * </ol>
      * @see PrimaryKeyFeatureConstant

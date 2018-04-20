@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.config;
 
+import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.WordMode;
 
 import java.util.Map;
@@ -8,6 +9,14 @@ import java.util.Map;
  * Created by rnkrsoft.com on 2018/4/2.
  */
 public interface OrmConfig {
+    /**
+     * 严格注解模式
+     */
+    boolean isStrict();
+    /**
+     * 数据库类型
+     */
+    DatabaseType getDatabaseType();
     /**
      * DAO所在的包路径，ORM启动时扫描
      * @return 包路径数组

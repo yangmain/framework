@@ -38,22 +38,6 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
      */
     @Getter
     OrmConfig ormConfig;
-    /**
-     * SQL 语句大小写模式
-     */
-    WordMode sqlMode = WordMode.upperCase;
-    /**
-     * 关键词大小写模式
-     */
-    WordMode keywordMode = WordMode.upperCase;
-    /**
-     * 数据库类型
-     */
-    DatabaseType databaseType = DatabaseType.MySQL;
-    /**
-     * 严格注解模式
-     */
-    boolean strict = true;
 
     private boolean addToConfig = true;
 
@@ -154,10 +138,10 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
             definition.setBeanClass(this.ormMapperFactoryBean.getClass());
 
             definition.getPropertyValues().add("addToConfig", this.addToConfig);
-            definition.getPropertyValues().add("databaseType", this.databaseType);
-            definition.getPropertyValues().add("sqlMode", this.sqlMode);
-            definition.getPropertyValues().add("keywordMode", this.keywordMode);
-            definition.getPropertyValues().add("strict", this.strict);
+            definition.getPropertyValues().add("databaseType", this.ormConfig.getDatabaseType());
+            definition.getPropertyValues().add("sqlMode", this.ormConfig.getSqlMode());
+            definition.getPropertyValues().add("keywordMode", this.ormConfig.getKeywordMode());
+            definition.getPropertyValues().add("strict", this.ormConfig.isStrict());
 
             boolean explicitFactoryUsed = false;
             if (StringUtils.hasText(this.ormSessionFactoryBeanName)) {

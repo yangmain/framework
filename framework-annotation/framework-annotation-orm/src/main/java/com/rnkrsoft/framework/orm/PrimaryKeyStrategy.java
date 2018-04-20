@@ -28,5 +28,14 @@ public enum PrimaryKeyStrategy {
     /**
      * 数据库的自动增长字段
      */
-    IDENTITY
+    IDENTITY,
+    /**
+     * 表达式方式，支持:
+     * 静态文本
+     * ${yyyyMMdddHHmmssSSS}
+     * ${SEQ:填充长度}
+     * ${RANDOM:填充长度}
+     * ${UUID}
+     */
+    EXPRESSION
 }

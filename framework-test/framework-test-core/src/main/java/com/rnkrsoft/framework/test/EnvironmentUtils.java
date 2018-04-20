@@ -10,7 +10,7 @@ public class EnvironmentUtils {
     /**
      * 环境枚举
      */
-    public static enum Environment{
+    public enum Environment{
         /**
          * IDE环境的JUNIT
          */

@@ -196,6 +196,12 @@ public class JpaEntityExtractor implements EntityExtractor {
                 }
                 primaryKeyStrategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
                 columnMetadata.setPrimaryKeyFeature(generatedValue.generator());
+            }else{
+                //TODO
+                ErrorContextFactory.instance()
+                        .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                        .message("字段{}使用了不支持的物理主键", field.getName())
+                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
             }
             if (columnMetadata.getNullable() != null && columnMetadata.getNullable()) {
                 ErrorContextFactory.instance()

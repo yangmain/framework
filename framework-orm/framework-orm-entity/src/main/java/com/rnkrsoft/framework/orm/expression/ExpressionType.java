@@ -16,5 +16,9 @@ public enum ExpressionType {
     /**
      * 表达式为序号
      */
-    SEQUENCE
+    SEQ,
+    /**
+     * 随机数字
+     */
+    RANDOM;
 }

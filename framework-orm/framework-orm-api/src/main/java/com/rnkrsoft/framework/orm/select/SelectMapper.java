@@ -8,6 +8,7 @@ public interface SelectMapper<Entity, PrimaryKey> extends
         SelectAndMapper<Entity, PrimaryKey>,
         SelectOrMapper<Entity, PrimaryKey>,
         SelectByPrimaryKeyMapper<Entity, PrimaryKey>,
-        SelectPageOrMapper<Entity, PrimaryKey>
+        SelectPageOrMapper<Entity, PrimaryKey>,
+        SelectPageAndMapper<Entity, PrimaryKey>
 {
 }

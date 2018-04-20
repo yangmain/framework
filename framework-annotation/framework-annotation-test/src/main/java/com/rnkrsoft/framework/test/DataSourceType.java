@@ -5,6 +5,7 @@ package com.rnkrsoft.framework.test;
  * 开发数据源
  */
 public enum DataSourceType {
+    AUTO,
     H2,
     MySQL
 }

@@ -367,6 +367,8 @@ public class OrmEntityExtractor implements EntityExtractor {
             strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.SEQUENCE_SERVICE) {
             strategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
+        } else if (primaryKey.strategy() == PrimaryKeyStrategy.EXPRESSION) {
+            strategy = PrimaryKeyStrategy.EXPRESSION;
         }
         if (strategy == PrimaryKeyStrategy.IDENTITY) {
             if (columnMetadata.getJavaType() != Integer.class
@@ -396,11 +398,25 @@ public class OrmEntityExtractor implements EntityExtractor {
             if (columnMetadata.getJavaType() != String.class) {
                 throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                        .message("字段{}使用了自增主键，类型必须为字符串", field.getName())
+                        .message("字段{}使用了UUID，类型必须为字符串", field.getName())
                         .solution("将字段{}的类型从{}修改为{}", field.getName(), columnMetadata.getJavaType(), String.class)
                         .runtimeException();
             }
+        } else if (strategy == PrimaryKeyStrategy.EXPRESSION) {
+            if (columnMetadata.getJavaType() != String.class) {
+                throw ErrorContextFactory.instance()
+                        .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                        .message("字段{}使用了表达式，类型必须为字符串", field.getName())
+                        .solution("将字段{}的类型从{}修改为{}", field.getName(), columnMetadata.getJavaType(), String.class)
+                        .runtimeException();
+            }
+        }else{
+            ErrorContextFactory.instance()
+                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                    .message("字段{}使用了不支持的物理主键", field.getName())
+                    .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
         }
+
         if (columnMetadata.getNullable() != null && columnMetadata.getNullable()) {
             throw ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())

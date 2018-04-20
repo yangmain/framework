@@ -16,5 +16,5 @@ public @interface DataSource {
      * 数据源类型
      * @return 数据源类型
      */
-    DataSourceType value() default DataSourceType.H2;
+    DataSourceType value() default DataSourceType.AUTO;
 }

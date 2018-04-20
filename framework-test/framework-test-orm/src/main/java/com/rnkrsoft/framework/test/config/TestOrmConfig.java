@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.test.config;
 
+import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
@@ -9,6 +10,11 @@ import lombok.Setter;
 import java.util.Map;
 @Getter
 public class TestOrmConfig implements OrmConfig {
+    boolean   strict;
+    /**
+     * 数据库类型
+     */
+    DatabaseType databaseType = DatabaseType.MySQL;
     /**
      * DAO所在的包路径，MyBatis启动时扫描
      */

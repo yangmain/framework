@@ -10,6 +10,9 @@ import com.devops4j.utils.DateUtils;
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyFeatureConstant;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.expression.Expression;
+import com.rnkrsoft.framework.orm.expression.ExpressionContext;
+import com.rnkrsoft.framework.orm.expression.ExpressionHelper;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.sequence.SequenceService;
@@ -99,7 +102,6 @@ public class PrimaryKeyHelper {
             final Invoker invoker = metaClass.getSetter(primaryKeyMetadata.getJavaName());
             String seqFeature0 = null;
             if (feature == null) {
-
             } else if (feature.equals(PrimaryKeyFeatureConstant.YYYY_MM_DD_HH_MM_SS_SSS)) {
                 seqFeature0 = DateUtils.toString(new Date(), DateStyle.FILE_FORMAT2);
             } else {
@@ -148,6 +150,36 @@ public class PrimaryKeyHelper {
                         }
 
                     }
+                    try {
+                        invoker.invoke(parameter, primaryKey);
+                    } catch (Exception e) {
+                        throw ErrorContextFactory.instance()
+                                .activity("正在使用 orm 的自动生成主键")
+                                .message("获取设置字段{}主键值发生错误", primaryKeyMetadata.getJavaName())
+                                .solution("检查实体{}字段{}是否为public", primaryKeyMetadata.getEntityClass(), primaryKeyMetadata.getJavaName())
+                                .cause(e)
+                                .runtimeException();
+                        //这个异常一般不会发生
+                    }
+                }
+
+                @Override
+                public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+
+                }
+            });
+        } else if (primaryKeyMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.EXPRESSION) {
+            log.debug("use expression");
+            final String schema = primaryKeyMetadata.getTableMetadata().getSchema();
+            final String tableName = primaryKeyMetadata.getTableMetadata().getTableName();
+            final String feature = primaryKeyMetadata.getPrimaryKeyFeature();
+            MetaClass metaClass = GlobalSystemMetadata.forClass(tableMetadata.getEntityClass());
+            //将主键值设置到实体
+            final Invoker invoker = metaClass.getSetter(primaryKeyMetadata.getJavaName());
+            msBuilder.keyGenerator(new KeyGenerator() {
+                @Override
+                public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
+                    Object primaryKey = ExpressionHelper.eval(ExpressionContext.builder().useCache(true).expression(feature).schema(schema).sequenceName(tableName).build());
                     try {
                         invoker.invoke(parameter, primaryKey);
                     } catch (Exception e) {

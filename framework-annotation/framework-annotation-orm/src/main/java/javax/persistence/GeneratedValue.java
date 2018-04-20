@@ -10,9 +10,6 @@ import static javax.persistence.GenerationType.AUTO;
 @Retention(RUNTIME)
 
 public @interface GeneratedValue {
-
-
     GenerationType strategy() default AUTO;
-
     String generator() default "";
 }
