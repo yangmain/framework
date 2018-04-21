@@ -4,6 +4,7 @@ package com.rnkrsoft.framework.orm.config;
  * Created by rnkrsoft.com on 2018/4/2.
  */
 
+import com.rnkrsoft.framework.orm.NameMode;
 import lombok.*;
 
 @Data
@@ -13,29 +14,26 @@ import lombok.*;
 @NoArgsConstructor
 public class ItemConfig {
     /**
-     * 是否使用表模式
+     * 数据库模式模式
+     * @return
      */
-    boolean useSchema = true;
+    NameMode schemaMode = NameMode.AUTO;
     /**
-     * 使用实体表模式
+     * 前缀模式
      */
-    boolean useEntitySchema = true;
+    NameMode prefixMode = NameMode.AUTO;
+    /**
+     * 后缀模式
+     */
+    NameMode suffixMode = NameMode.AUTO;
     /**
      * 表模式
      */
     String schema;
     /**
-     * 使用实体前缀
-     */
-    boolean useEntityPrefix = true;
-    /**
      * 表前缀
      */
     String prefix;
-    /**
-     * 使用实体后缀
-     */
-    boolean useEntitySuffix = true;
     /**
      * 表后缀
      */

@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder;
 
 import com.rnkrsoft.framework.orm.WordMode;
-import com.rnkrsoft.framework.test.TableNameMode;
+import com.rnkrsoft.framework.orm.NameMode;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -41,17 +41,17 @@ public abstract class MappedStatementBuilder {
     /**
      * 表模式使用
      */
-    TableNameMode schemaMode;
+    NameMode schemaMode;
 
     /**
      * 前缀模式
      */
-    TableNameMode prefixMode;
+    NameMode prefixMode;
 
     /**
      * 后缀模式
      */
-    TableNameMode suffixModed;
+    NameMode suffixModed;
     /**
      * 配置对象
      */

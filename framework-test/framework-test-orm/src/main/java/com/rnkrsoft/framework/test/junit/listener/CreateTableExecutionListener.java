@@ -3,12 +3,15 @@ package com.rnkrsoft.framework.test.junit.listener;
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
+import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer;
 import com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean;
 import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import com.rnkrsoft.framework.test.CreateTable;
-import com.rnkrsoft.framework.test.TableNameMode;
+import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.test.config.TestOrmConfig;
 import com.rnkrsoft.framework.test.datasource.DataSourceScanner;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -63,18 +66,19 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             String schema = methodCreateTable.schema();
             String prefix = methodCreateTable.prefix();
             String suffix = methodCreateTable.suffix();
-            TableNameMode schemaMode = methodCreateTable.schemaMode();
-            TableNameMode prefixMode = methodCreateTable.prefixMode();
-            TableNameMode suffixMode = methodCreateTable.suffixMode();
-            if(schemaMode == TableNameMode.ENTITY){
+            NameMode schemaMode = methodCreateTable.schemaMode();
+            NameMode prefixMode = methodCreateTable.prefixMode();
+            NameMode suffixMode = methodCreateTable.suffixMode();
+            if(schemaMode == NameMode.AUTO){
                 schema = null;
             }
-            if(prefixMode == TableNameMode.ENTITY){
+            if(prefixMode == NameMode.AUTO){
                 prefix = null;
             }
-            if(suffixMode == TableNameMode.ENTITY){
+            if(suffixMode == NameMode.AUTO){
                 suffix = null;
             }
+
             for (Class clazz : classes) {
                 JdbcTemplate jdbcTemplate = testContext.getApplicationContext().getBean(JdbcTemplate.class);
                 if (drop) {
@@ -90,9 +94,30 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
                 throw ErrorContextFactory.instance().message("'{}' do not exist bean name '{}'", OrmSessionFactoryBean.class, sqlSessionFactoryName).runtimeException();
             }
             SqlSessionFactory sqlSessionFactory = (SqlSessionFactory)ctx.getBean(sqlSessionFactoryName);
+
+            String ormScannerConfigurerName = StringUtils.firstCharToLower(OrmScannerConfigurer.class.getSimpleName());
+            if(!ctx.containsBean(ormScannerConfigurerName)){
+                throw ErrorContextFactory.instance().message("'{}' do not exist bean name '{}'", OrmScannerConfigurer.class, ormScannerConfigurerName).runtimeException();
+            }
+            OrmScannerConfigurer ormScannerConfigurer = (OrmScannerConfigurer)ctx.getBean(ormScannerConfigurerName);
             Configuration configuration = sqlSessionFactory.getConfiguration();
+
+            String sequenceServiceConfigureName = StringUtils.firstCharToLower(SequenceServiceConfigure.class.getSimpleName());
+            if(!ctx.containsBean(sequenceServiceConfigureName)){
+                throw ErrorContextFactory.instance().message("'{}' do not exist bean name '{}'", SequenceServiceConfigure.class, sequenceServiceConfigureName).runtimeException();
+            }
+            SequenceServiceConfigure sequenceServiceConfigure = (SequenceServiceConfigure)ctx.getBean(sequenceServiceConfigureName);
+            TestOrmConfig ormConfig = (TestOrmConfig)ormScannerConfigurer.getOrmConfig();
+            ormConfig.setKeywordMode(keywordMode);
+            ormConfig.setSqlMode(sqlMode);
+            ormConfig.getGlobal().setSchemaMode(schemaMode);
+            ormConfig.getGlobal().setSchema(schema);
+            ormConfig.getGlobal().setPrefixMode(prefixMode);
+            ormConfig.getGlobal().setPrefix(prefix);
+            ormConfig.getGlobal().setSuffixMode(suffixMode);
+            ormConfig.getGlobal().setSuffix(suffix);
             //overload mapper
-            OrmMappedStatementRegister.rescan(configuration, sqlMode, keywordMode, schemaMode, schema, prefixMode,  prefix, suffixMode, suffix);
+            OrmMappedStatementRegister.rescan(configuration, ormConfig, sequenceServiceConfigure);
         }
 
     }
@@ -116,16 +141,16 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             String schema = methodCreateTable.schema();
             String prefix = methodCreateTable.prefix();
             String suffix = methodCreateTable.suffix();
-            TableNameMode schemaMode = methodCreateTable.schemaMode();
-            TableNameMode prefixMode = methodCreateTable.prefixMode();
-            TableNameMode suffixMode = methodCreateTable.suffixMode();
-            if(schemaMode == TableNameMode.ENTITY){
+            NameMode schemaMode = methodCreateTable.schemaMode();
+            NameMode prefixMode = methodCreateTable.prefixMode();
+            NameMode suffixMode = methodCreateTable.suffixMode();
+            if(schemaMode == NameMode.ENTITY){
                 schema = null;
             }
-            if(prefixMode == TableNameMode.ENTITY){
+            if(prefixMode == NameMode.ENTITY){
                 prefix = null;
             }
-            if(suffixMode == TableNameMode.ENTITY){
+            if(suffixMode == NameMode.ENTITY){
                 suffix = null;
             }
             if (drop && DataSourceScanner.H2_DATASOURCE.equals(dsn)) {

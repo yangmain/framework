@@ -6,7 +6,7 @@ import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.test.TableNameMode;
+import com.rnkrsoft.framework.orm.NameMode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -33,11 +33,11 @@ public abstract class SqlScriptUtils {
      * @return
      */
     public static String generateCreateTable(Class entityClass,
-                                             TableNameMode schemaMode,
+                                             NameMode schemaMode,
                                              String schema,
-                                             TableNameMode prefixMode,
+                                             NameMode prefixMode,
                                              String prefix,
-                                             TableNameMode suffixMode,
+                                             NameMode suffixMode,
                                              String suffix,
                                              String engine,
                                              WordMode sqlMode,
@@ -45,31 +45,31 @@ public abstract class SqlScriptUtils {
                                              boolean createBeforeTest) {
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, false);
-        if (schemaMode == TableNameMode.AUTO) {
+        if (schemaMode == NameMode.AUTO) {
             if (schema != null) {
                 tableMetadata.setSchema(schema);
             }
-        } else if (schemaMode == TableNameMode.ENTITY) {
+        } else if (schemaMode == NameMode.ENTITY) {
 
-        } else if (schemaMode == TableNameMode.CREATE_TEST) {
+        } else if (schemaMode == NameMode.CREATE_TEST) {
             tableMetadata.setSchema(schema);
         }
-        if (prefixMode == TableNameMode.AUTO) {
+        if (prefixMode == NameMode.AUTO) {
             if (prefix != null) {
                 tableMetadata.setPrefix(prefix);
             }
-        } else if (prefixMode == TableNameMode.ENTITY) {
+        } else if (prefixMode == NameMode.ENTITY) {
 
-        } else if (prefixMode == TableNameMode.CREATE_TEST) {
+        } else if (prefixMode == NameMode.CREATE_TEST) {
             tableMetadata.setPrefix(prefix);
         }
-        if (suffixMode == TableNameMode.AUTO) {
+        if (suffixMode == NameMode.AUTO) {
             if (suffix != null) {
                 tableMetadata.setSuffix(suffix);
             }
-        } else if (suffixMode == TableNameMode.ENTITY) {
+        } else if (suffixMode == NameMode.ENTITY) {
 
-        } else if (suffixMode == TableNameMode.CREATE_TEST) {
+        } else if (suffixMode == NameMode.CREATE_TEST) {
             tableMetadata.setSuffix(suffix);
         }
         tableMetadata.setDataEngine(engine);
@@ -180,42 +180,42 @@ public abstract class SqlScriptUtils {
     }
 
     public static String generateDropTable(Class entityClass,
-                                           TableNameMode schemaMode,
+                                           NameMode schemaMode,
                                            String schema,
-                                           TableNameMode prefixMode,
+                                           NameMode prefixMode,
                                            String prefix,
-                                           TableNameMode suffixMode,
+                                           NameMode suffixMode,
                                            String suffix,
                                            WordMode sqlMode,
                                            WordMode keywordMode,
                                            boolean dropBeforeTest) {
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, false);
-        if (schemaMode == TableNameMode.AUTO) {
+        if (schemaMode == NameMode.AUTO) {
             if (schema != null) {
                 tableMetadata.setSchema(schema);
             }
-        } else if (schemaMode == TableNameMode.ENTITY) {
+        } else if (schemaMode == NameMode.ENTITY) {
 
-        } else if (schemaMode == TableNameMode.CREATE_TEST) {
+        } else if (schemaMode == NameMode.CREATE_TEST) {
             tableMetadata.setSchema(schema);
         }
-        if (prefixMode == TableNameMode.AUTO) {
+        if (prefixMode == NameMode.AUTO) {
             if (prefix != null) {
                 tableMetadata.setPrefix(prefix);
             }
-        } else if (prefixMode == TableNameMode.ENTITY) {
+        } else if (prefixMode == NameMode.ENTITY) {
 
-        } else if (prefixMode == TableNameMode.CREATE_TEST) {
+        } else if (prefixMode == NameMode.CREATE_TEST) {
             tableMetadata.setPrefix(prefix);
         }
-        if (suffixMode == TableNameMode.AUTO) {
+        if (suffixMode == NameMode.AUTO) {
             if (suffix != null) {
                 tableMetadata.setSuffix(suffix);
             }
-        } else if (suffixMode == TableNameMode.ENTITY) {
+        } else if (suffixMode == NameMode.ENTITY) {
 
-        } else if (suffixMode == TableNameMode.CREATE_TEST) {
+        } else if (suffixMode == NameMode.CREATE_TEST) {
             tableMetadata.setSuffix(suffix);
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);

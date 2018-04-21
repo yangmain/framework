@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.test;
 
 
+import com.rnkrsoft.framework.orm.NameMode;
 import com.rnkrsoft.framework.orm.WordMode;
 
 import java.lang.annotation.ElementType;
@@ -73,17 +74,17 @@ public @interface CreateTable {
      * 表模式使用
      * @return
      */
-    TableNameMode schemaMode() default TableNameMode.CREATE_TEST;
+    NameMode schemaMode() default NameMode.CREATE_TEST;
 
     /**
      * 前缀模式
      * @return
      */
-    TableNameMode prefixMode() default TableNameMode.CREATE_TEST;
+    NameMode prefixMode() default NameMode.CREATE_TEST;
 
     /**
      * 后缀模式
      * @return
      */
-    TableNameMode suffixMode() default TableNameMode.CREATE_TEST;
+    NameMode suffixMode() default NameMode.CREATE_TEST;
 }

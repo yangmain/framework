@@ -39,7 +39,6 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     @Getter
     OrmConfig ormConfig;
 
-    private boolean addToConfig = true;
 
     private SqlSessionFactory ormSessionFactory;
 
@@ -137,11 +136,7 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
             definition.getPropertyValues().add("mapperInterface", definition.getBeanClassName());
             definition.setBeanClass(this.ormMapperFactoryBean.getClass());
 
-            definition.getPropertyValues().add("addToConfig", this.addToConfig);
-            definition.getPropertyValues().add("databaseType", this.ormConfig.getDatabaseType());
-            definition.getPropertyValues().add("sqlMode", this.ormConfig.getSqlMode());
-            definition.getPropertyValues().add("keywordMode", this.ormConfig.getKeywordMode());
-            definition.getPropertyValues().add("strict", this.ormConfig.isStrict());
+            definition.getPropertyValues().add("ormConfig", this.ormConfig);
 
             boolean explicitFactoryUsed = false;
             if (StringUtils.hasText(this.ormSessionFactoryBeanName)) {

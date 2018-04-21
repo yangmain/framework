@@ -136,31 +136,30 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
                     configMap.put(basePackage, itemConfig);
                     continue;
                 } catch (ClassNotFoundException e) {
-
-                }
-                String basePackage_path = basePackage.replaceAll("\\.", "/");
-                //进行数组拆分
-                String[] basePackages = org.springframework.util.StringUtils.tokenizeToStringArray(basePackage_path, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
-                //检测key是否为通配符
-                for (String basePackage0 : basePackages) {
-                    ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-                    Resource[] resources = resourcePatternResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + basePackage0 + "/" + DEFAULT_RESOURCE_PATTERN);
-                    for (Resource resource : resources) {
-                        MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
-                        ClassMetadata classMetadata = metadataReader.getClassMetadata();
-                        if (classMetadata.isInterface()) {
-                            Class clazz = Class.forName(classMetadata.getClassName());
-                            if (MapperMakerInterface.class.isAssignableFrom(clazz)) {
-                                if (!configMap.containsKey(classMetadata.getClassName())) {
-                                    configMap.put(classMetadata.getClassName(), itemConfig);
-                                } else {
-                                    throw new Error(MessageFormatter.format("存在冲突的配置[{}]", basePackage));
+                    //包名的情况
+                    String basePackage_path = basePackage.replaceAll("\\.", "/");
+                    //进行数组拆分
+                    String[] basePackages = org.springframework.util.StringUtils.tokenizeToStringArray(basePackage_path, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
+                    //检测key是否为通配符
+                    for (String basePackage0 : basePackages) {
+                        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+                        Resource[] resources = resourcePatternResolver.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + basePackage0 + "/" + DEFAULT_RESOURCE_PATTERN);
+                        for (Resource resource : resources) {
+                            MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
+                            ClassMetadata classMetadata = metadataReader.getClassMetadata();
+                            if (classMetadata.isInterface()) {
+                                Class clazz = Class.forName(classMetadata.getClassName());
+                                if (MapperMakerInterface.class.isAssignableFrom(clazz)) {
+                                    if (!configMap.containsKey(classMetadata.getClassName())) {
+                                        configMap.put(classMetadata.getClassName(), itemConfig);
+                                    } else {
+                                        throw new Error(MessageFormatter.format("存在冲突的配置[{}]", basePackage));
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
             }
         }
         ormConfig.setConfigs(configMap);
@@ -180,7 +179,10 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
                 XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(resource.getInputStream(), configuration, mapperLocation.toString(), configuration.getSqlFragments());
                 xmlMapperBuilder.parse();
             } catch (Exception e) {
-                throw new NestedIOException("Failed to parse mapping resource: '" + mapperLocation + "'", e);
+                throw ErrorContextFactory.instance()
+                        .message("Failed to parse mapping resource: '{}'", mapperLocation)
+                        .cause(e)
+                        .runtimeException();
             } finally {
                 ErrorContextFactory.instance().reset();
             }

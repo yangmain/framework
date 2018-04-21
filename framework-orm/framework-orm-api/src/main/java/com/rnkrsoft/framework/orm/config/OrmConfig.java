@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.config;
 
 import com.rnkrsoft.framework.orm.DatabaseType;
+import com.rnkrsoft.framework.orm.NameMode;
 import com.rnkrsoft.framework.orm.WordMode;
 
 import java.util.Map;

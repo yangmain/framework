@@ -8,13 +8,11 @@
 
     <bean id="ormScannerConfigurer" class="com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer">
         <property name="ormConfig">
-            <bean class="com.rnkrsoft.framework.orm.config.ReleaseOrmConfig">
+            <bean class="com.rnkrsoft.framework.test.config.TestOrmConfig">
                 <!--SQL关键字大小写模式，UPDATE，FORM，WHERE等-->
                 <property name="keywordMode" value="upperCase"/>
                 <!--SQL大小写模式 表名，字段名等-->
                 <property name="sqlMode" value="upperCase"/>
-                <!--是否允许重复加载DAO和MAPPER-->
-                <property name="allowReload" value="true"/>
                 <!--序号服务与表映射关系-->
                 <property name="sequenceMappings">
                     <map>
@@ -37,16 +35,11 @@
                 <!--全局配置-->
                 <property name="global">
                     <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
-                        <!--是否使用数据库模式-->
-                        <property name="useSchema" value="false"/>
-                        <!--是否使用实体类上标注的数据库模式-->
-                        <property name="useEntitySchema" value="true"/>
+                        <property name="schemaMode" value="ENTITY"/>
+                        <property name="prefixMode" value="ENTITY"/>
+                        <property name="suffixMode" value="ENTITY"/>
                         <property name="schema" value=""/>
-                        <!--是否使用实体类上标注的表前缀-->
-                        <property name="useEntityPrefix" value="true"/>
                         <property name="prefix" value=""/>
-                        <!--是否使用实体类上标注的表后缀-->
-                        <property name="useEntitySuffix" value="true"/>
                         <property name="suffix" value=""/>
                         <!--是否自动创建表-->
                         <property name="autoCreateTable" value="false"/>
@@ -57,10 +50,9 @@
                     <map>
                         <entry key="com.rnkrsoft.framework.orm.spring.dao.subPackage">
                             <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
-                                <property name="useSchema" value="false"/>
-                                <property name="useEntityPrefix" value="true"/>
-                                <property name="useEntitySuffix" value="true"/>
-                                <property name="useEntitySchema" value="true"/>
+                                <property name="schemaMode" value="ENTITY"/>
+                                <property name="prefixMode" value="ENTITY"/>
+                                <property name="suffixMode" value="ENTITY"/>
                                 <property name="autoCreateTable" value="false"/>
                             </bean>
                         </entry>
@@ -69,7 +61,7 @@
             </bean>
         </property>
     </bean>
-    <bean class="com.rnkrsoft.framework.orm.mybatis.sequence.SpringSequenceServiceConfigure">
+    <bean id="sequenceServiceConfigure" class="com.rnkrsoft.framework.orm.mybatis.sequence.SpringSequenceServiceConfigure">
         <property name="mappings">
             <props>
                 <prop key="DEMO_INF">com.rnkrsoft.framework.sequence.jnjvm.InjvmSequenceService</prop>
