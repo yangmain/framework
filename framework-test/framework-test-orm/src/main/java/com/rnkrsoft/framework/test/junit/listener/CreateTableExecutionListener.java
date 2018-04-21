@@ -1,10 +1,17 @@
 package com.rnkrsoft.framework.test.junit.listener;
 
+import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
+import com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer;
+import com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean;
 import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import com.rnkrsoft.framework.test.CreateTable;
 import com.rnkrsoft.framework.test.TableNameMode;
 import com.rnkrsoft.framework.test.datasource.DataSourceScanner;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestContext;
@@ -23,7 +30,6 @@ import java.util.List;
  *
  */
 public class CreateTableExecutionListener extends AbstractTestExecutionListener {
-    ApplicationContext ctx;
 
     @Override
     public void beforeTestClass(TestContext testContext) throws Exception {
@@ -78,7 +84,15 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
                 String createSql = SqlScriptUtils.generateCreateTable(clazz, schemaMode, schema, prefixMode, prefix, suffixMode, suffix, null, sqlMode, keywordMode, test);
                 jdbcTemplate.execute(createSql);
             }
-            //重新加载Mapper
+            ApplicationContext ctx = testContext.getApplicationContext();
+            String sqlSessionFactoryName = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
+            if(!ctx.containsBean(sqlSessionFactoryName)){
+                throw ErrorContextFactory.instance().message("'{}' do not exist bean name '{}'", OrmSessionFactoryBean.class, sqlSessionFactoryName).runtimeException();
+            }
+            SqlSessionFactory sqlSessionFactory = (SqlSessionFactory)ctx.getBean(sqlSessionFactoryName);
+            Configuration configuration = sqlSessionFactory.getConfiguration();
+            //overload mapper
+            OrmMappedStatementRegister.rescan(configuration, sqlMode, keywordMode, schemaMode, schema, prefixMode,  prefix, suffixMode, suffix);
         }
 
     }

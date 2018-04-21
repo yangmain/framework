@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.test;
 
+import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.test.dao.OrmDemoDAO;
 import com.rnkrsoft.framework.test.entity.OrmEntity;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import static org.junit.Assert.*;
  */
 @ContextConfiguration("classpath*:testContext-orm.xml")
 public class DataSourceTestTest extends DataSourceTest{
-    @CreateTable(entities = OrmEntity.class)
+    @CreateTable(entities = OrmEntity.class, keywordMode = WordMode.upperCase, sqlMode = WordMode.upperCase)
     @Test
     public void test1(){
         OrmDemoDAO ormDemoDAO = getBean(OrmDemoDAO.class);

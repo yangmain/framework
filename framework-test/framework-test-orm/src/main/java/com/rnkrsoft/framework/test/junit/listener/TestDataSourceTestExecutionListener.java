@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.test.junit.listener;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.test.DataSource;
 import com.rnkrsoft.framework.test.datasource.DataSourceScanner;
 import org.springframework.test.context.TestContext;
@@ -24,7 +25,6 @@ public class TestDataSourceTestExecutionListener extends AbstractTestExecutionLi
                 throw ErrorContextFactory.instance().message("DataSource set failure!").runtimeException();
             }
         }
-
     }
 
     @Override

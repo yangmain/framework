@@ -1,5 +1,9 @@
 package com.rnkrsoft.framework.orm.mybatis.spring.mapper;
 
+import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.devops4j.reflection4j.GlobalSystemMetadata;
+import com.devops4j.reflection4j.MetaObject;
+import com.devops4j.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.count.CountAllMapper;
 import com.rnkrsoft.framework.orm.count.CountAndMapper;
@@ -77,12 +81,13 @@ public abstract class OrmMappedStatementRegister {
                               String prefix,
                               TableNameMode suffixMode,
                               String suffix) {
+        Reflector reflector = GlobalSystemMetadata.reflector(Configuration.class);
         Map<String, MappedStatement> mappedStatements = null;
         try {
-            Field mappedStatementsField = Configuration.class.getDeclaredField("mappedStatements");
+            Field mappedStatementsField = reflector.getField("mappedStatements");
             mappedStatements = (Map) mappedStatementsField.get(configuration);
         } catch (Exception e) {
-
+            throw ErrorContextFactory.instance().message("获取Configuration.mappedStatements 发生错误").cause(e).runtimeException();
         }
         //移除已经加载的MAPPER编号的语句对象
         for (String id : HAVE_LOADED_MAPPER_ID_SET){
