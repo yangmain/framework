@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.select;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -25,22 +26,20 @@ import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
  */
 public class SelectAllMappedStatementBuilder extends MappedStatementBuilder {
 
-    public SelectAllMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public SelectAllMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
-        String select = convert("SELECT", keywordMode);
-        String from = convert("FROM", keywordMode);
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
+        String select = convert("SELECT", getOrmConfig().getKeywordMode());
+        String from = convert("FROM", getOrmConfig().getKeywordMode());
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
-        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, keywordMode, sqlMode, false)).append(" ");
+        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, getOrmConfig().getKeywordMode(), getOrmConfig().getSqlMode(), false)).append(" ");
         sqlBuilder.append(from).append(" ");
-        sqlBuilder.append(convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        sqlBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         StaticSqlSource sqlSource = new StaticSqlSource(config, sqlBuilder.toString());
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.SELECT_ALL, sqlSource, SqlCommandType.SELECT);

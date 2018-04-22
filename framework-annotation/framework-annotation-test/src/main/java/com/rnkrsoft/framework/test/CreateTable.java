@@ -74,17 +74,17 @@ public @interface CreateTable {
      * 表模式使用
      * @return
      */
-    NameMode schemaMode() default NameMode.CREATE_TEST;
+    NameMode schemaMode() default NameMode.createTest;
 
     /**
      * 前缀模式
      * @return
      */
-    NameMode prefixMode() default NameMode.CREATE_TEST;
+    NameMode prefixMode() default NameMode.createTest;
 
     /**
      * 后缀模式
      * @return
      */
-    NameMode suffixMode() default NameMode.CREATE_TEST;
+    NameMode suffixMode() default NameMode.createTest;
 }

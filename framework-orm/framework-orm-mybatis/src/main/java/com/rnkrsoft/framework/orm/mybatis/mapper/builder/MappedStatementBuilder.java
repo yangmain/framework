@@ -1,7 +1,10 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder;
 
-import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.config.ItemConfig;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
+import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -17,41 +20,20 @@ import java.util.Arrays;
 @ToString
 @Data
 public abstract class MappedStatementBuilder {
-    public MappedStatementBuilder(Configuration config, String namespace, Class mapperClass, Class entityClass, Class keyClass) {
+    public MappedStatementBuilder(Configuration config, OrmConfig ormConfig, String namespace, Class mapperClass, Class entityClass, Class keyClass) {
         this.config = config;
+        this.ormConfig = ormConfig;
         this.namespace = namespace;
         this.mapperClass = mapperClass;
         this.entityClass = entityClass;
         this.keyClass = keyClass;
+        EntityExtractorHelper helper = new EntityExtractorHelper();
+        this.tableMetadata = helper.extractTable(entityClass, ormConfig.isStrict());
     }
-    /**
-     * 数据库模式
-     */
-    String schema;
 
-    /**
-     * 前缀
-     */
-    String prefix;
+    private TableMetadata tableMetadata;
 
-    /**
-     * 后缀
-     */
-    String suffix;
-    /**
-     * 表模式使用
-     */
-    NameMode schemaMode;
-
-    /**
-     * 前缀模式
-     */
-    NameMode prefixMode;
-
-    /**
-     * 后缀模式
-     */
-    NameMode suffixModed;
+    OrmConfig ormConfig;
     /**
      * 配置对象
      */
@@ -64,37 +46,43 @@ public abstract class MappedStatementBuilder {
     /**
      * Mapper类对象
      */
-    protected  Class mapperClass;
+    protected Class mapperClass;
     /**
      * 实体类对象
      */
-    protected  Class entityClass;
+    protected Class entityClass;
     /**
      * 主键类对象
      */
     protected Class keyClass;
-    /**
-     * SQL语句大小写模式
-     */
-    protected WordMode sqlMode;
-    /**
-     * 关键字大小写模式
-     */
-    protected WordMode keywordMode;
-    /**
-     * 严格注解
-     */
-    protected boolean strict;
+
+    public TableMetadata getTableMetadata() {
+        ItemConfig itemConfig = ormConfig.get(mapperClass.getName());
+        if (itemConfig.getSchemaMode() == NameMode.createTest) {
+            this.tableMetadata.setSchema(itemConfig.getSchema());
+        }
+        if (itemConfig.getPrefixMode() == NameMode.createTest) {
+            this.tableMetadata.setPrefix(itemConfig.getPrefix());
+        }
+        if (itemConfig.getSuffixMode() == NameMode.createTest) {
+            this.tableMetadata.setSuffix(itemConfig.getSuffix());
+        }
+        return this.tableMetadata;
+    }
+
     /**
      * 将多个节点组装成组合节点
+     *
      * @param sqlNodes 节点数组
      * @return 组合节点
      */
     protected MixedSqlNode mixedContents(SqlNode... sqlNodes) {
         return new MixedSqlNode(Arrays.asList(sqlNodes));
     }
+
     /**
      * 构建MapperStatement
+     *
      * @return MapperStatement
      */
     public abstract MappedStatement build();

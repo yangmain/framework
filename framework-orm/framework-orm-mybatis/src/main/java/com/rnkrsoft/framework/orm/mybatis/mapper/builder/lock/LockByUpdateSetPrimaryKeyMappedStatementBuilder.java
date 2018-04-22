@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.lock;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -25,33 +26,31 @@ import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
 @Slf4j
 public class LockByUpdateSetPrimaryKeyMappedStatementBuilder extends MappedStatementBuilder {
 
-    public LockByUpdateSetPrimaryKeyMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public LockByUpdateSetPrimaryKeyMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
+        String primaryKeyName = getTableMetadata().getPrimaryKeys().get(0);
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);
-        String update = convert("UPDATE", keywordMode);
+        String update = convert("UPDATE", getOrmConfig().getKeywordMode());
         //headBuilder是前半段
         StringBuilder headBuilder = new StringBuilder();
         headBuilder.append(update).append(" ");
-        headBuilder.append(convert(tableMetadata.getTableName(), sqlMode)).append(" ");
-        headBuilder.append(convert("SET", keywordMode)).append(" ");
-        headBuilder.append(convert(primaryKeyColumn.getJdbcName(), sqlMode)).append(" ");
+        headBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getKeywordMode())).append(" ");
+        headBuilder.append(convert("SET", getOrmConfig().getKeywordMode())).append(" ");
+        headBuilder.append(convert(primaryKeyColumn.getJdbcName(), getOrmConfig().getSqlMode())).append(" ");
         headBuilder.append("=");
-        headBuilder.append(convert(primaryKeyColumn.getJdbcName(), sqlMode)).append(" ");
+        headBuilder.append(convert(primaryKeyColumn.getJdbcName(), getOrmConfig().getSqlMode())).append(" ");
 
         //footBuilder是后半段
-        String where = convert("WHERE", keywordMode);
+        String where = convert("WHERE", getOrmConfig().getKeywordMode());
         String primaryKeySql = "#{" + primaryKeyColumn.getJavaName() + ":" + primaryKeyColumn.getJdbcType() + " }";
         StringBuilder footBuilder = new StringBuilder();
         footBuilder.append(where).append(" ");
-        footBuilder.append(convert(primaryKeyName, sqlMode)).append(" = ").append(primaryKeySql);
+        footBuilder.append(convert(primaryKeyName, getOrmConfig().getSqlMode())).append(" = ").append(primaryKeySql);
         DynamicSqlSource sqlSource = new DynamicSqlSource(config
                 , mixedContents(new TextSqlNode(headBuilder.toString())
                 , new TextSqlNode(footBuilder.toString())));

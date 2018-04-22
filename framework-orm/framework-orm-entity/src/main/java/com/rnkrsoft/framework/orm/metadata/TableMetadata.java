@@ -1,5 +1,7 @@
 package com.rnkrsoft.framework.orm.metadata;
 
+import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.framework.orm.WordMode;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -61,4 +63,18 @@ public class TableMetadata {
      * 表后缀
      */
     String suffix = "";
+
+    public String getFullTableName(){
+        String table = tableName;
+        if (!StringUtils.isBlank(prefix)) {
+            table = prefix + "_" + table;
+        }
+        if (!StringUtils.isBlank(suffix)) {
+            table = table + "_" + suffix;
+        }
+        if (!StringUtils.isBlank(schema)) {
+            table = schema + "." + table;
+        }
+        return table;
+    }
 }

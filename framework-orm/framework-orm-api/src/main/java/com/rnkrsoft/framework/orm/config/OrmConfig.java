@@ -77,4 +77,6 @@ public interface OrmConfig {
      * @return 表-生成规则
      */
     Map<String, String> getSequenceMappings();
+
+    ItemConfig get(String daoInterface);
 }

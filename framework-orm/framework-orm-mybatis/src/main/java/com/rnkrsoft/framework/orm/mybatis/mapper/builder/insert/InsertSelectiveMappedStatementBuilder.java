@@ -6,6 +6,7 @@ import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.Constants;
 import com.rnkrsoft.framework.orm.PrimaryKeyFeatureConstant;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -45,22 +46,20 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
      */
     protected SequenceServiceConfigure sequenceConfigure;
 
-    public InsertSelectiveMappedStatementBuilder(Configuration config, Class mapperClass, SequenceServiceConfigure sequenceConfigure) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public InsertSelectiveMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass, SequenceServiceConfigure sequenceConfigure) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
         this.sequenceConfigure = sequenceConfigure;
     }
 
     @Override
     public MappedStatement build() {
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        TextSqlNode insertIntoSqlNode = new TextSqlNode(convert("INSERT INTO ", keywordMode) + convert(tableMetadata.getTableName(), keywordMode) + "(");
+        TextSqlNode insertIntoSqlNode = new TextSqlNode(convert("INSERT INTO ", getOrmConfig().getKeywordMode()) + convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode()) + "(");
         List<SqlNode> heads = new ArrayList();
         List<SqlNode> values = new ArrayList();
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
-        for (String column : tableMetadata.getOrderColumns()) {
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
+        for (String column : getTableMetadata().getOrderColumns()) {
             ColumnMetadata columnMetadata = fields.get(column);
-            heads.add(new IfSqlNode(new TextSqlNode(convert(columnMetadata.getJdbcName(), sqlMode) + ","), columnMetadata.getJavaName() + " != null"));
+            heads.add(new IfSqlNode(new TextSqlNode(convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + ","), columnMetadata.getJavaName() + " != null"));
             String valueExp = "#{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " },";
             values.add(new IfSqlNode(new TextSqlNode(valueExp), columnMetadata.getJavaName() + " != null"));
         }
@@ -69,7 +68,7 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
         DynamicSqlSource sqlSource = new DynamicSqlSource(config, mixedContents(insertIntoSqlNode
                 , new TrimSqlNode(config, headsSqlNode, "", "", "", ",")//用于去除多余的逗号
                 , new TextSqlNode(") ")
-                , new TextSqlNode(convert("VALUES", keywordMode))
+                , new TextSqlNode(convert("VALUES", getOrmConfig().getKeywordMode()))
                 , new TextSqlNode(" (")
                 , new TrimSqlNode(config, valuesSqlNode, "", "", "", ",")//用于去除多余的逗号
                 , new TextSqlNode(")")));
@@ -86,12 +85,12 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
             parameterMappings.add(builder.build());
         }
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "BaseParameterMap", entityClass, parameterMappings);
-        List<String> primaryKeys = tableMetadata.getPrimaryKeys();
+        List<String> primaryKeys = getTableMetadata().getPrimaryKeys();
         //存在主键，肯定的
         if (!primaryKeys.isEmpty()) {
             final String pkColumnName = primaryKeys.get(0);
             final ColumnMetadata primaryKeyMetadata = fields.get(pkColumnName);
-            PrimaryKeyHelper.generate(sequenceConfigure, tableMetadata, primaryKeyMetadata, msBuilder);
+            PrimaryKeyHelper.generate(sequenceConfigure, getTableMetadata(), primaryKeyMetadata, msBuilder);
         }
         msBuilder.parameterMap(paramBuilder.build());
         //创建结果映射

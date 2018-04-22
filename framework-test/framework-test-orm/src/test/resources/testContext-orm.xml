@@ -35,9 +35,9 @@
                 <!--全局配置-->
                 <property name="global">
                     <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
-                        <property name="schemaMode" value="ENTITY"/>
-                        <property name="prefixMode" value="ENTITY"/>
-                        <property name="suffixMode" value="ENTITY"/>
+                        <property name="schemaMode" value="entity"/>
+                        <property name="prefixMode" value="entity"/>
+                        <property name="suffixMode" value="entity"/>
                         <property name="schema" value=""/>
                         <property name="prefix" value=""/>
                         <property name="suffix" value=""/>
@@ -50,9 +50,9 @@
                     <map>
                         <entry key="com.rnkrsoft.framework.orm.spring.dao.subPackage">
                             <bean class="com.rnkrsoft.framework.orm.config.ItemConfig">
-                                <property name="schemaMode" value="ENTITY"/>
-                                <property name="prefixMode" value="ENTITY"/>
-                                <property name="suffixMode" value="ENTITY"/>
+                                <property name="schemaMode" value="entity"/>
+                                <property name="prefixMode" value="entity"/>
+                                <property name="suffixMode" value="entity"/>
                                 <property name="autoCreateTable" value="false"/>
                             </bean>
                         </entry>

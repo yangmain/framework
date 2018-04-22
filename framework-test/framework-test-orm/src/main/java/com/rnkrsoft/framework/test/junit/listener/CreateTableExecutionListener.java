@@ -3,7 +3,6 @@ package com.rnkrsoft.framework.test.junit.listener;
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.WordMode;
-import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer;
@@ -69,13 +68,13 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             NameMode schemaMode = methodCreateTable.schemaMode();
             NameMode prefixMode = methodCreateTable.prefixMode();
             NameMode suffixMode = methodCreateTable.suffixMode();
-            if(schemaMode == NameMode.AUTO){
+            if(schemaMode == NameMode.auto){
                 schema = null;
             }
-            if(prefixMode == NameMode.AUTO){
+            if(prefixMode == NameMode.auto){
                 prefix = null;
             }
-            if(suffixMode == NameMode.AUTO){
+            if(suffixMode == NameMode.auto){
                 suffix = null;
             }
 
@@ -144,13 +143,13 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             NameMode schemaMode = methodCreateTable.schemaMode();
             NameMode prefixMode = methodCreateTable.prefixMode();
             NameMode suffixMode = methodCreateTable.suffixMode();
-            if(schemaMode == NameMode.ENTITY){
+            if(schemaMode == NameMode.entity){
                 schema = null;
             }
-            if(prefixMode == NameMode.ENTITY){
+            if(prefixMode == NameMode.entity){
                 prefix = null;
             }
-            if(suffixMode == NameMode.ENTITY){
+            if(suffixMode == NameMode.entity){
                 suffix = null;
             }
             if (drop && DataSourceScanner.H2_DATASOURCE.equals(dsn)) {

@@ -8,13 +8,13 @@ public enum NameMode {
     /**
      * 自动识别
      */
-    AUTO,
+    auto,
     /**
      * 使用实体上的
      */
-    ENTITY,
+    entity,
     /**
      * 使用@CreateTable上的
      */
-    CREATE_TEST
+    createTest
 }

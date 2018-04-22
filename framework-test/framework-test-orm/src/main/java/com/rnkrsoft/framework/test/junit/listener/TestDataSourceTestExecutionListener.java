@@ -4,6 +4,7 @@ import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.test.DataSource;
 import com.rnkrsoft.framework.test.datasource.DataSourceScanner;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
@@ -11,6 +12,7 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
  * Created by rnkrsoft.com on 2018/4/2.
  * 测试数据源监听器
  */
+@Slf4j
 public class TestDataSourceTestExecutionListener extends AbstractTestExecutionListener {
 
     @Override
@@ -20,6 +22,7 @@ public class TestDataSourceTestExecutionListener extends AbstractTestExecutionLi
         DataSource ds = testClass.getAnnotation(DataSource.class);
         if(ds != null){
             String dsn = ds.value().name();
+            log.debug("开发数据源 '{}'", dsn);
             String name = DataSourceScanner.setDateSourceName(dsn);
             if(!dsn.equals(name)){
                 throw ErrorContextFactory.instance().message("DataSource set failure!").runtimeException();

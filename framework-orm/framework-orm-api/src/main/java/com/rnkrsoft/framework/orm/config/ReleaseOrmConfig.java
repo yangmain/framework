@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.config;
 
 import com.rnkrsoft.framework.orm.DatabaseType;
+import com.rnkrsoft.framework.orm.NameMode;
 import com.rnkrsoft.framework.orm.WordMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,4 +57,32 @@ public class ReleaseOrmConfig implements OrmConfig{
     Map<String, ItemConfig> configs;
 
     Map<String, String> sequenceMappings;
+
+    @Override
+    public ItemConfig get(String daoInterface) {
+        ItemConfig newItemConfig = new ItemConfig();
+        NameMode schemaMode = getGlobal().getSchemaMode();
+        String schema = getGlobal().getSchema();
+        NameMode prefixMode = getGlobal().getPrefixMode();
+        String prefix = getGlobal().getPrefix();
+        NameMode suffixMode = getGlobal().getSuffixMode();
+        String suffix = getGlobal().getSuffix();
+        ItemConfig itemConfig = getConfigs().get(daoInterface);
+
+        if (itemConfig != null) {
+            schemaMode = itemConfig.getSchemaMode();
+            schema = itemConfig.getSchema();
+            prefixMode = itemConfig.getPrefixMode();
+            prefix = itemConfig.getPrefix();
+            suffixMode = itemConfig.getSuffixMode();
+            suffix = itemConfig.getSuffix();
+        }
+        newItemConfig.setSchemaMode(schemaMode);
+        newItemConfig.setSchema(schema);
+        newItemConfig.setPrefixMode(prefixMode);
+        newItemConfig.setPrefix(prefix);
+        newItemConfig.setSuffixMode(suffixMode);
+        newItemConfig.setSuffix(suffix);
+        return newItemConfig;
+    }
 }

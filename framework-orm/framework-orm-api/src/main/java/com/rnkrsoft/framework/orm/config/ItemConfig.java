@@ -17,15 +17,15 @@ public class ItemConfig {
      * 数据库模式模式
      * @return
      */
-    NameMode schemaMode = NameMode.AUTO;
+    NameMode schemaMode = NameMode.auto;
     /**
      * 前缀模式
      */
-    NameMode prefixMode = NameMode.AUTO;
+    NameMode prefixMode = NameMode.auto;
     /**
      * 后缀模式
      */
-    NameMode suffixMode = NameMode.AUTO;
+    NameMode suffixMode = NameMode.auto;
     /**
      * 表模式
      */

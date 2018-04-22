@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.select;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -27,33 +28,31 @@ import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
 @Slf4j
 public class SelectPageOrMappedStatementBuilder extends MappedStatementBuilder {
 
-    public SelectPageOrMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public SelectPageOrMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        String select = convert("SELECT", keywordMode);
-        String from = convert("FROM", keywordMode);
+        String select = convert("SELECT", getOrmConfig().getKeywordMode());
+        String from = convert("FROM", getOrmConfig().getKeywordMode());
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
-        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, keywordMode, sqlMode, false)).append(" ");
+        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, getOrmConfig().getKeywordMode(), getOrmConfig().getSqlMode(), false)).append(" ");
         sqlBuilder.append(from).append(" ");
-        sqlBuilder.append(convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        sqlBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
         List<SqlNode> wheres = new ArrayList<SqlNode>();
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
-            String whereSql = convert(" OR ", keywordMode) + convert(columnMetadata.getJdbcName(), sqlMode) + " = #{entity." + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
+            String whereSql = convert(" OR ", getOrmConfig().getKeywordMode()) + convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{entity." + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
             SqlNode node = new IfSqlNode(new TextSqlNode(whereSql), MessageFormat.format("entity.{0} != null", columnMetadata.getJavaName()));
             wheres.add(node);
             parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(keyClass)).build());
         }
-        SqlNode whereSqlNode = new WhereSqlNode(config, new MixedSqlNode(wheres), keywordMode);
+        SqlNode whereSqlNode = new WhereSqlNode(config, new MixedSqlNode(wheres), getOrmConfig().getKeywordMode());
         DynamicSqlSource sqlSource = new DynamicSqlSource(config, mixedContents(new StaticTextSqlNode(sqlBuilder.toString()), whereSqlNode));
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.SELECT_PAGE_OR, sqlSource, SqlCommandType.SELECT);
@@ -71,7 +70,7 @@ public class SelectPageOrMappedStatementBuilder extends MappedStatementBuilder {
         List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
         for (String column: fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
-            ResultMapping.Builder builder = new ResultMapping.Builder(config, columnMetadata.getJavaName(), convert(columnMetadata.getJdbcName(), sqlMode), columnMetadata.getJavaType());
+            ResultMapping.Builder builder = new ResultMapping.Builder(config, columnMetadata.getJavaName(), convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()), columnMetadata.getJavaType());
             resultMappings.add(builder.build());
         }
         final ResultMap resultMap = new ResultMap.Builder(config, "PageBaseResultMap", entityClass, resultMappings).build();

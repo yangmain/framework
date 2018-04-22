@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.count;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -25,35 +26,33 @@ import java.util.Map;
  */
 public class CountAndMappedStatementBuilder extends MappedStatementBuilder {
 
-    public CountAndMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public CountAndMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig,  mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
-        String select = KeywordsUtils.convert("SELECT", keywordMode);
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
+        String select = KeywordsUtils.convert("SELECT", getOrmConfig().getKeywordMode());
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert("COUNT(1) AS", keywordMode)).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert("CNT", sqlMode)).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert("FROM", keywordMode)).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("COUNT(1) AS", getOrmConfig().getKeywordMode())).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("CNT", getOrmConfig().getSqlMode())).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("FROM", getOrmConfig().getKeywordMode())).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         //创建结果映射
         List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
         List<SqlNode> wheres = new ArrayList<SqlNode>();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
-            String whereSql = KeywordsUtils.convert(" AND ", keywordMode) + KeywordsUtils.convert(columnMetadata.getJdbcName(), sqlMode) + " = #{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
+            String whereSql = KeywordsUtils.convert(" AND ", getOrmConfig().getKeywordMode()) + KeywordsUtils.convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
             SqlNode node = new IfSqlNode(new TextSqlNode(whereSql), MessageFormat.format("{0} != null", columnMetadata.getJavaName()));
             wheres.add(node);
             parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(keyClass)).build());
         }
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "defaultParameterMap", entityClass, parameterMappings);
-        SqlNode whereSqlNode = new WhereSqlNode(config, new MixedSqlNode(wheres), keywordMode);
+        SqlNode whereSqlNode = new WhereSqlNode(config, new MixedSqlNode(wheres), getOrmConfig().getKeywordMode());
         DynamicSqlSource sqlSource = new DynamicSqlSource(config, mixedContents(new StaticTextSqlNode(sqlBuilder.toString()), whereSqlNode));
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.COUNT_AND, sqlSource, SqlCommandType.SELECT);

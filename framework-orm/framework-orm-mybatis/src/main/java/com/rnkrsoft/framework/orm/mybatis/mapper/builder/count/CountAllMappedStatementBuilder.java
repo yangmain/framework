@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.count;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -23,22 +24,19 @@ import java.util.Map;
  */
 public class CountAllMappedStatementBuilder extends MappedStatementBuilder {
 
-    public CountAllMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public CountAllMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig,  mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
-        TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        String select = KeywordsUtils.convert("SELECT", keywordMode);
+        String select = KeywordsUtils.convert("SELECT", getOrmConfig().getKeywordMode());
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert("COUNT(1) AS", keywordMode)).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert("CNT", sqlMode)).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert("FROM", keywordMode)).append(" ");
-        sqlBuilder.append(KeywordsUtils.convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("COUNT(1) AS", getOrmConfig().getKeywordMode())).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("CNT", getOrmConfig().getSqlMode())).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert("FROM", getOrmConfig().getKeywordMode())).append(" ");
+        sqlBuilder.append(KeywordsUtils.convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         //创建结果映射
         DynamicSqlSource sqlSource = new DynamicSqlSource(config, mixedContents(new StaticTextSqlNode(sqlBuilder.toString())));
         //创建一个MappedStatement建造器

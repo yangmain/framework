@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.select;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -24,28 +25,26 @@ import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
  */
 public class SelectByPrimaryKeyMappedStatementBuilder extends MappedStatementBuilder {
 
-    public SelectByPrimaryKeyMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public SelectByPrimaryKeyMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
+        String primaryKeyName = getTableMetadata().getPrimaryKeys().get(0);
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);
-        String select = convert("SELECT", keywordMode);
-        String from = convert("FROM", keywordMode);
-        String where = convert("WHERE", keywordMode);
+        String select = convert("SELECT", getOrmConfig().getKeywordMode());
+        String from = convert("FROM", getOrmConfig().getKeywordMode());
+        String where = convert("WHERE", getOrmConfig().getKeywordMode());
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
-        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, keywordMode, sqlMode, false)).append(" ");
+        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, getOrmConfig().getKeywordMode(), getOrmConfig().getSqlMode(), false)).append(" ");
         sqlBuilder.append(from).append(" ");
-        sqlBuilder.append(convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        sqlBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         sqlBuilder.append(where).append(" ");
-        sqlBuilder.append(convert(primaryKeyName, sqlMode)).append(" = ? ");
+        sqlBuilder.append(convert(primaryKeyName, getOrmConfig().getSqlMode())).append(" = ? ");
         StaticSqlSource sqlSource = new StaticSqlSource(config, sqlBuilder.toString());
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.SELECT_BY_PRIMARY_KEY, sqlSource, SqlCommandType.SELECT);

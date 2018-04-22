@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.update;
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -26,34 +27,32 @@ import static com.rnkrsoft.framework.orm.untils.KeywordsUtils.convert;
  */
 public class UpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBuilder {
 
-    public UpdateByPrimaryKeyMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public UpdateByPrimaryKeyMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
-        Map<String, ColumnMetadata> fields = tableMetadata.getColumnMetadataSet();
+        String primaryKeyName = getTableMetadata().getPrimaryKeys().get(0);
+        Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
         ColumnMetadata primaryKeyColumn = fields.get(primaryKeyName);
-        String update = convert("UPDATE", keywordMode);
-        String where = convert("WHERE", keywordMode);
+        String update = convert("UPDATE", getOrmConfig().getKeywordMode());
+        String where = convert("WHERE", getOrmConfig().getKeywordMode());
         //headBuilder是前半段
         StringBuilder headBuilder = new StringBuilder();
         headBuilder.append(update).append(" ");
-        headBuilder.append(convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        headBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
 
         //footBuilder是后半段
         String primaryKeySql = "#{" + primaryKeyColumn.getJavaName() + ":" + primaryKeyColumn.getJdbcType() + " }";
         StringBuilder footBuilder = new StringBuilder();
         footBuilder.append(where).append(" ");
-        footBuilder.append(convert(primaryKeyName, sqlMode)).append(" = ").append(primaryKeySql);
+        footBuilder.append(convert(primaryKeyName, getOrmConfig().getSqlMode())).append(" = ").append(primaryKeySql);
         //生成Set部分
         List<SqlNode> sets = new ArrayList();
         //创建参数映射
         List<ParameterMapping> parameterMappings = new ArrayList();
-        for (String column : tableMetadata.getOrderColumns()) {
+        for (String column : getTableMetadata().getOrderColumns()) {
             //如果是主键，没必要更新
             if (column.equals(primaryKeyName)) {
                 continue;
@@ -62,7 +61,7 @@ public class UpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
             //生成Set
             String valueSql = "#{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
             StringBuilder sqlBuilder = new StringBuilder();
-            sqlBuilder.append(convert(column, sqlMode))
+            sqlBuilder.append(convert(column, getOrmConfig().getSqlMode()))
                     .append(" = ")
                     .append(valueSql)
                     .append(" , ");
@@ -74,7 +73,7 @@ public class UpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
         }
         DynamicSqlSource sqlSource = new DynamicSqlSource(config
                 , mixedContents(new TextSqlNode(headBuilder.toString())
-                , new TrimSqlNode(config, new MixedSqlNode(sets), convert("SET", keywordMode), "", "", ",")
+                , new TrimSqlNode(config, new MixedSqlNode(sets), convert("SET", getOrmConfig().getKeywordMode()), "", "", ",")
                 , new TextSqlNode(footBuilder.toString())));
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.UPDATE_BY_PRIMARY_KEY, sqlSource, SqlCommandType.UPDATE);

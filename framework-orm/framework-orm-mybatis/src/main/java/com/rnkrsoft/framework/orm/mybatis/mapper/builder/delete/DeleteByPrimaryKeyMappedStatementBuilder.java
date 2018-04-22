@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder.delete;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
@@ -24,27 +25,25 @@ import java.util.List;
  */
 public class DeleteByPrimaryKeyMappedStatementBuilder extends MappedStatementBuilder {
 
-    public DeleteByPrimaryKeyMappedStatementBuilder(Configuration config, Class mapperClass) {
-        super(config, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+    public DeleteByPrimaryKeyMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
     }
 
     @Override
     public MappedStatement build() {
         TypeHandlerRegistry registry = config.getTypeHandlerRegistry();
-        EntityExtractorHelper helper = new EntityExtractorHelper();
-        TableMetadata tableMetadata = helper.extractTable(entityClass, strict);
-        String primaryKeyName = tableMetadata.getPrimaryKeys().get(0);
-        String delete = KeywordsUtils.convert("DELETE FROM", keywordMode);
-        String where = KeywordsUtils.convert("WHERE", keywordMode);
+        String primaryKeyName = getTableMetadata().getPrimaryKeys().get(0);
+        String delete = KeywordsUtils.convert("DELETE FROM", getOrmConfig().getKeywordMode());
+        String where = KeywordsUtils.convert("WHERE", getOrmConfig().getKeywordMode());
         //headBuilder是前半段
         StringBuilder headBuilder = new StringBuilder();
         headBuilder.append(delete).append(" ");
-        headBuilder.append(KeywordsUtils.convert(tableMetadata.getTableName(), sqlMode)).append(" ");
+        headBuilder.append(KeywordsUtils.convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
 
         //footBuilder是后半段
         StringBuilder footBuilder = new StringBuilder();
         footBuilder.append(where).append(" ");
-        footBuilder.append(KeywordsUtils.convert(primaryKeyName, sqlMode)).append(" = ?");
+        footBuilder.append(KeywordsUtils.convert(primaryKeyName, getOrmConfig().getSqlMode())).append(" = ?");
         DynamicSqlSource sqlSource = new DynamicSqlSource(config
                 , mixedContents(new TextSqlNode(headBuilder.toString())
                 , new TextSqlNode(footBuilder.toString())));

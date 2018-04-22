@@ -45,31 +45,31 @@ public abstract class SqlScriptUtils {
                                              boolean createBeforeTest) {
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, false);
-        if (schemaMode == NameMode.AUTO) {
+        if (schemaMode == NameMode.auto) {
             if (schema != null) {
                 tableMetadata.setSchema(schema);
             }
-        } else if (schemaMode == NameMode.ENTITY) {
+        } else if (schemaMode == NameMode.entity) {
 
-        } else if (schemaMode == NameMode.CREATE_TEST) {
+        } else if (schemaMode == NameMode.createTest) {
             tableMetadata.setSchema(schema);
         }
-        if (prefixMode == NameMode.AUTO) {
+        if (prefixMode == NameMode.auto) {
             if (prefix != null) {
                 tableMetadata.setPrefix(prefix);
             }
-        } else if (prefixMode == NameMode.ENTITY) {
+        } else if (prefixMode == NameMode.entity) {
 
-        } else if (prefixMode == NameMode.CREATE_TEST) {
+        } else if (prefixMode == NameMode.createTest) {
             tableMetadata.setPrefix(prefix);
         }
-        if (suffixMode == NameMode.AUTO) {
+        if (suffixMode == NameMode.auto) {
             if (suffix != null) {
                 tableMetadata.setSuffix(suffix);
             }
-        } else if (suffixMode == NameMode.ENTITY) {
+        } else if (suffixMode == NameMode.entity) {
 
-        } else if (suffixMode == NameMode.CREATE_TEST) {
+        } else if (suffixMode == NameMode.createTest) {
             tableMetadata.setSuffix(suffix);
         }
         tableMetadata.setDataEngine(engine);
@@ -100,16 +100,7 @@ public abstract class SqlScriptUtils {
         if (createBeforeTest) {
             sql.append(convert(" IF NOT EXISTS", keywordMode));
         }
-        String table = tableMetadata.getTableName();
-        if (!StringUtils.isBlank(tableMetadata.getSchema())) {
-            if (!StringUtils.isBlank(tableMetadata.getPrefix())) {
-                table = tableMetadata.getPrefix() + "_" + table;
-            }
-            if (!StringUtils.isBlank(tableMetadata.getSuffix())) {
-                table = table + "_" + tableMetadata.getSuffix();
-            }
-            table = tableMetadata.getSchema() + "." + table;
-        }
+        String table = tableMetadata.getFullTableName();
         table = convert(table, sqlMode);
         sql.append(" " + table);
         sql.append("(\n");
@@ -191,31 +182,31 @@ public abstract class SqlScriptUtils {
                                            boolean dropBeforeTest) {
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, false);
-        if (schemaMode == NameMode.AUTO) {
+        if (schemaMode == NameMode.auto) {
             if (schema != null) {
                 tableMetadata.setSchema(schema);
             }
-        } else if (schemaMode == NameMode.ENTITY) {
+        } else if (schemaMode == NameMode.entity) {
 
-        } else if (schemaMode == NameMode.CREATE_TEST) {
+        } else if (schemaMode == NameMode.createTest) {
             tableMetadata.setSchema(schema);
         }
-        if (prefixMode == NameMode.AUTO) {
+        if (prefixMode == NameMode.auto) {
             if (prefix != null) {
                 tableMetadata.setPrefix(prefix);
             }
-        } else if (prefixMode == NameMode.ENTITY) {
+        } else if (prefixMode == NameMode.entity) {
 
-        } else if (prefixMode == NameMode.CREATE_TEST) {
+        } else if (prefixMode == NameMode.createTest) {
             tableMetadata.setPrefix(prefix);
         }
-        if (suffixMode == NameMode.AUTO) {
+        if (suffixMode == NameMode.auto) {
             if (suffix != null) {
                 tableMetadata.setSuffix(suffix);
             }
-        } else if (suffixMode == NameMode.ENTITY) {
+        } else if (suffixMode == NameMode.entity) {
 
-        } else if (suffixMode == NameMode.CREATE_TEST) {
+        } else if (suffixMode == NameMode.createTest) {
             tableMetadata.setSuffix(suffix);
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
