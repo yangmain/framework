@@ -12,8 +12,6 @@
                 <property name="keywordMode" value="upperCase"/>
                 <!--SQL大小写模式 表名，字段名等-->
                 <property name="sqlMode" value="upperCase"/>
-                <!--是否允许重复加载DAO和MAPPER-->
-                <property name="allowReload" value="true"/>
                 <!--序号服务与表映射关系-->
                 <property name="sequenceMappings">
                     <map>

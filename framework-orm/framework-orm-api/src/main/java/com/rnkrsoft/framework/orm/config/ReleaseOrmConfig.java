@@ -38,7 +38,7 @@ public class ReleaseOrmConfig implements OrmConfig{
     /**
      * 是否允许重复加载
      */
-    boolean allowReload = false;
+    final boolean allowReload = false;
     /**
      * 获取关键字模式
      */

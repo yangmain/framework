@@ -101,32 +101,11 @@ public abstract class OrmMappedStatementRegister {
      * @throws ClassNotFoundException
      */
     public static void scan(Configuration configuration, OrmConfig ormConfig, SequenceServiceConfigure ssc, Class daoInterface){
-        //检测是否为IDE测试或者单测模式
-        LAZY_INIT.set(isTestEnv());
         //如果是开发环境则将DAO接口缓存起来，等待后续处理，如果是生产环境则直接处理
-        if (LAZY_INIT.get()) {
+        if (ormConfig.isAllowReload()) {
             addDaoInterface(daoInterface);
         } else {
             scan0(configuration, ormConfig, ssc, daoInterface);
-        }
-    }
-
-    /**
-     * 通过Junit识别运行环境
-     *
-     * @return
-     */
-    static boolean isTestEnv() {
-        try {
-            Class.forName("org.junit.Test");
-            return true;
-        } catch (ClassNotFoundException e) {
-            try {
-                Class.forName("junit.framework.Test");
-                return true;
-            } catch (ClassNotFoundException e1) {
-                return false;
-            }
         }
     }
 

@@ -42,7 +42,6 @@ public class InsertMappedStatementBuilder extends MappedStatementBuilder {
     @Override
     public MappedStatement build() {
         String tableName = KeywordsUtils.convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode());
-        System.out.println("===================================================================" + tableName);
         TextSqlNode insertIntoSqlNode = new TextSqlNode(KeywordsUtils.convert("INSERT INTO ", getOrmConfig().getKeywordMode()) + tableName  + "(");
         List<SqlNode> heads = new ArrayList();
         List<SqlNode> values = new ArrayList();

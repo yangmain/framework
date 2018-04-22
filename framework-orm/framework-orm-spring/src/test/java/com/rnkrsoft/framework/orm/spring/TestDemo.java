@@ -19,6 +19,8 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import org.springframework.test.context.web.ServletTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * Created by rnkrsoft.com on 2018/4/5.
  */
@@ -42,9 +44,9 @@ public class TestDemo{
     public void test1(){
         jdbcTemplate.execute("CREATE TABLE JPA_DEMO_INF(SERIAL_NO VARCHAR(36), AGE INT, PRIMARY  KEY(SERIAL_NO))");
         System.out.println(jpaDemoDAO.countAll());
-        for (int i = 0; i < 1000 ; i++) {
+        for (int i = 0; i < 1 ; i++) {
             JpaEntity entity = new JpaEntity();
-//        entity.setSerial(UUID.randomUUID().toString());
+            entity.setSerialNo(UUID.randomUUID().toString());
             entity.setAge(12);
             jpaDemoDAO.insertSelective(entity);
         }
