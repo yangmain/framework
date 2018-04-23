@@ -63,6 +63,10 @@ public class ColumnMetadata {
      * 默认值
      */
     String defaultValue = "";
+    /**
+     * 如果字段为物理主键时，是否为自增字段
+     */
+    boolean autoIncrement = false;
 
     @Override
     public String toString() {

@@ -5,6 +5,7 @@
 		http://www.springframework.org/schema/beans/spring-beans.xsd">
     <import resource="classpath*:testContext-dev.xml"/>
 
+    <bean class="com.rnkrsoft.framework.sequence.SpringContextHelper"/>
 
     <bean id="ormScannerConfigurer" class="com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer">
         <property name="ormConfig">

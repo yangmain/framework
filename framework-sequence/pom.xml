@@ -14,5 +14,7 @@
         <module>framework-sequence-api</module>
         <module>framework-sequence-h2</module>
         <module>framework-sequence-injvm</module>
+        <module>framework-sequence-myisam</module>
+        <module>framework-sequence-redis</module>
     </modules>
 </project>

@@ -10,4 +10,7 @@
     <artifactId>framework-toolkit</artifactId>
     <name>framework-toolkit</name>
     <description>framework toolkit</description>
+    <modules>
+        <module>framework-toolkit-cli</module>
+    </modules>
 </project>

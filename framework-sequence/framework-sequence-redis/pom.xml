@@ -6,13 +6,14 @@
         <artifactId>framework-sequence</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>framework-sequence-api</artifactId>
-    <name>framework-sequence-api</name>
-    <description>This is the framework4j-sequence-api</description>
+    <artifactId>framework-sequence-redis</artifactId>
+    <name>framework-sequence-redis</name>
+    <description>基于Redis的序号生成</description>
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-sequence-api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
