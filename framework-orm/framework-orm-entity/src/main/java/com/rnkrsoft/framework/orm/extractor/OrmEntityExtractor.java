@@ -151,6 +151,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                         } else {
                             dataType = "DECIMAL(18,2)";
                         }
+                        jdbcType = "DECIMAL";
                     }
                 } else if (numberColumn.type() == NumberType.INTEGER) {
                     if (fieldClass == Integer.TYPE) {

@@ -4,6 +4,7 @@ import com.rnkrsoft.framework.orm.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * Created by rnkrsoft.com on 2018/4/5.
@@ -20,4 +21,8 @@ public class OrmEntity implements Serializable {
     @NumberColumn(name = "AGE", nullable = false)
     @Comment("年龄")
     Integer age;
+
+    @NumberColumn(name = "RATE", nullable = false)
+    @Comment("比例")
+    BigDecimal rate;
 }
