@@ -40,13 +40,19 @@ public class EntityGeneratorJdk implements EntityGenerator{
             buf.put("UTF-8", MessageFormatter.format("  @Comment(\"{}\")", columnMetadata.getComment()), "\n");
             if(metadata.getPrimaryKeys().contains(columnName)){
                 String str = "  @PrimaryKey(";
-                if(columnMetadata.getAutoIncrement() != null && columnMetadata.getAutoIncrement()){
+                if(columnMetadata.getJdbcType().equals("NUMERIC") && columnMetadata.getAutoIncrement() != null && columnMetadata.getAutoIncrement()){
                     str += "strategy = PrimaryKeyStrategy.IDENTITY ";
+                }else if(columnMetadata.getJdbcType().equals("VARCHAR")){
+                    str += "strategy = PrimaryKeyStrategy.UUID ";
+                }else if(columnMetadata.getJdbcType().equals("CHAR")){
+                    str += "strategy = PrimaryKeyStrategy.UUID ";
+                }else{
+
                 }
                 str +=")";
                 buf.put("UTF-8", str, "\n");
             }
-            if(columnMetadata.getJdbcType().equals("VARCHAR")){
+            if (columnMetadata.getJdbcType().equals("VARCHAR")){
                 buf.put("UTF-8", MessageFormatter.format("  @StringColumn(name = \"{}\", nullable={})", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", MessageFormatter.format("  String {};", columnMetadata.getJavaName()));
             }else if(columnMetadata.getJdbcType().equals("CHAR")){
