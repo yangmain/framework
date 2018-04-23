@@ -66,7 +66,7 @@ public class ColumnMetadata {
     /**
      * 如果字段为物理主键时，是否为自增字段
      */
-    boolean autoIncrement = false;
+    Boolean autoIncrement = false;
 
     @Override
     public String toString() {

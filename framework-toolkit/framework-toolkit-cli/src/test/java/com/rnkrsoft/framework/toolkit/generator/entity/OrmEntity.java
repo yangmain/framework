@@ -16,6 +16,7 @@ public class OrmEntity implements Serializable {
     @StringColumn(name = "SERIAL_NO", nullable = false)
     @Comment("序列号")
     String serialNo;
+
     @NumberColumn(name = "AGE", nullable = false)
     @Comment("年龄")
     Integer age;
