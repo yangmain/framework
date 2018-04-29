@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by devops4j on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  * 参数对象
  */
 @Data

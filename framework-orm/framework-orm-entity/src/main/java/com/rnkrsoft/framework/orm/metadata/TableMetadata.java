@@ -24,9 +24,17 @@ public class TableMetadata {
      */
     Class entityClass;
     /**
-     * 类名
+     * 数据访问对象
      */
-    String className = "";
+    Class daoClass;
+    /**
+     * 实体类对象全限定名
+     */
+    String entityClassName = "";
+    /**
+     * 数据访问对象全限定名
+     */
+    String daoClassName = "";
     /**
      * 表名
      */

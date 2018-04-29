@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by devops4j on 2017/1/4.
+ * Created by rnkrsoft.com on 2017/1/4.
  */
 public class CommandCollection {
     @Getter

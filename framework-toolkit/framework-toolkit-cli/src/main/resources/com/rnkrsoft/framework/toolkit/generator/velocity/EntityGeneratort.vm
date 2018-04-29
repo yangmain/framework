@@ -1,0 +1,7 @@
+package ${package};
+
+#for(${item} in ${imports})
+import ${item};
+#end
+
+

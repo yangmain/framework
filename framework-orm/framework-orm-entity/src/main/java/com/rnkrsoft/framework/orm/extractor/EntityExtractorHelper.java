@@ -52,7 +52,7 @@ public final class EntityExtractorHelper {
                     .solution("建议使用{}注解，也可以使用JPA注解{}", Table.class, javax.persistence.Table.class)
                     .throwError();
         }
-        TableMetadata tableMetadata = TableMetadata.builder().entityClass(entityClass).className(entityClass.getSimpleName()).build();
+        TableMetadata tableMetadata = TableMetadata.builder().entityClass(entityClass).entityClassName(entityClass.getSimpleName()).build();
         //严格模式下，只能使用Wing4j注解
         if (strict) {
             if (tableAnnORM == null) {
