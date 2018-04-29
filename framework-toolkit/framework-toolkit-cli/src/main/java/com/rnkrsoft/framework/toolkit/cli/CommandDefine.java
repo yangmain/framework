@@ -1,11 +1,16 @@
-package com.rnkrsoft.framework.toolkit;
+package com.rnkrsoft.framework.toolkit.cli;
 
+import com.devops4j.message.MessageFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.*;
 
+/**
+ * Created by rnkrsoft.com on 2017/1/4.
+ * 命令定义
+ */
 @ToString
 public class CommandDefine {
     @Setter
@@ -28,6 +33,7 @@ public class CommandDefine {
     @Setter
     @Getter
     protected String extrInfo;
+
     /**
      * 获取选项信息
      *
@@ -69,8 +75,8 @@ public class CommandDefine {
      * @param argNum    参数数目
      * @return 对象
      */
-    public CommandDefine addOption(String longName, String shortName, boolean require, int argNum, String desc, String example) {
-        Option option = new Option(longName, shortName, require, argNum, desc, example);
+    public CommandDefine addOption(String longName, String shortName, boolean require, int argNum, String desc, String example, String ... defaultValue) {
+        Option option = new Option(longName, shortName, require, argNum, desc, example, Arrays.asList(defaultValue));
         return addOption(option);
     }
 
@@ -110,6 +116,7 @@ public class CommandDefine {
      */
     boolean parseOptions(Command command, List<String> cmdArgs) {
         Iterator<String> it = cmdArgs.iterator();
+        Map<String, List> tempArgs = new HashMap();
         while (it.hasNext()) {
             String opt = it.next();
             if (opt.startsWith("-")) {
@@ -117,7 +124,7 @@ public class CommandDefine {
                 Option option = getOption(argName);
                 int argNum = option.argNum;
                 if (argNum == 0) {
-                    command.args.put(option.getLongName(), new ArrayList<String>());
+                    tempArgs.put(option.getLongName(), null);
                 } else if (argNum == 1) {
                     String arg = null;
                     if (it.hasNext()) {
@@ -125,7 +132,7 @@ public class CommandDefine {
                     } else {
                         throw new IllegalArgumentException("无效参数");
                     }
-                    command.args.put(option.getLongName(), Arrays.asList(arg));
+                    tempArgs.put(option.getLongName(), Arrays.asList(arg));
                 } else {
                     List<String> args = new ArrayList();
                     int count = 0;
@@ -135,14 +142,33 @@ public class CommandDefine {
                         args.add(param);
                     }
                     if (count != option.argNum) {
-                        throw new IllegalArgumentException("无效参数");
+                        System.out.println(MessageFormatter.format("无效参数:{}", command.getCmd()));
+                        return false;
                     }
-                    command.args.put(option.getLongName(), args);
+                    tempArgs.put(option.getLongName(), args);
                 }
-
-
                 continue;
             }
+        }
+        for (Option option : options.values()) {
+            String longName = option.getLongName();
+            String shortName = option.getShortName();
+            List<String> values = null;
+            if(!tempArgs.containsKey(longName)){
+                if(tempArgs.containsKey(shortName)){
+                    values = tempArgs.get(shortName);
+                }else {
+                    if (option.isRequire()){
+                        System.out.println(MessageFormatter.format("参数{}是必须输入的", longName));
+                        return false;
+                    }else {
+                        values = option.getDefaultValue();
+                    }
+                }
+            }else{
+                values = tempArgs.get(longName);
+            }
+            command.args.put(longName, values);
         }
         return true;
     }
@@ -160,7 +186,11 @@ public class CommandDefine {
         }
         Command command = new Command(args[0], this);
         List<String> cmdArgs = Arrays.asList(args);
-        parseOptions(command, cmdArgs);
-        return command;
+        boolean success = parseOptions(command, cmdArgs);
+        if (success){
+            return command;
+        }else{
+            return null;
+        }
     }
 }

@@ -10,7 +10,7 @@ import com.rnkrsoft.framework.toolkit.generator.GenerateContext;
 /**
  * Created by rnkrsoft.com on 2018/4/26.
  */
-public class JdkDaoGenerator implements DaoGenerator {
+public class JdkDaoGenerator extends JdkGenerator implements DaoGenerator {
 
     @Override
     public ByteBuf generate(GenerateContext ctx) {

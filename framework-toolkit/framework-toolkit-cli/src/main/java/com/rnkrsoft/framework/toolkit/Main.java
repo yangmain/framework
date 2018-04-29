@@ -2,10 +2,10 @@ package com.rnkrsoft.framework.toolkit;
 
 import com.devops4j.io.buffer.ByteBuf;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.toolkit.Command;
-import com.rnkrsoft.framework.toolkit.CommandCollection;
-import com.rnkrsoft.framework.toolkit.CommandDefine;
-import com.rnkrsoft.framework.toolkit.HelpFormatter;
+import com.rnkrsoft.framework.toolkit.cli.Command;
+import com.rnkrsoft.framework.toolkit.cli.CommandCollection;
+import com.rnkrsoft.framework.toolkit.cli.CommandDefine;
+import com.rnkrsoft.framework.toolkit.cli.HelpFormatter;
 import com.rnkrsoft.framework.toolkit.generator.GenerateContext;
 import com.rnkrsoft.framework.toolkit.generator.Generator;
 import com.rnkrsoft.framework.toolkit.generator.jdk.JdkDaoGenerator;
@@ -40,14 +40,15 @@ public class Main {
     static {
         {
             CommandDefine define = new CommandDefine();
-            define.addOption("url", "h", true, 1, "数据库地址", "192.168.1.106:3306");
-            define.addOption("username", "u", true, 1, "用户名", "root");
-            define.addOption("password", "p", true, 1, "密码", "root");
-            define.addOption("schema", "s", true, 1, "数据库模式", "rnkrsoft");
-            define.addOption("package", "f", true, 1, "保存包名", "com.rnkrsoft.framework");
+            define.addOption("url", "h", true, 1, "数据库地址", "127.0.0.1:3306",  "");
+            define.addOption("username", "u", false, 1, "用户名", "字符串用户名", "root");
+            define.addOption("password", "p", false, 1, "密码", "字符串密码",  "");
+            define.addOption("schema", "s", true, 1, "数据库模式", "字符串数据库名", "");
+            define.addOption("package", "f", false, 1, "保存包名", "java格式的包名",  "com.rnkrsoft");
+            define.addOption("output", "o", false, 1, "输出路径", ".", ".");
             define.setName("逆向工程");
             define.setCmd("reverse");
-            define.setExample("reverse -h 192.168.1.106:3306 -u root -p root -schema rnkrsoft -package com.rnkrsoft.framework");
+            define.setExample("reverse -h 122.114.65.131:3306 -u root -p duduledmm@2018 -schema dudule -package com.rnkrsoft.framework");
             define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/help");
             COMMAND_COLLECTION.addDefine(define);
         }
@@ -116,6 +117,8 @@ public class Main {
             String h = command.valueString("url");
             String u = command.valueString("username");
             String p = command.valueString("password");
+            String output = command.valueString("output");
+            System.out.println("output " + output);
             if (packageName == null) {
                 System.out.println("package is empty!");
                 return false;
@@ -130,12 +133,16 @@ public class Main {
                 List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName);
                 Generator entityGenerator = new JdkEntityGenerator();
                 Generator daoGenerator = new JdkDaoGenerator();
+                File outputDir = new File(output);
+               if(!outputDir.exists()){
+                   outputDir.mkdirs();
+               }
                 for (TableMetadata metadata : metadatas) {
                     GenerateContext ctx = GenerateContext.builder().packageName(packageName).tableMetadata(metadata).build();
                     ByteBuf entityCode = entityGenerator.generate(ctx);
                     ByteBuf daoCode = daoGenerator.generate(ctx);
-                    File entityFile = new File(metadata.getEntityClassName().replaceAll("\\.", "/") + ".java");
-                    File daoFile = new File(metadata.getDaoClassName().replaceAll("\\.", "/") + ".java");
+                    File entityFile = new File(outputDir, metadata.getEntityClassName().replaceAll("\\.", "/") + ".java");
+                    File daoFile = new File(outputDir, metadata.getDaoClassName().replaceAll("\\.", "/") + ".java");
                     entityFile.getParentFile().mkdirs();
                     daoFile.getParentFile().mkdirs();
                     FileOutputStream entityFileFos = new FileOutputStream(entityFile);
@@ -160,9 +167,13 @@ public class Main {
                 usage();
             } else if (command.hasOption("cmd")) {
                 String arg = command.valueString("cmd");
-                CommandDefine define = COMMAND_COLLECTION.getOptionCollection().get(arg);
-                HelpFormatter formatter = new HelpFormatter();
-                formatter.render("", define, "");
+                if (arg == null){
+                    usage();
+                }else {
+                    CommandDefine define = COMMAND_COLLECTION.getOptionCollection().get(arg);
+                    HelpFormatter formatter = new HelpFormatter();
+                    formatter.render("", define, "");
+                }
             }
         }
         return true;
@@ -183,15 +194,18 @@ public class Main {
                 return;
             }
             Command command = define.parseCommand(line);
-            addToHistory(commandCount, line);
-            processCmd(command);
-            commandCount++;
+            //解析出命令对象的，进行命令执行
+            if (command != null){
+                addToHistory(commandCount, line);
+                processCmd(command);
+                commandCount++;
+            }
         }
     }
 
     void run() throws IOException {
         System.out.println("Welcome to rnkrsoft orm toolkit!");
-        boolean jlinemissing = false;
+        boolean jLineMissing = false;
         // only use jline if it's in the classpath
         try {
             Class consoleC = Class.forName("jline.console.ConsoleReader");
@@ -206,10 +220,10 @@ public class Main {
             }
         } catch (Exception e) {
             log.debug("Unable to start jline", e);
-            jlinemissing = true;
+            jLineMissing = true;
         }
 
-        if (jlinemissing) {
+        if (jLineMissing) {
             System.out.println("JLine support is disabled");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String line;

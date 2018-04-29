@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.toolkit;
+package com.rnkrsoft.framework.toolkit.cli;
 
 import lombok.Data;
 
@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by rnkrsoft.com on 2017/1/4.
+ * 帮助信息格式化对象
  */
 @Data
 public class HelpFormatter {
@@ -57,21 +58,23 @@ public class HelpFormatter {
     boolean isNotBlank(String string) {
         return string != null && !string.isEmpty();
     }
+
     /**
      * 渲染出命令信息
      *
-     * @param header 选项头信息
+     * @param header            选项头信息
      * @param commandCollection 命令集合
-     * @param footer 选项尾信息
+     * @param footer            选项尾信息
      */
     public void render(String header, CommandCollection commandCollection, String footer) {
         PrintWriter pw = new PrintWriter(System.out);
-        for (CommandDefine define :commandCollection.getOptionCollection().values()){
+        for (CommandDefine define : commandCollection.getOptionCollection().values()) {
             render(pw, header, define, footer);
             pw.append(newLine);
         }
         pw.flush();
     }
+
     /**
      * 渲染出命令信息
      *
@@ -85,6 +88,7 @@ public class HelpFormatter {
         pw.append(newLine);
         pw.flush();
     }
+
     /**
      * 渲染出命令信息
      *
@@ -113,7 +117,7 @@ public class HelpFormatter {
     }
 
     public void renderUsage(PrintWriter pw, String header, CommandDefine define, String footer) {
-        if(isBlank(define.getExample())){
+        if (isBlank(define.getExample())) {
             return;
         }
         final String lpad = createPadding(leftPadding);
@@ -160,20 +164,19 @@ public class HelpFormatter {
             } else {
                 optBuf.append(lpad).append(" ").append(getShortOptionPrefix()).append(option.getShortName()).append(" | ").append(getLongOptionPrefix()).append(option.getLongName());
             }
+            //命令带有参数，则输出描述
             if (option.getArgNum() > 0) {
                 optBuf.append(!option.getLongName().equals(option.getShortName()) ? longOptSeparator : " ");
-                optBuf.append("<");
-                if (isBlank(option.getExample())) {
+                if (option.getDefaultValue() == null || option.getDefaultValue().isEmpty()) {
                     optBuf.append(getArgName());
                 } else {
                     optBuf.append(option.getExample());
                 }
-                optBuf.append(">");
-
             } else {
                 optBuf.append(" ");
             }
-            optBuf.append(newLine).append("\t\t\t\t").append(option.getDesc());
+            optBuf.append(newLine).append("\t\t\t\t").append(option.getDesc())
+                    .append(" 默认值:").append(option.getDefaultValue());
             prefixList.add(optBuf);
             max = optBuf.length() > max ? optBuf.length() : max;
         }
@@ -197,7 +200,8 @@ public class HelpFormatter {
         if (isNotBlank(footer)) {
             sb.append(newLine).append(footer);
         }
-        pw.append(sb).append(newLine);;
+        pw.append(sb).append(newLine);
+        ;
     }
 
     /**
@@ -209,7 +213,7 @@ public class HelpFormatter {
      * @param footer 选项尾信息
      */
     public void renderExample(PrintWriter pw, String header, CommandDefine define, String footer) {
-        if(isBlank(define.getExample())){
+        if (isBlank(define.getExample())) {
             return;
         }
         StringBuffer sb = new StringBuffer();

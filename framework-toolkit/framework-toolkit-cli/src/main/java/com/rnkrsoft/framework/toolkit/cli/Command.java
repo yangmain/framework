@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.toolkit;
+package com.rnkrsoft.framework.toolkit.cli;
 
 import lombok.Getter;
 
@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * Created by rnkrsoft.com on 2017/1/4.
+ * 命令对象抽象封装
  */
 public class Command {
     /**
@@ -22,11 +23,11 @@ public class Command {
     protected String cmd = null;
 
     @Getter
-    protected CommandDefine commandOptions = null;
+    protected CommandDefine commandDefine = null;
 
-    public Command(String cmd, CommandDefine commandOptions) {
+    public Command(String cmd, CommandDefine commandDefine) {
         this.cmd = cmd;
-        this.commandOptions = commandOptions;
+        this.commandDefine = commandDefine;
     }
 
     /**
@@ -39,7 +40,7 @@ public class Command {
         if (args.containsKey(name)) {
             return true;
         } else {
-            String longName = commandOptions.alias.get(name);
+            String longName = commandDefine.alias.get(name);
             return args.containsKey(longName);
         }
     }
@@ -54,7 +55,7 @@ public class Command {
         if (args.containsKey(name)) {
             return args.get(name).toArray(new String[0]);
         }
-        String longName = commandOptions.alias.get(name);
+        String longName = commandDefine.alias.get(name);
         if (args.containsKey(longName)) {
             return args.get(longName).toArray(new String[0]);
         } else {
@@ -70,11 +71,13 @@ public class Command {
      */
     public String valueString(String name) {
         if (args.containsKey(name)) {
-            return args.get(name).get(0);
+            List<String> args0 = args.get(name);
+            return args0 == null ? null : args0.get(0);
         }
-        String longName = commandOptions.alias.get(name);
+        String longName = commandDefine.alias.get(name);
         if (args.containsKey(longName)) {
-            return args.get(longName).get(0);
+            List<String> args0 = args.get(longName);
+            return args0 == null ? null : args0.get(0);
         } else {
             return null;
         }

@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.toolkit;
+package com.rnkrsoft.framework.toolkit.cli;
 
 import lombok.Getter;
 
@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Created by rnkrsoft.com on 2017/1/4.
+ *
  */
 public class CommandCollection {
     @Getter
