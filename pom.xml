@@ -27,6 +27,7 @@
         <module>framework-orm</module>
         <module>framework-test</module>
         <module>framework-toolkit</module>
+        <module>framework-standalone</module>
     </modules>
     <properties>
     </properties>
