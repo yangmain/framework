@@ -14,7 +14,7 @@ public enum NameMode {
      */
     entity,
     /**
-     * 使用@CreateTable上的
+     * 客户定制
      */
-    createTest
+    customize,
 }

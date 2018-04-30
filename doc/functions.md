@@ -23,3 +23,6 @@
    20. LockByForUpdateOr
    21. LockByForUpdateAnd
    22. LockByUpdateSetPrimaryKey
+   
+ #单元测试支持
+ 单元测试使用基于Junit的技术特性，支持TDD开发思想

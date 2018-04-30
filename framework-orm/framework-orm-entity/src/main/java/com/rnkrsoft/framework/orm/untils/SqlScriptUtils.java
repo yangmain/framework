@@ -51,7 +51,7 @@ public abstract class SqlScriptUtils {
             }
         } else if (schemaMode == NameMode.entity) {
 
-        } else if (schemaMode == NameMode.createTest) {
+        } else if (schemaMode == NameMode.customize) {
             tableMetadata.setSchema(schema);
         }
         if (prefixMode == NameMode.auto) {
@@ -60,7 +60,7 @@ public abstract class SqlScriptUtils {
             }
         } else if (prefixMode == NameMode.entity) {
 
-        } else if (prefixMode == NameMode.createTest) {
+        } else if (prefixMode == NameMode.customize) {
             tableMetadata.setPrefix(prefix);
         }
         if (suffixMode == NameMode.auto) {
@@ -69,7 +69,7 @@ public abstract class SqlScriptUtils {
             }
         } else if (suffixMode == NameMode.entity) {
 
-        } else if (suffixMode == NameMode.createTest) {
+        } else if (suffixMode == NameMode.customize) {
             tableMetadata.setSuffix(suffix);
         }
         tableMetadata.setDataEngine(engine);
@@ -188,7 +188,7 @@ public abstract class SqlScriptUtils {
             }
         } else if (schemaMode == NameMode.entity) {
 
-        } else if (schemaMode == NameMode.createTest) {
+        } else if (schemaMode == NameMode.customize) {
             tableMetadata.setSchema(schema);
         }
         if (prefixMode == NameMode.auto) {
@@ -197,7 +197,7 @@ public abstract class SqlScriptUtils {
             }
         } else if (prefixMode == NameMode.entity) {
 
-        } else if (prefixMode == NameMode.createTest) {
+        } else if (prefixMode == NameMode.customize) {
             tableMetadata.setPrefix(prefix);
         }
         if (suffixMode == NameMode.auto) {
@@ -206,7 +206,7 @@ public abstract class SqlScriptUtils {
             }
         } else if (suffixMode == NameMode.entity) {
 
-        } else if (suffixMode == NameMode.createTest) {
+        } else if (suffixMode == NameMode.customize) {
             tableMetadata.setSuffix(suffix);
         }
         ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
@@ -237,17 +237,7 @@ public abstract class SqlScriptUtils {
             sql.append(convert(" IF EXISTS", keywordMode));
         }
         sql.append(" ");
-        String table = tableMetadata.getTableName();
-        if (!StringUtils.isBlank(tableMetadata.getSchema())) {
-            if (!StringUtils.isBlank(tableMetadata.getPrefix())) {
-                table = tableMetadata.getPrefix() + "_" + table;
-            }
-            if (!StringUtils.isBlank(tableMetadata.getSuffix())) {
-                table = table + "_" + tableMetadata.getSuffix();
-            }
-            table = tableMetadata.getSchema() + "." + table;
-        }
-        table = convert(table, sqlMode);
+        String table = convert(tableMetadata.getFullTableName(), sqlMode);
         sql.append(table);
         os.write(sql.toString().getBytes("UTF-8"));
     }

@@ -58,13 +58,13 @@ public abstract class MappedStatementBuilder {
 
     public TableMetadata getTableMetadata() {
         ItemConfig itemConfig = ormConfig.get(mapperClass.getName());
-        if (itemConfig.getSchemaMode() == NameMode.createTest) {
+        if (itemConfig.getSchemaMode() != NameMode.entity) {
             this.tableMetadata.setSchema(itemConfig.getSchema());
         }
-        if (itemConfig.getPrefixMode() == NameMode.createTest) {
+        if (itemConfig.getPrefixMode() != NameMode.entity) {
             this.tableMetadata.setPrefix(itemConfig.getPrefix());
         }
-        if (itemConfig.getSuffixMode() == NameMode.createTest) {
+        if (itemConfig.getSuffixMode() != NameMode.entity) {
             this.tableMetadata.setSuffix(itemConfig.getSuffix());
         }
         return this.tableMetadata;
