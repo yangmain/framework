@@ -169,9 +169,6 @@ public abstract class OrmMappedStatementRegister {
         if (SelectAndMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (SelectAndMapper.class.isAssignableFrom(daoInterface)) {
-            builders.add(new SelectAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
-        }
         if (SelectOrMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
@@ -185,7 +182,7 @@ public abstract class OrmMappedStatementRegister {
             builders.add(new SelectPageAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
         if (SelectPageOrMapper.class.isAssignableFrom(daoInterface)) {
-            builders.add(new SelectOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
+            builders.add(new SelectPageOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
         //---------------------------统计-----------------------------------------
         if (CountAllMapper.class.isAssignableFrom(daoInterface)) {
@@ -215,7 +212,7 @@ public abstract class OrmMappedStatementRegister {
             MappedStatement ms = builder.build();
             String id = ms.getId();
             if (configuration.hasStatement(id)) {
-                log.error("Mybatis has existed MappedStatement id:{0},but now override...", id);
+                log.error("Mybatis has existed MappedStatement id:{},but now override...", id);
             } else {
                 configuration.addMappedStatement(ms);
             }

@@ -123,24 +123,24 @@ public class OrmEntityExtractor implements EntityExtractor {
                     } else if (fieldClass == Integer.class) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
-                        if (numberColumn.nullable()) {
-                            ErrorContextFactory.instance()
-                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-                                    .solution("nullable属性需要设置为{}", false).throwError();
-                        }
+//                        if (numberColumn.nullable()) {
+//                            ErrorContextFactory.instance()
+//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
+//                                    .solution("nullable属性需要设置为{}", false).throwError();
+//                        }
                     } else if (fieldClass == Boolean.TYPE) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
                     } else if (fieldClass == Boolean.class) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
-                        if (numberColumn.nullable()) {
-                            ErrorContextFactory.instance()
-                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-                                    .solution("nullable属性需要设置为{}", false).throwError();
-                        }
+//                        if (numberColumn.nullable()) {
+//                            ErrorContextFactory.instance()
+//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
+//                                    .solution("nullable属性需要设置为{}", false).throwError();
+//                        }
                     } else if (fieldClass == BigDecimal.class) {
                         if (numberColumn.scale() > 0 && numberColumn.precision() > 0 && numberColumn.precision() > numberColumn.scale()) {
                             dataType = "DECIMAL(" + numberColumn.precision() + "," + numberColumn.scale() + ")";
@@ -160,24 +160,24 @@ public class OrmEntityExtractor implements EntityExtractor {
                     } else if (fieldClass == Integer.class) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
-                        if (numberColumn.nullable()) {
-                            ErrorContextFactory.instance()
-                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-                                    .solution("nullable属性需要设置为{}", false).throwError();
-                        }
+//                        if (numberColumn.nullable()) {
+//                            ErrorContextFactory.instance()
+//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
+//                                    .solution("nullable属性需要设置为{}", false).throwError();
+//                        }
                     } else if (fieldClass == Boolean.TYPE) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
                     } else if (fieldClass == Boolean.class) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
-                        if (numberColumn.nullable()) {
-                            ErrorContextFactory.instance()
-                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-                                    .solution("nullable属性需要设置为{}", false).throwError();
-                        }
+//                        if (numberColumn.nullable()) {
+//                            ErrorContextFactory.instance()
+//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
+//                                    .solution("nullable属性需要设置为{}", false).throwError();
+//                        }
                     } else {
                         ErrorContextFactory.instance()
                                 .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
@@ -225,24 +225,24 @@ public class OrmEntityExtractor implements EntityExtractor {
                 } else if (fieldClass == Integer.class) {
                     dataType = "INTEGER";
                     jdbcType = "NUMERIC";
-                    if (numberColumn.nullable()) {
-                        ErrorContextFactory.instance()
-                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                                .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-                                .solution("nullable属性需要设置为{}", false).throwError();
-                    }
+//                    if (numberColumn.nullable()) {
+//                        ErrorContextFactory.instance()
+//                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+//                                .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
+//                                .solution("nullable属性需要设置为{}", false).throwError();
+//                    }
                 } else if (fieldClass == Boolean.TYPE) {
                     dataType = "TINYINT";
                     jdbcType = "NUMERIC";
                 } else if (fieldClass == Boolean.class) {
                     dataType = "TINYINT";
                     jdbcType = "NUMERIC";
-                    if (numberColumn.nullable()) {
-                        ErrorContextFactory.instance()
-                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-                                .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-                                .solution("nullable属性需要设置为{}", false).throwError();
-                    }
+//                    if (numberColumn.nullable()) {
+//                        ErrorContextFactory.instance()
+//                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+//                                .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
+//                                .solution("nullable属性需要设置为{}", false).throwError();
+//                    }
                 } else {
                     ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())

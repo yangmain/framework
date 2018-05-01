@@ -43,12 +43,12 @@ public class PrimaryKeyHelper {
     public static void generate(final SequenceServiceConfigure ssc, final TableMetadata tableMetadata, final ColumnMetadata primaryKeyMetadata, MappedStatement.Builder msBuilder) {
         //如果主键是自增整数主键，则使用主键自动生成
         if (primaryKeyMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.IDENTITY) {
-            log.debug("use int increment");
+            log.debug("{} use int increment", tableMetadata.getFullTableName());
             msBuilder.keyColumn(primaryKeyMetadata.getJdbcName());
             msBuilder.keyProperty(primaryKeyMetadata.getJavaName());
             msBuilder.keyGenerator(new Jdbc3KeyGenerator());
         } else if (primaryKeyMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.UUID) {
-            log.debug("use uuid");
+            log.debug("{} use uuid", tableMetadata.getFullTableName());
             final String getterMethodName = "get" + StringUtils.firstCharToUpper(primaryKeyMetadata.getJavaName());
             final String setterMethodName = "set" + StringUtils.firstCharToUpper(primaryKeyMetadata.getJavaName());
             //将主键值设置到实体
@@ -93,7 +93,7 @@ public class PrimaryKeyHelper {
                 }
             });
         } else if (primaryKeyMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.SEQUENCE_SERVICE) {
-            log.debug("use sequence");
+            log.debug("{} use sequence", tableMetadata.getFullTableName());
             final String schema = primaryKeyMetadata.getTableMetadata().getSchema();
             final String tableName = primaryKeyMetadata.getTableMetadata().getTableName();
             final String feature = primaryKeyMetadata.getPrimaryKeyFeature();
@@ -169,7 +169,7 @@ public class PrimaryKeyHelper {
                 }
             });
         } else if (primaryKeyMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.EXPRESSION) {
-            log.debug("use expression");
+            log.debug("{} use expression", tableMetadata.getFullTableName());
             final String schema = primaryKeyMetadata.getTableMetadata().getSchema();
             final String tableName = primaryKeyMetadata.getTableMetadata().getTableName();
             final String feature = primaryKeyMetadata.getPrimaryKeyFeature();
