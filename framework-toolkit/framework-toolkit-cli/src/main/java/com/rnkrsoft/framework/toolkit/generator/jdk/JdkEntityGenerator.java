@@ -11,7 +11,7 @@ import com.rnkrsoft.framework.toolkit.generator.GenerateContext;
 /**
  * Created by rnkrsoft.com on 2018/4/23.
  */
-public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator{
+public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator {
     @Override
     public ByteBuf generate(GenerateContext ctx) {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
@@ -53,47 +53,47 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator{
         buf.put("UTF-8", MessageFormatter.format("@Comment(\"{}\")", metadata.getComment()), "\n");
         buf.put("UTF-8", MessageFormatter.format("public class {} implements Serializable {", entityName), "\n");
 //        buf.put("UTF-8", "\n");
-        for (String columnName : metadata.getOrderColumns()){
+        for (String columnName : metadata.getOrderColumns()) {
             ColumnMetadata columnMetadata = metadata.getColumnMetadataSet().get(columnName);
             buf.put("UTF-8", indent(), MessageFormatter.format("@Comment(\"{}\")", columnMetadata.getComment()), "\n");
-            if(metadata.getPrimaryKeys().contains(columnName)){
+            if (metadata.getPrimaryKeys().contains(columnName)) {
                 String str = indent() + "@PrimaryKey(";
-                if(columnMetadata.getJdbcType().equals("NUMERIC") && columnMetadata.getAutoIncrement() != null && columnMetadata.getAutoIncrement()){
+                if (columnMetadata.getJdbcType().equals("NUMERIC") && columnMetadata.getAutoIncrement() != null && columnMetadata.getAutoIncrement()) {
                     str += "strategy = PrimaryKeyStrategy.IDENTITY";
-                }else if(columnMetadata.getJdbcType().equals("VARCHAR")){
+                } else if (columnMetadata.getJdbcType().equals("VARCHAR")) {
                     str += "strategy = PrimaryKeyStrategy.UUID";
-                }else if(columnMetadata.getJdbcType().equals("CHAR")){
+                } else if (columnMetadata.getJdbcType().equals("CHAR")) {
                     str += "strategy = PrimaryKeyStrategy.UUID";
-                }else{
+                } else {
 
                 }
-                str +=")";
+                str += ")";
                 buf.put("UTF-8", str, "\n");
             }
-            if (columnMetadata.getJdbcType().equals("VARCHAR")){
+            if (columnMetadata.getJdbcType().equals("VARCHAR")) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("String {};", columnMetadata.getJavaName()));
-            }else if(columnMetadata.getJdbcType().equals("CHAR")){
-                buf.put("UTF-8",indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR))", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8",indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
-            }else if(columnMetadata.getJdbcType().equals("NUMERIC")){
-                buf.put("UTF-8", indent(),MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
-            }else if(columnMetadata.getJdbcType().equals("DECIMAL")){
-                buf.put("UTF-8", indent(),MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.DECIMAL )", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("BigDecimal {};", columnMetadata.getJavaName()));
-            }else if(columnMetadata.getJdbcType().equals("DATE")){
-                buf.put("UTF-8", indent(),MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.DATE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
-            }else if(columnMetadata.getJdbcType().equals("DATETIME")){
-                buf.put("UTF-8", indent(),MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.DATE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
-            }else if(columnMetadata.getJdbcType().equals("TIMESTAMP")){
-                buf.put("UTF-8", indent(),MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.TIMESTAMP)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("Timestamp {};", columnMetadata.getJavaName()));
-            }else{
-                buf.put("UTF-8", indent(),MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(),MessageFormatter.format("String {};", columnMetadata.getJavaName()));
+                buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
+            } else if (columnMetadata.getJdbcType().equals("CHAR")) {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR))", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
+            } else if (columnMetadata.getJdbcType().equals("NUMERIC")) {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
+            } else if (columnMetadata.getJdbcType().equals("DECIMAL")) {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.DECIMAL )", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("BigDecimal {};", columnMetadata.getJavaName()));
+            } else if (columnMetadata.getJdbcType().equals("DATE")) {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.DATE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
+            } else if (columnMetadata.getJdbcType().equals("DATETIME")) {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.DATE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
+            } else if (columnMetadata.getJdbcType().equals("TIMESTAMP")) {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.TIMESTAMP)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("Timestamp {};", columnMetadata.getJavaName()));
+            } else {
+                buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
             }
             buf.put("UTF-8", "\n");
             buf.put("UTF-8", "\n");
