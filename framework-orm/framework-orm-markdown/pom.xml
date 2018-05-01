@@ -3,10 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
-        <artifactId>framework-annotation</artifactId>
+        <artifactId>framework-orm</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>framework-annotation-orm</artifactId>
-    <name>framework-annotation-orm</name>
-    <description>This is the framework4j-annotation-orm</description>
+    <artifactId>framework-orm-markdown</artifactId>
+    <name>framework-orm-markdown</name>
+    <description>MarkDown文档集成模块</description>
+    <dependencies>
+    </dependencies>
 </project>
