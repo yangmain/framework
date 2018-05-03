@@ -41,7 +41,7 @@ public class UserServiceImplTest extends DataSourceTest {
             suffix = "yyyy",
             schemaMode = NameMode.customize,
             schema = "xxxxxx",
-            dropBeforeCreate = false
+            dropBeforeCreate = true
     )
     @Test
     public void testRegister_error() throws Exception {

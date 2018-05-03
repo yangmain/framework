@@ -192,11 +192,8 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         final Class<?> testClass = testContext.getTestClass();
         ApplicationContext ctx = testContext.getApplicationContext();
         CreateTableContext context = CreateTableContext.context();
-        if (context.isDropAfterTest()) {
-            DataSource dataSource = (DataSource) ctx.getBean(DEFAULT_DATA_SOURCE);
-            createTableHandler.drop(dataSource, context);
-        }
-
+        DataSource dataSource = (DataSource) ctx.getBean(DEFAULT_DATA_SOURCE);
+        createTableHandler.drop(dataSource, context);
     }
 
     @Override
