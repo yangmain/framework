@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 
 /**
  * Created by rnkrsoft.com on 2017/1/4.
+ * 用于测试类或者方法上标注的测试表相关信息
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -41,19 +42,24 @@ public @interface CreateTable {
     String suffix() default "";
 
     /**
-     * 创建表前进行测试
+     * 测试前创建表结构
      *
      * @return 真假值
      */
     boolean createBeforeTest() default true;
 
     /**
-     * 进行测试前进行数据清除
+     * 创建表结构前进行表结构的删除
      *
      * @return 真假值
      */
-    boolean testBeforeDrop() default true;
+    boolean dropBeforeCreate() default true;
 
+    /**
+     * 测试后删除表结构
+     * @return 真假值
+     */
+    boolean dropAfterTest() default true;
     /**
      * 关键字的单词模式
      * 例如select drop delete update where 等
@@ -64,7 +70,9 @@ public @interface CreateTable {
 
     /**
      * SQL语句使用的单词模式
-     * 例如 select col1 from table1, col1和table1就是SQL语句
+     * 例如 select col1 FROM table1, col1和table1就是SQL语句
+     * 如果为upperCase,则转换为SELECT col1 FROM table1
+     * 如果为lowerCase,则转换为select col1 from table1
      *
      * @return 单词模式
      */

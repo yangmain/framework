@@ -33,8 +33,15 @@ public class CreateTableContext {
     String prefix;
     NameMode suffixMode = NameMode.customize;
     String suffix;
+    /**
+     * 测试前创建表结构
+     */
     boolean createBeforeTest = true;
-    boolean testBeforeDrop = true;
+    /**
+     * 创建表结构前删除表结构
+     */
+    boolean dropBeforeCreate = true;
+    boolean dropAfterTest = true;
     /**
      * 键为表名，值为封装
      */

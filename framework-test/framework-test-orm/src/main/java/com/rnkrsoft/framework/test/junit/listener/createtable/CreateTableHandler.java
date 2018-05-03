@@ -43,12 +43,16 @@ public class CreateTableHandler {
                 }
                 context.setSuffix(createTableWrapper.getSuffix());
             }
-            if (createTableWrapper.isTestBeforeDrop()) {
-                String dropSql = SqlScriptUtils.generateDropTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), createTableWrapper.isTestBeforeDrop());
-                jdbcTemplate.execute(dropSql);
+            //测试前进行表结构的创建
+            if(createTableWrapper.isCreateBeforeTest()){
+                //测试前进行表结构的删除
+                if (createTableWrapper.isDropBeforeCreate()) {
+                    String dropSql = SqlScriptUtils.generateDropTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), true);
+                    jdbcTemplate.execute(dropSql);
+                }
+                String createSql = SqlScriptUtils.generateCreateTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), null, createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), true);
+                jdbcTemplate.execute(createSql);
             }
-            String createSql = SqlScriptUtils.generateCreateTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), null, createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), createTableWrapper.isCreateBeforeTest());
-            jdbcTemplate.execute(createSql);
         }
     }
 
@@ -60,7 +64,7 @@ public class CreateTableHandler {
             return;
         }
         for (CreateTableWrapper createTableWrapper : entities) {
-            String dropSql = SqlScriptUtils.generateDropTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), createTableWrapper.isTestBeforeDrop());
+            String dropSql = SqlScriptUtils.generateDropTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), true);
             jdbcTemplate.execute(dropSql);
         }
     }

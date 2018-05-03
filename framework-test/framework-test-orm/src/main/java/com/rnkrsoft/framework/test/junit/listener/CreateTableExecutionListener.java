@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class CreateTableExecutionListener extends AbstractTestExecutionListener {
 
+    public static final String DEFAULT_DATA_SOURCE = "defaultDataSource";
     final CreateTableHandler createTableHandler = new CreateTableHandler();
 
     @Override
@@ -64,7 +65,8 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         if (classCreateTable != null) {
             Class[] classes = classCreateTable.entities();
             boolean createBeforeTest = classCreateTable.createBeforeTest();
-            boolean testBeforeDrop = classCreateTable.testBeforeDrop();
+            boolean dropBeforeCreate = classCreateTable.dropBeforeCreate();
+            boolean dropAfterTest = classCreateTable.dropAfterTest();
             sqlMode = classCreateTable.sqlMode();
             keywordMode = classCreateTable.keywordMode();
             schemaMode = classCreateTable.schemaMode();
@@ -80,12 +82,16 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             context.setSuffix(suffix);
             context.setSchemaMode(schemaMode);
             context.setSchema(schema);
+            context.setCreateBeforeTest(createBeforeTest);
+            context.setDropBeforeCreate(dropBeforeCreate);
+            context.setDropAfterTest(dropAfterTest);
             for (Class entityClass : classes) {
                 CreateTableWrapper createTableWrapper = CreateTableWrapper.builder()
                         .scope(CreateTableScope.Class)
                         .entityClass(entityClass)
                         .createBeforeTest(createBeforeTest)
-                        .testBeforeDrop(testBeforeDrop)
+                        .dropBeforeCreate(dropBeforeCreate)
+                        .dropAfterTest(dropAfterTest)
                         .sqlMode(sqlMode)
                         .keywordMode(keywordMode)
                         .schemaMode(schemaMode)
@@ -103,7 +109,8 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         if (methodCreateTable != null) {
             Class[] classes = methodCreateTable.entities();
             boolean createBeforeTest = methodCreateTable.createBeforeTest();
-            boolean testBeforeDrop = methodCreateTable.testBeforeDrop();
+            boolean dropBeforeCreate = methodCreateTable.dropBeforeCreate();
+            boolean dropAfterTest = methodCreateTable.dropAfterTest();
             sqlMode = methodCreateTable.sqlMode();
             keywordMode = methodCreateTable.keywordMode();
             schemaMode = methodCreateTable.schemaMode();
@@ -119,13 +126,17 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             context.setSuffix(suffix);
             context.setSchemaMode(schemaMode);
             context.setSchema(schema);
+            context.setCreateBeforeTest(createBeforeTest);
+            context.setDropBeforeCreate(dropBeforeCreate);
+            context.setDropAfterTest(dropAfterTest);
             //方法上的实体只有类上实体没包含才加入
             for (Class entityClass : classes) {
                 CreateTableWrapper createTableWrapper = CreateTableWrapper.builder()
                         .scope(CreateTableScope.Method)
                         .entityClass(entityClass)
                         .createBeforeTest(createBeforeTest)
-                        .testBeforeDrop(testBeforeDrop)
+                        .dropBeforeCreate(dropBeforeCreate)
+                        .dropAfterTest(dropAfterTest)
                         .sqlMode(sqlMode)
                         .keywordMode(keywordMode)
                         .schemaMode(schemaMode)
@@ -140,7 +151,7 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         }
         ApplicationContext ctx = testContext.getApplicationContext();
         CreateTableContext context = CreateTableContext.context();
-        DataSource dataSource = (DataSource) ctx.getBean("defaultDataSource");
+        DataSource dataSource = (DataSource) ctx.getBean(DEFAULT_DATA_SOURCE);
         createTableHandler.create(dataSource, context);
         String sqlSessionFactoryName = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
         if (!ctx.containsBean(sqlSessionFactoryName)) {
@@ -180,9 +191,12 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         final Method testMethod = testContext.getTestMethod();
         final Class<?> testClass = testContext.getTestClass();
         ApplicationContext ctx = testContext.getApplicationContext();
-        DataSource dataSource = (DataSource) ctx.getBean("defaultDataSource");
         CreateTableContext context = CreateTableContext.context();
-        createTableHandler.drop(dataSource, context);
+        if (context.isDropAfterTest()) {
+            DataSource dataSource = (DataSource) ctx.getBean(DEFAULT_DATA_SOURCE);
+            createTableHandler.drop(dataSource, context);
+        }
+
     }
 
     @Override

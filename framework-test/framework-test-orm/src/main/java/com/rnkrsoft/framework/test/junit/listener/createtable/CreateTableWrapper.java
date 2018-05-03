@@ -38,5 +38,6 @@ public class CreateTableWrapper {
     NameMode suffixMode = NameMode.customize;
     String suffix;
     boolean createBeforeTest = true;
-    boolean testBeforeDrop = true;
+    boolean dropBeforeCreate = true;
+    boolean dropAfterTest = true;
 }

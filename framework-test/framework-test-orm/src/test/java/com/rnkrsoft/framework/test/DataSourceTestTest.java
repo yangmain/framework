@@ -25,7 +25,7 @@ import java.util.UUID;
         schemaMode = NameMode.entity,
         schema = "xxxxxx",
         createBeforeTest = true,
-        testBeforeDrop = false
+        dropBeforeCreate = false
 )
 @ContextConfiguration("classpath*:testContext-orm.xml")
 @DataSource(DataSourceType.AUTO)
