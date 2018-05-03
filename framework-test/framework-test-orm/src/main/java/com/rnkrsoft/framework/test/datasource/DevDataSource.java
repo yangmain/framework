@@ -8,4 +8,11 @@ public class DevDataSource extends AbstractRoutingDataSource {
         String dataSource = DataSourceScanner.lookup();
         return dataSource;
     }
+
+    @Override
+    public void afterPropertiesSet() {
+        System.out.println("-----------");
+        super.afterPropertiesSet();
+        System.out.println("-----------");
+    }
 }

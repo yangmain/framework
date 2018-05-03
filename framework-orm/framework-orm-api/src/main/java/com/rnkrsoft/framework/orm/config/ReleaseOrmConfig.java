@@ -36,9 +36,9 @@ public class ReleaseOrmConfig implements OrmConfig{
      */
     String[] mapperLocations;
     /**
-     * 是否允许重复加载
+     * 是否允许重建表结构,正式发布不允许重建表结构
      */
-    final boolean allowReload = false;
+    final boolean rebuildTable = false;
     /**
      * 获取关键字模式
      */

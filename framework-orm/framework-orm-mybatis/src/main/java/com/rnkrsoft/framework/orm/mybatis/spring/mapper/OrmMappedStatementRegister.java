@@ -102,7 +102,7 @@ public abstract class OrmMappedStatementRegister {
      */
     public static void scan(Configuration configuration, OrmConfig ormConfig, SequenceServiceConfigure ssc, Class daoInterface){
         //如果是开发环境则将DAO接口缓存起来，等待后续处理，如果是生产环境则直接处理
-        if (ormConfig.isAllowReload()) {
+        if (ormConfig.isRebuildTable()) {
             addDaoInterface(daoInterface);
         } else {
             scan0(configuration, ormConfig, ssc, daoInterface);

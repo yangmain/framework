@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class CreateTableExecutionListener extends AbstractTestExecutionListener {
 
-    CreateTableHandler createTableHandler = new CreateTableHandler();
+    final CreateTableHandler createTableHandler = new CreateTableHandler();
 
     @Override
     public void beforeTestClass(TestContext testContext) throws Exception {
@@ -74,6 +74,12 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             suffixMode = classCreateTable.suffixMode();
             suffix = classCreateTable.suffix();
             CreateTableContext context = CreateTableContext.context();
+            context.setPrefixMode(prefixMode);
+            context.setPrefix(prefix);
+            context.setSuffixMode(suffixMode);
+            context.setSuffix(suffix);
+            context.setSchemaMode(schemaMode);
+            context.setSchema(schema);
             for (Class entityClass : classes) {
                 CreateTableWrapper createTableWrapper = CreateTableWrapper.builder()
                         .scope(CreateTableScope.Class)
@@ -107,7 +113,12 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
             suffixMode = methodCreateTable.suffixMode();
             suffix = methodCreateTable.suffix();
             CreateTableContext context = CreateTableContext.context();
-            List<Class> methodEntities_ = Arrays.asList(classes);
+            context.setPrefixMode(prefixMode);
+            context.setPrefix(prefix);
+            context.setSuffixMode(suffixMode);
+            context.setSuffix(suffix);
+            context.setSchemaMode(schemaMode);
+            context.setSchema(schema);
             //方法上的实体只有类上实体没包含才加入
             for (Class entityClass : classes) {
                 CreateTableWrapper createTableWrapper = CreateTableWrapper.builder()
@@ -129,10 +140,16 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         }
         ApplicationContext ctx = testContext.getApplicationContext();
         CreateTableContext context = CreateTableContext.context();
-        DataSource dataSource = ctx.getBean(DataSource.class);
+        DataSource dataSource = (DataSource) ctx.getBean("defaultDataSource");
         Connection connection = dataSource.getConnection();
-        createTableHandler.create(connection, context);
-        connection.close();
+        try {
+            createTableHandler.create(connection, context);
+        }finally {
+            if(connection != null){
+                connection.commit();
+                connection.close();
+            }
+        }
         String sqlSessionFactoryName = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
         if (!ctx.containsBean(sqlSessionFactoryName)) {
             throw ErrorContextFactory.instance().message("'{}' do not exist bean name '{}'", OrmSessionFactoryBean.class, sqlSessionFactoryName).runtimeException();
@@ -171,11 +188,17 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         final Method testMethod = testContext.getTestMethod();
         final Class<?> testClass = testContext.getTestClass();
         ApplicationContext ctx = testContext.getApplicationContext();
-        DataSource dataSource = ctx.getBean(DataSource.class);
+        DataSource dataSource = (DataSource) ctx.getBean("defaultDataSource");
         Connection connection = dataSource.getConnection();
         CreateTableContext context = CreateTableContext.context();
-        createTableHandler.drop(connection, context);
-        connection.close();
+        try {
+            createTableHandler.drop(connection, context);
+        }finally {
+            if(connection != null){
+                connection.commit();
+                connection.close();
+            }
+        }
     }
 
     @Override

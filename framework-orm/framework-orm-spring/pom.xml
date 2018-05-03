@@ -16,6 +16,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-mybatis</artifactId>
             <version>1.0.0</version>

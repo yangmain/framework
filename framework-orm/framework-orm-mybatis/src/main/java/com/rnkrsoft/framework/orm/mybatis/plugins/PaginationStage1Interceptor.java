@@ -127,7 +127,7 @@ public class PaginationStage1Interceptor implements Interceptor {
         return "select count(1) from (" + sql + ") page_table";
     }
 
-    private static class ReflectUtil {
+    public static class ReflectUtil {
         public static Object getFieldValue(Object obj, String fieldName) {
             Object result = null;
             Field field = ReflectUtil.getField(obj, fieldName);

@@ -28,6 +28,7 @@
         <module>framework-test</module>
         <module>framework-toolkit</module>
         <module>framework-standalone</module>
+        <module>framework-test-standalone</module>
     </modules>
     <properties>
     </properties>

@@ -20,16 +20,6 @@ import static org.junit.Assert.*;
 /**
  * Created by woate on 2018/4/26.
  */
-@CreateTable(entities = OrmEntity.class,
-        keywordMode = WordMode.lowerCase,
-        sqlMode = WordMode.lowerCase,
-        prefixMode = NameMode.customize,
-        prefix = "xxxx",
-        suffixMode = NameMode.customize,
-        suffix = "yyyy",
-        schemaMode = NameMode.customize,
-        testBeforeDrop = false
-)
 @ContextConfiguration("classpath*:testContext-orm.xml")
 @DataSource(DataSourceType.H2)
 public class UserServiceImplTest extends DataSourceTest {
@@ -42,14 +32,14 @@ public class UserServiceImplTest extends DataSourceTest {
     }
 
 
-    @CreateTable(entities = UserInfoEntity.class,
+    @CreateTable(entities = {UserInfoEntity.class, OrmEntity.class},
             keywordMode = WordMode.lowerCase,
             sqlMode = WordMode.lowerCase,
-            prefixMode = NameMode.customize,
+            prefixMode = NameMode.entity,
             prefix = "xxxx",
-            suffixMode = NameMode.customize,
+            suffixMode = NameMode.entity,
             suffix = "yyyy",
-            schemaMode = NameMode.customize,
+            schemaMode = NameMode.entity,
             schema = "xxxxxx",
             testBeforeDrop = false
     )
