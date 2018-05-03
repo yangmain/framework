@@ -25,9 +25,9 @@ public class TestOrmConfig implements OrmConfig {
     @Setter
     String[] mapperLocations;
     /**
-     * 是否允许重建表结构
+     * 是否允许重载
      */
-    boolean rebuildTable = true;
+    boolean allowReload = true;
     /**
      * 获取关键字模式
      */

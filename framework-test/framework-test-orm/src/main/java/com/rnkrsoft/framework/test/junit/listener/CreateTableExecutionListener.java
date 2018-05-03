@@ -141,15 +141,7 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         ApplicationContext ctx = testContext.getApplicationContext();
         CreateTableContext context = CreateTableContext.context();
         DataSource dataSource = (DataSource) ctx.getBean("defaultDataSource");
-        Connection connection = dataSource.getConnection();
-        try {
-            createTableHandler.create(connection, context);
-        }finally {
-            if(connection != null){
-                connection.commit();
-                connection.close();
-            }
-        }
+        createTableHandler.create(dataSource, context);
         String sqlSessionFactoryName = StringUtils.firstCharToLower(OrmSessionFactoryBean.class.getSimpleName());
         if (!ctx.containsBean(sqlSessionFactoryName)) {
             throw ErrorContextFactory.instance().message("'{}' do not exist bean name '{}'", OrmSessionFactoryBean.class, sqlSessionFactoryName).runtimeException();
@@ -189,16 +181,8 @@ public class CreateTableExecutionListener extends AbstractTestExecutionListener 
         final Class<?> testClass = testContext.getTestClass();
         ApplicationContext ctx = testContext.getApplicationContext();
         DataSource dataSource = (DataSource) ctx.getBean("defaultDataSource");
-        Connection connection = dataSource.getConnection();
         CreateTableContext context = CreateTableContext.context();
-        try {
-            createTableHandler.drop(connection, context);
-        }finally {
-            if(connection != null){
-                connection.commit();
-                connection.close();
-            }
-        }
+        createTableHandler.drop(dataSource, context);
     }
 
     @Override

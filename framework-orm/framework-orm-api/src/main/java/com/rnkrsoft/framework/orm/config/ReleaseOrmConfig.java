@@ -38,7 +38,7 @@ public class ReleaseOrmConfig implements OrmConfig{
     /**
      * 是否允许重建表结构,正式发布不允许重建表结构
      */
-    final boolean rebuildTable = false;
+    final boolean allowReload = false;
     /**
      * 获取关键字模式
      */

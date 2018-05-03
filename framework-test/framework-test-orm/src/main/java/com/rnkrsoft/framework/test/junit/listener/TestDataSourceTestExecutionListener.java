@@ -1,9 +1,8 @@
 package com.rnkrsoft.framework.test.junit.listener;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.test.DataSource;
-import com.rnkrsoft.framework.test.datasource.DataSourceScanner;
+import com.rnkrsoft.framework.test.datasource.DataSourceLookup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
@@ -23,7 +22,7 @@ public class TestDataSourceTestExecutionListener extends AbstractTestExecutionLi
         if(ds != null){
             String dsn = ds.value().name();
             log.debug("开发数据源 '{}'", dsn);
-            String name = DataSourceScanner.setDateSourceName(dsn);
+            String name = DataSourceLookup.setDateSourceName(dsn);
             if(!dsn.equals(name)){
                 throw ErrorContextFactory.instance().message("DataSource set failure!").runtimeException();
             }
@@ -33,7 +32,7 @@ public class TestDataSourceTestExecutionListener extends AbstractTestExecutionLi
     @Override
     public void afterTestClass(TestContext testContext) throws Exception {
         super.afterTestClass(testContext);
-        DataSourceScanner.setDateSourceName(null);
+        DataSourceLookup.setDateSourceName(null);
     }
 
 

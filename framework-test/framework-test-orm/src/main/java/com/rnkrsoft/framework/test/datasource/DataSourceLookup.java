@@ -1,6 +1,5 @@
 package com.rnkrsoft.framework.test.datasource;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.test.EnvironmentUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
  * Created by rnkrsoft.com on 2018/4/2.
  */
 @Slf4j
-public class DataSourceScanner {
+public class DataSourceLookup {
     static ThreadLocal<String> currentDataSource = new ThreadLocal();
     public static final String H2_DATASOURCE = "h2DataSource";
     public static final String MYSQL_DATASOURCE = "mysqlDataSource";

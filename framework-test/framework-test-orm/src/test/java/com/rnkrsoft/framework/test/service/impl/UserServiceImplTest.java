@@ -35,11 +35,11 @@ public class UserServiceImplTest extends DataSourceTest {
     @CreateTable(entities = {UserInfoEntity.class, OrmEntity.class},
             keywordMode = WordMode.lowerCase,
             sqlMode = WordMode.lowerCase,
-            prefixMode = NameMode.entity,
+            prefixMode = NameMode.customize,
             prefix = "xxxx",
-            suffixMode = NameMode.entity,
+            suffixMode = NameMode.customize,
             suffix = "yyyy",
-            schemaMode = NameMode.entity,
+            schemaMode = NameMode.customize,
             schema = "xxxxxx",
             testBeforeDrop = false
     )
@@ -49,8 +49,8 @@ public class UserServiceImplTest extends DataSourceTest {
         UserInfoDAO userInfoDAO = getBean(UserInfoDAO.class);
         OrmDemoDAO ormDemoDAO = getBean(OrmDemoDAO.class);
         try {
-            userInfoDAO.countAll();
-            ormDemoDAO.countAll();
+            userInfoDAO.selectAll();
+            ormDemoDAO.selectAll();
             String userNo = userService.register("!@#$%", 21);
             System.out.println(userNo);
 //            Assert.assertEquals(36, userNo.length());

@@ -24,11 +24,11 @@ import java.util.UUID;
         suffix = "yyyy",
         schemaMode = NameMode.entity,
         schema = "xxxxxx",
-        createBeforeTest = false,
+        createBeforeTest = true,
         testBeforeDrop = false
 )
 @ContextConfiguration("classpath*:testContext-orm.xml")
-@DataSource(DataSourceType.H2)
+@DataSource(DataSourceType.AUTO)
 public class DataSourceTestTest extends DataSourceTest{
     @Test
     public void test1(){
@@ -39,17 +39,6 @@ public class DataSourceTestTest extends DataSourceTest{
         entity.setCreateDate(new Date());
         entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
         ormDemoDAO.insert(entity);
-        System.out.println(entity);
-//        ormDemoDAO.selectAll();
-//        ormDemoDAO.selectAnd(entity);
-//        ormDemoDAO.selectOr(entity);
-//        entity.setAge(3);
-//        ormDemoDAO.selectAnd(entity);
-//        ormDemoDAO.selectOr(entity);
-//        ormDemoDAO.updateByPrimaryKeySelective(entity);
-//        ormDemoDAO.selectAll();
-//        Assert.assertEquals(1, ormDemoDAO.deleteByPrimaryKey(entity.getSerialNo()));
-//        Assert.assertEquals(0, ormDemoDAO.countAll());
 
     }
 }

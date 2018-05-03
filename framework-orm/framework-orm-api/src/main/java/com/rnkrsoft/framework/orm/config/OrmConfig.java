@@ -31,10 +31,10 @@ public interface OrmConfig {
     String[] getMapperLocations();
 
     /**
-     * 是否允许重建表结构
-     * @return 是否允许重建表结构
+     * 是否允许重复加载，通常用于开发模式
+     * @return 是否允许重复加载
      */
-    boolean isRebuildTable();
+    boolean isAllowReload();
 
     /**
      * 获取关键字模式
