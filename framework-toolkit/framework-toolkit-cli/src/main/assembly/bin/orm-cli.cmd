@@ -29,7 +29,7 @@ if not "%ORM_HOME%"=="" goto exe
 echo.
 echo Error: ORM_HOME not found in your environment. >&2
 echo Please set the ORM_HOME variable in your environment to match the >&2
-echo location of the Maven installation. >&2
+echo location of the ORM installation. >&2
 echo.
 goto error
 

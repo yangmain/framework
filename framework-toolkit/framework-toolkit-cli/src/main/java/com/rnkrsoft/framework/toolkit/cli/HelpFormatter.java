@@ -71,6 +71,7 @@ public class HelpFormatter {
         for (CommandDefine define : commandCollection.getOptionCollection().values()) {
             render(pw, header, define, footer);
             pw.append(newLine);
+            pw.append(newLine);
         }
         pw.flush();
     }

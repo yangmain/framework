@@ -1,2 +1,2 @@
 #!/bin/sh
-java -Djava.ext.dirs=../lib/ Main
+java -Djava.ext.dirs=%ORM_HOME%/lib/ com.rnkrsoft.framework.toolkit.Main

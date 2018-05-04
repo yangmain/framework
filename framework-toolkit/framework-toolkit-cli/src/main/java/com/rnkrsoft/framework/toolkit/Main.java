@@ -31,7 +31,7 @@ public class Main {
     /**
      * 存放执行过的历史命令
      */
-    protected HashMap<Integer, String> history = new HashMap<Integer, String>();
+    protected HashMap<Integer, String> history = new HashMap();
     /**
      * 命令集合
      */
@@ -51,7 +51,7 @@ public class Main {
             define.setName("逆向工程");
             define.setCmd("reverse");
             define.setExample("reverse -h 122.114.65.131:3306 -u root -p duduledmm@2018 -schema dudule -package com.rnkrsoft.framework");
-            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/help");
+            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/framework/help");
             COMMAND_COLLECTION.addDefine(define);
         }
         {
@@ -60,21 +60,21 @@ public class Main {
             define.setCmd("help");
             define.addOption("cmd", "c", false, 1, "命令", "reverse");
             define.setExample("help -c reverse");
-            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/help");
+            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/framework/help");
             COMMAND_COLLECTION.addDefine(define);
         }
         {
             CommandDefine define = new CommandDefine();
             define.setName("退出CLI");
             define.setCmd("exit");
-            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/help");
+            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/framework/help");
             COMMAND_COLLECTION.addDefine(define);
         }
         {
             CommandDefine define = new CommandDefine();
             define.setName("查看历史命令");
             define.setCmd("history");
-            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/help");
+            define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/framework/help");
             COMMAND_COLLECTION.addDefine(define);
         }
     }
