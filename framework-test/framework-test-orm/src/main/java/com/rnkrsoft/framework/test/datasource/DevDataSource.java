@@ -2,6 +2,8 @@ package com.rnkrsoft.framework.test.datasource;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.message.MessageFormatter;
+import com.rnkrsoft.framework.orm.DatabaseType;
+import com.rnkrsoft.framework.test.DataSourceType;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -17,6 +19,8 @@ import java.sql.SQLException;
  */
 @Slf4j
 public class DevDataSource extends AbstractDataSource implements InitializingBean {
+    @Setter
+    DatabaseType databaseType = DatabaseType.MySQL;
     @Setter
     String host = "localhost";
     @Setter
@@ -67,9 +71,13 @@ public class DevDataSource extends AbstractDataSource implements InitializingBea
         //=============================================设置H2数据源===========================================================
         this.h2DataSource = new BasicDataSource();
         this.h2DataSource.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-        this.h2DataSource.setUrl("jdbc:log4jdbc:h2:mem:test;MODE=MYSQL");
-        this.h2DataSource.setUsername("sa");
-        this.h2DataSource.setPassword("");
+
+        if (databaseType == DatabaseType.MySQL){
+            String url = "jdbc:log4jdbc:h2:mem:test;MODE=MYSQL";
+            this.h2DataSource.setUrl(url);
+            this.h2DataSource.setUsername("sa");
+            this.h2DataSource.setPassword("");
+        }
         this.h2DataSource.setInitialSize(10);
         this.h2DataSource.setMinIdle(10);
         this.h2DataSource.setMaxActive(10);
@@ -82,30 +90,34 @@ public class DevDataSource extends AbstractDataSource implements InitializingBea
         //=============================================设置MySQL数据源===========================================================
 
         if(username == null){
-            throw ErrorContextFactory.instance().message("MySQL 数据源未设置密码").runtimeException();
+            throw ErrorContextFactory.instance().message("数据源未设置密码").runtimeException();
         }
         if(password == null){
-            throw ErrorContextFactory.instance().message("MySQL 数据源未设置密码").runtimeException();
+            throw ErrorContextFactory.instance().message("数据源未设置密码").runtimeException();
         }
         if(schema == null){
-            throw ErrorContextFactory.instance().message("MySQL 数据源未设置数据库模式").runtimeException();
+            throw ErrorContextFactory.instance().message("数据源未设置数据库模式").runtimeException();
         }
-        this.mysqlDataSource = new BasicDataSource();
-        this.mysqlDataSource.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-        String url = MessageFormatter.format("jdbc:log4jdbc:mysql://{}:{}/{}?useUnicode=true", host, port, schema);
-        log.debug("MySQL url: {}", url);
-        this.mysqlDataSource.setUrl(url);
-        this.mysqlDataSource.setUsername(username);
-        this.mysqlDataSource.setPassword(password);
-        this.mysqlDataSource.setInitialSize(initialSize);
-        this.mysqlDataSource.setMinIdle(minIdle);
-        this.mysqlDataSource.setMaxActive(maxActive);
-        this.mysqlDataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsSec * 1000);
-        this.mysqlDataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeSec * 1000);
-        this.mysqlDataSource.setValidationQuery("SELECT 'x'");
-        this.mysqlDataSource.setTestWhileIdle(true);
-        this.mysqlDataSource.setTestOnBorrow(true);
-        this.mysqlDataSource.setTestOnReturn(false);
 
+        if (databaseType == DatabaseType.MySQL){
+            this.mysqlDataSource = new BasicDataSource();
+            this.mysqlDataSource.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+            String url = MessageFormatter.format("jdbc:log4jdbc:mysql://{}:{}/{}?useUnicode=true", host, port, schema);
+            log.debug("MySQL url: {}", url);
+            this.mysqlDataSource.setUrl(url);
+            this.mysqlDataSource.setUsername(username);
+            this.mysqlDataSource.setPassword(password);
+            this.mysqlDataSource.setInitialSize(initialSize);
+            this.mysqlDataSource.setMinIdle(minIdle);
+            this.mysqlDataSource.setMaxActive(maxActive);
+            this.mysqlDataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsSec * 1000);
+            this.mysqlDataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeSec * 1000);
+            this.mysqlDataSource.setValidationQuery("SELECT 'x'");
+            this.mysqlDataSource.setTestWhileIdle(true);
+            this.mysqlDataSource.setTestOnBorrow(true);
+            this.mysqlDataSource.setTestOnReturn(false);
+        }else {
+            throw ErrorContextFactory.instance().message("不支持的数据库 '{}'", databaseType).runtimeException();
+        }
     }
 }
