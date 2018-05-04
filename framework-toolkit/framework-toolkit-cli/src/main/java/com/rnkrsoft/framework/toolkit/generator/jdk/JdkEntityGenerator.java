@@ -49,7 +49,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
         buf.put("UTF-8", "@NoArgsConstructor", "\n");
         buf.put("UTF-8", "@AllArgsConstructor", "\n");
         buf.put("UTF-8", "@ToString", "\n");
-        buf.put("UTF-8", MessageFormatter.format("@Table(name = \"{}\")", metadata.getTableName()), "\n");
+        buf.put("UTF-8", MessageFormatter.format("@Table(name = \"{}\", prefix = \"{}\", suffix = \"{}\")", metadata.getTableName(), metadata.getPrefix(), metadata.getSuffix()), "\n");
         buf.put("UTF-8", MessageFormatter.format("@Comment(\"{}\")", metadata.getComment()), "\n");
         buf.put("UTF-8", MessageFormatter.format("public class {} implements Serializable {", entityName), "\n");
 //        buf.put("UTF-8", "\n");

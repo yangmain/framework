@@ -32,7 +32,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
 
 
     @Override
-    public List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName) throws Exception {
+    public List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName, String prefix, String suffix) throws Exception {
         Connection connection = connectMySQL("jdbc:mysql://" + url + "/" + schema, userName, password);
         Statement statement = connection.createStatement();
         List<TableMetadata> metadatas = new ArrayList();
@@ -41,8 +41,18 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 "where table_schema = '" + schema + "'";
         boolean succ = statement.execute(sql);
         ResultSet resultSet = statement.getResultSet();
+        prefix = prefix == null ? "" : prefix.toUpperCase();
+        suffix = suffix == null ? "" : suffix.toUpperCase();
+        String prefix0 = prefix.isEmpty() ? "" : (prefix + "_");
+        String suffix0 = suffix.isEmpty() ? "" : ("_" + suffix);
         while (resultSet.next()) {
-            String name = resultSet.getString("table_name");
+            String name = resultSet.getString("table_name").toUpperCase();
+            if (name.toUpperCase().startsWith(prefix0)) {
+                name = name.substring(prefix0.length());
+            }
+            if (name.toUpperCase().endsWith(suffix0)) {
+                name = name.substring(0, name.length() - suffix0.length());
+            }
             String engine = resultSet.getString("table_engine");
             String autoIncrement = resultSet.getString("auto_increment");
             String comment = resultSet.getString("table_comment");
@@ -50,6 +60,8 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     .tableName(name)
                     .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name)) + "Entity")
                     .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name)) + "DAO")
+                    .prefix(prefix.toUpperCase())
+                    .suffix(suffix.toUpperCase())
                     .dataEngine(engine)
                     .comment(comment)
                     .schema(schema)

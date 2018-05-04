@@ -11,11 +11,14 @@ import java.util.List;
 public interface JdbcReverse {
     /**
      * 逆向生成表信息
-     * @param url 主机
-     * @param schema 数据库模式
+     *
+     * @param url      主机
+     * @param schema   数据库模式
      * @param userName 用户名
      * @param password 密码
+     * @param prefix   前缀
+     * @param suffix   后缀
      * @return 表信息列表
      */
-    List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName) throws Exception;
+    List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName, String prefix, String suffix) throws Exception;
 }

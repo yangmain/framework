@@ -17,7 +17,7 @@ public class JdbcReverseMySQLTest {
     @Test
     public void testReverses() throws Exception {
         JdbcReverse jdbcReverse = new JdbcReverseMySQL();
-        List<TableMetadata> metadatas = jdbcReverse.reverses("122.114.65.131:3306", "dudule", "root", "duduledmm@2018", "com.rnkrsoft.test");
+        List<TableMetadata> metadatas = jdbcReverse.reverses("122.114.65.131:3306", "dudule", "root", "duduledmm@2018", "com.rnkrsoft.test", "TB", "");
         System.out.println(metadatas.get(0));
 
 //        for (TableMetadata tableMetadata : metadatas){

@@ -46,6 +46,8 @@ public class Main {
             define.addOption("schema", "s", true, 1, "数据库模式", "字符串数据库名", "");
             define.addOption("package", "f", false, 1, "保存包名", "java格式的包名",  "com.rnkrsoft");
             define.addOption("output", "o", false, 1, "输出路径", ".", ".");
+            define.addOption("prefix", "pre", false, 1, "前缀", "表名前缀", "TB");
+            define.addOption("suffix", "suf", false, 1, "后缀", "表名后缀", "");
             define.setName("逆向工程");
             define.setCmd("reverse");
             define.setExample("reverse -h 122.114.65.131:3306 -u root -p duduledmm@2018 -schema dudule -package com.rnkrsoft.framework");
@@ -118,6 +120,8 @@ public class Main {
             String u = command.valueString("username");
             String p = command.valueString("password");
             String output = command.valueString("output");
+            String prefix = command.valueString("prefix");
+            String suffix = command.valueString("suffix");
             System.out.println("output " + output);
             if (packageName == null) {
                 System.out.println("package is empty!");
@@ -130,7 +134,7 @@ public class Main {
 
             try {
                 JdbcReverse jdbcReverse = new JdbcReverseMySQL();
-                List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName);
+                List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, prefix, suffix);
                 Generator entityGenerator = new JdkEntityGenerator();
                 Generator daoGenerator = new JdkDaoGenerator();
                 File outputDir = new File(output);
