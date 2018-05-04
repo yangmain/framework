@@ -9,4 +9,11 @@
     <artifactId>framework-toolkit-plugin</artifactId>
     <name>framework-toolkit-plugin</name>
     <description>工具插件</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-toolkit-cli</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

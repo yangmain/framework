@@ -15,6 +15,7 @@ public @interface DataSource {
     /**
      * 数据源类型
      * @return 数据源类型
+     * @since 1.0.0
      */
     DataSourceType value() default DataSourceType.AUTO;
 }

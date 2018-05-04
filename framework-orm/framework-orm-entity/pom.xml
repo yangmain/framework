@@ -36,5 +36,10 @@
             <artifactId>framework-sequence-injvm</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.devops4j.io</groupId>
+            <artifactId>devops4j-io</artifactId>
+            <version>0.0.1-alpha</version>
+        </dependency>
     </dependencies>
 </project>

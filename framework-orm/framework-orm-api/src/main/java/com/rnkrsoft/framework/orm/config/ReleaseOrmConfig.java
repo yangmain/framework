@@ -42,11 +42,11 @@ public class ReleaseOrmConfig implements OrmConfig{
     /**
      * 获取关键字模式
      */
-    WordMode keywordMode;
+    WordMode keywordMode = WordMode.upperCase;
     /**
      * 获取SQL模式
      */
-    WordMode sqlMode;
+    WordMode sqlMode = WordMode.upperCase;
     /**
      * 全局配置
      */

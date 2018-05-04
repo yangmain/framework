@@ -16,6 +16,7 @@ public @interface PrimaryKey {
      * 主键生成规则
      *
      * @return 主键生成规则
+     * @since 1.0.0
      */
     PrimaryKeyStrategy strategy() default PrimaryKeyStrategy.UUID;
 
@@ -27,12 +28,13 @@ public @interface PrimaryKey {
      * <li>${yyyyMMddHHmm}</li>
      * <li>${yyyyMMddHHmmss}</li>
      * <li>${yyyyMMddHHmmssSSS}</li>
-     * <li>固定字符串
-     * <li>复杂表达式
+     * <li>固定字符串</li>
+     * <li>复杂表达式 ${yyyyMMddHHmmssSSS}_${SEQ:5}_${RANDOM:8}</li>
      * <p>
      * </ol>
      * @see PrimaryKeyFeatureConstant
      * @return 主键特征
+     * @since 1.0.0
      */
     String feature() default "";
 }

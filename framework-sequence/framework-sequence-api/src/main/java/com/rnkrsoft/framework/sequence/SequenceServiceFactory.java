@@ -12,14 +12,16 @@ import java.util.ServiceLoader;
 public class SequenceServiceFactory {
     /**
      * 返回最先匹配的序号服务
+     *
      * @return 序号服务
      */
-    public static SequenceService instance(){
+    public static SequenceService instance() {
         return instance(null);
     }
 
     /**
      * 返回指定实现类的序号服务
+     *
      * @param className 实现类
      * @return 序号服务
      */
@@ -30,10 +32,10 @@ public class SequenceServiceFactory {
         while (service == null && serviceIterator.hasNext()) {
             SequenceService service0 = serviceIterator.next();
             //如果没有指定实现类，发现则赋值
-            if(className == null){
+            if (className == null) {
                 service = service0;
-            }else{//如果指实现类，只有匹配实现类才赋值
-                if(service0.getClass().getName().equals(className)){
+            } else {//如果指实现类，只有匹配实现类才赋值
+                if (service0.getClass().getName().equals(className)) {
                     service = service0;
                 }
             }

@@ -17,6 +17,7 @@ public @interface Comment {
      * 表或者字段的注释
      *
      * @return 注释
+     * @since 1.0.0
      */
     String value();
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * Created by rnkrsoft.com on 2018/4/2.
+ * ORM配置对象
  */
 public interface OrmConfig {
     /**

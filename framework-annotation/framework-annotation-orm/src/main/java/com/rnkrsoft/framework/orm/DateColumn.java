@@ -16,6 +16,7 @@ public @interface DateColumn {
      * 字段名称
      *
      * @return 字段名称
+     * @since 1.0.0
      */
     String name() default "";
 
@@ -23,11 +24,13 @@ public @interface DateColumn {
      * 是否允许为空
      *
      * @return 是否允许为空
+     * @since 1.0.0
      */
     boolean nullable() default true;
     /**
      * 默认值
      * @return 默认值
+     * @since 1.0.0
      */
     String defaultValue() default "";
 
@@ -35,6 +38,7 @@ public @interface DateColumn {
      * 字段数据类型
      *
      * @return 数据类型
+     * @since 1.0.0
      */
     DateType type() default DateType.AUTO;
 }

@@ -16,6 +16,7 @@ public @interface StringColumn {
      * 字段名称
      *
      * @return 字段名称
+     * @since 1.0.0
      */
     String name() default "";
 
@@ -23,6 +24,7 @@ public @interface StringColumn {
      * 是否允许为空
      *
      * @return 是否允许为空
+     * @since 1.0.0
      */
     boolean nullable() default true;
 
@@ -30,12 +32,14 @@ public @interface StringColumn {
      * 字段长度
      * 超过255的VARCHAR，在MySQL数据库自动使用TEXT
      * @return 字段长度
+     * @since 1.0.0
      */
     int length() default 255;
 
     /**
      * 默认值
      * @return 默认值
+     * @since 1.0.0
      */
     String defaultValue() default "";
 
@@ -43,6 +47,7 @@ public @interface StringColumn {
      * 字段数据类型
      *
      * @return 数据类型
+     * @since 1.0.0
      */
     StringType type() default StringType.AUTO;
 }

@@ -2,7 +2,7 @@ package com.rnkrsoft.framework.orm;
 
 /**
  * Created by rnkrsoft.com on 2017/1/4.
- * 测试时使用的表名模式
+ * 命名模式枚举
  */
 public enum NameMode {
     /**
@@ -14,7 +14,7 @@ public enum NameMode {
      */
     entity,
     /**
-     * 客户定制
+     * 客户自定义
      */
     customize,
 }

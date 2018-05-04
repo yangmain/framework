@@ -2,6 +2,7 @@ package com.rnkrsoft.framework.orm.config;
 
 /**
  * Created by rnkrsoft.com on 2018/4/2.
+ * 配置项
  */
 
 import com.rnkrsoft.framework.orm.NameMode;

@@ -1,17 +1,22 @@
 package com.rnkrsoft.framework.orm.untils;
 
+import com.devops4j.io.buffer.ByteBuf;
+import com.devops4j.reflection4j.resource.ClassScanner;
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.Table;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.mysql.DataEngineType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +108,7 @@ public abstract class SqlScriptUtils {
         String table = tableMetadata.getFullTableName();
         table = convert(table, sqlMode);
         sql.append(" " + table);
-        sql.append("(\n");
+        sql.append("(").append(System.getProperty("line.separator"));
         int autoIncrementCnt = 0;
         for (String name : tableMetadata.getOrderColumns()) {
             ColumnMetadata columnMetadata = tableMetadata.getColumnMetadataSet().get(name);
@@ -151,10 +156,10 @@ public abstract class SqlScriptUtils {
             if (columnMetadata.getComment() != null && !columnMetadata.getComment().trim().isEmpty()) {
                 sql.append(convert(" COMMENT '", keywordMode)).append(columnMetadata.getComment()).append("'");
             }
-            sql.append(",\n");
+            sql.append(",").append(System.getProperty("line.separator"));
         }
 
-        sql.append(primaryKey(tableMetadata.getPrimaryKeys(), sqlMode, keywordMode) + "\n");
+        sql.append(primaryKey(tableMetadata.getPrimaryKeys(), sqlMode, keywordMode) + System.getProperty("line.separator"));
         sql.append(") ");
         if (autoIncrementCnt > 1) {
             throw new IllegalArgumentException(tableMetadata.getTableName() + "自增主键只允许一个");
@@ -301,7 +306,7 @@ public abstract class SqlScriptUtils {
      * @param newline     是否换行
      * @return 列名
      */
-    public static String genreateSqlHead(Class<?> entityClass, WordMode keywordMode, WordMode sqlMode, boolean newline) {
+    public static String generateSqlHead(Class<?> entityClass, WordMode keywordMode, WordMode sqlMode, boolean newline) {
         EntityExtractorHelper helper = new EntityExtractorHelper();
         TableMetadata tableMetadata = helper.extractTable(entityClass, false);
         StringBuilder builder = new StringBuilder();
@@ -312,7 +317,7 @@ public abstract class SqlScriptUtils {
             index++;
             //如果不是第一个字段，且要换行
             if (builder.length() > 0 && newline) {
-                builder.append("\n");
+                builder.append(System.getProperty("line.separator"));
             }
             builder.append(convert(columnMetadata.getJdbcName(), sqlMode))
                     .append(convert(" AS ", keywordMode))
@@ -334,21 +339,22 @@ public abstract class SqlScriptUtils {
      * @throws IOException
      */
     public static void generateSql(ByteArrayOutputStream os,
-                                          WordMode sqlMode,
-                                          WordMode keywordMode,
-                                          Class... entities) throws IOException {
+                                   WordMode sqlMode,
+                                   WordMode keywordMode,
+                                   Class... entities) throws IOException {
         for (Class entityClass : entities) {
             EntityExtractorHelper helper = new EntityExtractorHelper();
             TableMetadata tableMetadata = helper.extractTable(entityClass, false);
             generateDropTable(os, tableMetadata, sqlMode, keywordMode, false);
-            os.write("\n".getBytes("UTF-8"));
+            os.write(System.getProperty("line.separator").getBytes("UTF-8"));
             generateCreateTable(os, tableMetadata, sqlMode, keywordMode, false);
-            os.write("\n".getBytes("UTF-8"));
+            os.write(System.getProperty("line.separator").getBytes("UTF-8"));
         }
     }
 
     /**
      * 创建SQL语句
+     *
      * @param keywordMode 关键大小写
      * @param sqlMode     SQL关键大小写
      * @param entities
@@ -362,9 +368,9 @@ public abstract class SqlScriptUtils {
             EntityExtractorHelper helper = new EntityExtractorHelper();
             TableMetadata tableMetadata = helper.extractTable(entityClass, false);
             generateDropTable(os, tableMetadata, sqlMode, keywordMode, false);
-            os.write("\n".getBytes("UTF-8"));
+            os.write(System.getProperty("line.separator").getBytes("UTF-8"));
             generateCreateTable(os, tableMetadata, sqlMode, keywordMode, false);
-            os.write("\n".getBytes("UTF-8"));
+            os.write(System.getProperty("line.separator").getBytes("UTF-8"));
         }
         FileOutputStream fos = new FileOutputStream("./target/sqlScript.sql");
         fos.write(os.toByteArray());
@@ -372,12 +378,94 @@ public abstract class SqlScriptUtils {
         fos.close();
     }
 
-    public static String convert(String sql, WordMode mode){
-        if(mode == WordMode.lowerCase){
+    /**
+     * 创建脚本
+     *
+     * @param schemaMode       数据库名模式类型
+     * @param schema           数据库名模式
+     * @param prefixMode       前缀类型
+     * @param prefix           前缀
+     * @param suffixMode       后缀类型
+     * @param suffix           后缀
+     * @param engine           引擎类型
+     * @param sqlMode          SQL字段大小写模式
+     * @param keywordMode      SQL关键字大小写模式
+     * @param testBeforeCreate 创建前进行测试
+     * @param dropBeforeCreate 创建前进行删除
+     * @param packages         包路径数组
+     */
+    public static ByteBuf generate(NameMode schemaMode,
+                                   String schema,
+                                   NameMode prefixMode,
+                                   String prefix,
+                                   NameMode suffixMode,
+                                   String suffix,
+                                   DataEngineType engine,
+                                   WordMode sqlMode,
+                                   WordMode keywordMode,
+                                   boolean testBeforeCreate,
+                                   boolean dropBeforeCreate,
+                                   String... packages) {
+        ByteBuf byteBuf = ByteBuf.allocate(2014).autoExpand(true);
+        ClassScanner classScanner = new ClassScanner(true);
+        for (String packageName : new HashSet<String>(Arrays.asList(packages))) {
+            classScanner.scan(packageName, new ClassScanner.AnnotatedWithFilter(Table.class));
+            classScanner.scan(packageName, new ClassScanner.AnnotatedWithFilter(javax.persistence.Table.class));
+        }
+        for (Class entityClass : classScanner.getClasses()) {
+            String dropTableSql = generateDropTable(entityClass, schemaMode, schema, prefixMode, prefix, suffixMode, suffix, sqlMode, keywordMode, true);
+            byteBuf.put("UTF-8", dropTableSql, ";", System.getProperty("line.separator"));
+            String createTableSql = generateCreateTable(entityClass, schemaMode, schema, prefixMode, prefix, suffixMode, suffix, engine.getValue(), sqlMode, keywordMode, true);
+            byteBuf.put("UTF-8", createTableSql, ";", System.getProperty("line.separator"));
+        }
+        return byteBuf;
+    }
+
+    /**
+     * 创建脚本
+     *
+     * @param scriptFileName   脚本文件存放路径
+     * @param schemaMode       数据库名模式类型
+     * @param schema           数据库名模式
+     * @param prefixMode       前缀类型
+     * @param prefix           前缀
+     * @param suffixMode       后缀类型
+     * @param suffix           后缀
+     * @param engine           引擎类型
+     * @param sqlMode          SQL字段大小写模式
+     * @param keywordMode      SQL关键字大小写模式
+     * @param testBeforeCreate 创建前进行测试
+     * @param dropBeforeCreate 创建前进行删除
+     * @param packages         包路径数组
+     */
+    public static void generate(String scriptFileName,
+                                NameMode schemaMode,
+                                String schema,
+                                NameMode prefixMode,
+                                String prefix,
+                                NameMode suffixMode,
+                                String suffix,
+                                DataEngineType engine,
+                                WordMode sqlMode,
+                                WordMode keywordMode,
+                                boolean testBeforeCreate,
+                                boolean dropBeforeCreate,
+                                String... packages) throws IOException {
+        ByteBuf byteBuf = generate(schemaMode, schema, prefixMode, prefix, suffixMode, suffix, engine, sqlMode, keywordMode, testBeforeCreate, dropBeforeCreate, packages);
+        FileOutputStream fos = new FileOutputStream(new File(scriptFileName));
+        try {
+            byteBuf.write(fos);
+        } finally {
+            IOUtils.closeQuietly(fos);
+        }
+    }
+
+    public static String convert(String sql, WordMode mode) {
+        if (mode == WordMode.lowerCase) {
             return sql.toLowerCase();
-        }else if(mode == WordMode.upperCase){
+        } else if (mode == WordMode.upperCase) {
             return sql.toUpperCase();
-        }else{
+        } else {
             return sql;
         }
     }

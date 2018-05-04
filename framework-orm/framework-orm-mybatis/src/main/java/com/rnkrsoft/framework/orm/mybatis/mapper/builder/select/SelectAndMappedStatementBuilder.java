@@ -4,7 +4,6 @@ import com.rnkrsoft.framework.orm.Constants;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
-import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.select.SelectMapper;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
@@ -41,7 +40,7 @@ public class SelectAndMappedStatementBuilder extends MappedStatementBuilder {
         String from = convert("FROM", getOrmConfig().getKeywordMode());
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append(select).append(" ");
-        sqlBuilder.append(SqlScriptUtils.genreateSqlHead(entityClass, getOrmConfig().getKeywordMode(), getOrmConfig().getSqlMode(), false)).append(" ");
+        sqlBuilder.append(SqlScriptUtils.generateSqlHead(entityClass, getOrmConfig().getKeywordMode(), getOrmConfig().getSqlMode(), false)).append(" ");
         sqlBuilder.append(from).append(" ");
         sqlBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         //创建结果映射
