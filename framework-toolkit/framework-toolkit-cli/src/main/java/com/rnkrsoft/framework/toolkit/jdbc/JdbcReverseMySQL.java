@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.toolkit.jdbc;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.devops4j.message.MessageFormatter;
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
@@ -47,19 +48,20 @@ public class JdbcReverseMySQL implements JdbcReverse {
         String suffix0 = suffix.isEmpty() ? "" : ("_" + suffix);
         while (resultSet.next()) {
             String name = resultSet.getString("table_name").toUpperCase();
-            if (name.toUpperCase().startsWith(prefix0)) {
-                name = name.substring(prefix0.length());
+            String name0 = name.toUpperCase();
+            if (name0.startsWith(prefix0)) {
+                name0 = name0.substring(prefix0.length());
             }
-            if (name.toUpperCase().endsWith(suffix0)) {
-                name = name.substring(0, name.length() - suffix0.length());
+            if (name0.endsWith(suffix0)) {
+                name0 = name0.substring(0, name0.length() - suffix0.length());
             }
             String engine = resultSet.getString("table_engine");
             String autoIncrement = resultSet.getString("auto_increment");
             String comment = resultSet.getString("table_comment");
             TableMetadata tableMetadata = TableMetadata.builder()
-                    .tableName(name)
-                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name)) + "Entity")
-                    .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name)) + "DAO")
+                    .tableName(name0)
+                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Entity")
+                    .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "DAO")
                     .prefix(prefix.toUpperCase())
                     .suffix(suffix.toUpperCase())
                     .dataEngine(engine)
@@ -68,6 +70,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     .build();
             reverse(tableMetadata, schema, connection);
             metadatas.add(tableMetadata);
+            System.out.println(MessageFormatter.format("reverse table - {}", name));
         }
         resultSet.close();
         statement.close();
