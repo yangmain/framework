@@ -166,17 +166,16 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
         //通过Spring容器获取
         SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) applicationContext.getBean(this.ormSessionFactoryBeanName);
         Configuration configuration = sqlSessionFactory.getConfiguration();
-        for (String mapperLocation : ormConfig.getMapperLocations()){
+        for (Resource mapperLocation : ormConfig.getMapperLocations()){
             if (mapperLocation == null) {
                 continue;
             }
-            Resource resource = new PathResource(mapperLocation);
-            if (!resource.exists()) {
-                log.warn("mapper file [{}] is not exists!", resource.getFile().getName());
+            if (!mapperLocation.exists()) {
+                log.warn("mapper file [{}] is not exists!", mapperLocation.getFile().getName());
                 continue;
             }
             try {
-                XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(resource.getInputStream(), configuration, mapperLocation.toString(), configuration.getSqlFragments());
+                XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperLocation.getInputStream(), configuration, mapperLocation.toString(), configuration.getSqlFragments());
                 xmlMapperBuilder.parse();
             } catch (Exception e) {
                 throw ErrorContextFactory.instance()

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.core.io.Resource;
 
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class ReleaseOrmConfig implements OrmConfig{
     /**
      * MAPPER文件路径
      */
-    String[] mapperLocations;
+    Resource[] mapperLocations;
     /**
      * 是否允许重建表结构,正式发布不允许重建表结构
      */

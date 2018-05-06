@@ -7,6 +7,7 @@ import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.core.io.Resource;
 
 import java.util.Map;
 @Getter
@@ -23,7 +24,7 @@ public class TestOrmConfig implements OrmConfig {
     String[] daoPackages;
 
     @Setter
-    String[] mapperLocations;
+    Resource[] mapperLocations;
     /**
      * 是否允许重载
      */

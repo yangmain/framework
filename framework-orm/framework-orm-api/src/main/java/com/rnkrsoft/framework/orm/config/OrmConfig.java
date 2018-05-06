@@ -3,6 +3,7 @@ package com.rnkrsoft.framework.orm.config;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.NameMode;
 import com.rnkrsoft.framework.orm.WordMode;
+import org.springframework.core.io.Resource;
 
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public interface OrmConfig {
      * 获取Mapper文件路径
      * @return Mapper文件路径
      */
-    String[] getMapperLocations();
+    Resource[] getMapperLocations();
 
     /**
      * 是否允许重复加载，通常用于开发模式
