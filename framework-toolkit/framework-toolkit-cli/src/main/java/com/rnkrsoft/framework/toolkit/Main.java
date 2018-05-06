@@ -11,6 +11,7 @@ import com.rnkrsoft.framework.toolkit.generator.Generator;
 import com.rnkrsoft.framework.toolkit.generator.jdk.JdkDaoGenerator;
 import com.rnkrsoft.framework.toolkit.generator.jdk.JdkEntityGenerator;
 import com.rnkrsoft.framework.toolkit.generator.jdk.JdkMapperGenerator;
+import com.rnkrsoft.framework.toolkit.generator.jdk.JdkPomGenerator;
 import com.rnkrsoft.framework.toolkit.jdbc.JdbcReverse;
 import com.rnkrsoft.framework.toolkit.jdbc.JdbcReverseMySQL;
 import jline.console.completer.Completer;
@@ -136,6 +137,7 @@ public class Main {
             try {
                 JdbcReverse jdbcReverse = new JdbcReverseMySQL();
                 List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, prefix, suffix);
+                Generator pomGenerator = new JdkPomGenerator();
                 Generator entityGenerator = new JdkEntityGenerator();
                 Generator daoGenerator = new JdkDaoGenerator();
                 Generator mapperGenerator = new JdkMapperGenerator();
@@ -145,24 +147,29 @@ public class Main {
                }
                 for (TableMetadata metadata : metadatas) {
                     GenerateContext ctx = GenerateContext.builder().packageName(packageName).tableMetadata(metadata).build();
+                    ByteBuf pomCode = pomGenerator.generate(ctx);
                     ByteBuf entityCode = entityGenerator.generate(ctx);
                     ByteBuf daoCode = daoGenerator.generate(ctx);
                     ByteBuf mapperCode = mapperGenerator.generate(ctx);
+                    File pomFile = new File(outputDir, "pom.xml");
                     File entityFile = new File(outputDir, "src/main/java/" + metadata.getEntityClassName().replaceAll("\\.", "/") + ".java");
                     File daoFile = new File(outputDir, "src/main/java/" + metadata.getDaoClassName().replaceAll("\\.", "/") + ".java");
                     File mapperFile = new File(outputDir, "src/main/resources/" + metadata.getMapperName().replaceAll("\\.", "/") + ".xml");
-
+                    pomFile.getParentFile().mkdirs();
                     entityFile.getParentFile().mkdirs();
                     daoFile.getParentFile().mkdirs();
                     mapperFile.getParentFile().mkdirs();
+                    FileOutputStream pomFileFos = new FileOutputStream(pomFile);
                     FileOutputStream entityFileFos = new FileOutputStream(entityFile);
                     FileOutputStream daoFileFos = new FileOutputStream(daoFile);
                     FileOutputStream mapperFileFos = new FileOutputStream(mapperFile);
                     try{
+                        pomCode.write(pomFileFos);
                         entityCode.write(entityFileFos);
                         daoCode.write(daoFileFos);
                         mapperCode.write(mapperFileFos);
                     }finally {
+                        IOUtils.closeQuietly(pomFileFos);
                         IOUtils.closeQuietly(entityFileFos);
                         IOUtils.closeQuietly(daoFileFos);
                         IOUtils.closeQuietly(mapperFileFos);
