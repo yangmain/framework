@@ -90,7 +90,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType().equals("TIMESTAMP")) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.TIMESTAMP)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(), MessageFormatter.format("Timestamp {};", columnMetadata.getJavaName()));
+                buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
             } else {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));

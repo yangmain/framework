@@ -46,8 +46,6 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
         super.checkDaoConfig();
         notNull(this.mapperInterface, "Property 'mapperInterface' is required");
         Configuration configuration = getSqlSession().getConfiguration();
-        configuration.addInterceptor(new PaginationStage1Interceptor(this.ormConfig.getDatabaseType()));
-        configuration.addInterceptor(new PaginationStage2Interceptor());
         //扫描接口
         OrmMappedStatementRegister.scan(configuration, this.ormConfig, sequenceServiceConfigure, this.mapperInterface);
         if (!configuration.hasMapper(this.mapperInterface)) {

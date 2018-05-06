@@ -104,7 +104,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 jdbc_type = "NUMERIC";
                 column_type = "TINYINT";
             } else if (data_type.equals("decimal")) {
-                jdbc_type = "NUMERIC";
+                jdbc_type = "DECIMAL";
                 column_type = "DECIMAL";
             } else if (data_type.equals("datetime")) {
                 jdbc_type = "TIMESTAMP";

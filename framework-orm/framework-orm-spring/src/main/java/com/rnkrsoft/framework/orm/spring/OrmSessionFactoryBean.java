@@ -23,10 +23,7 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 /**
@@ -165,7 +162,7 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         //默认加入分页插件
         boolean paginationStage1Interceptor = false;
         boolean paginationStage2Interceptor = false;
-        List<Interceptor> pluginList = null;
+        Set<Interceptor> pluginSet = null;
         if (plugins != null) {
             for (Interceptor plugin : plugins) {
                 if (plugin instanceof PaginationStage1Interceptor) {
@@ -175,18 +172,17 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
                     paginationStage2Interceptor = true;
                 }
             }
-            pluginList = Arrays.asList(plugins);
+            pluginSet = new HashSet(Arrays.asList(plugins));
         } else {
-            pluginList = new ArrayList();
+            pluginSet = new HashSet();
         }
         if (!paginationStage1Interceptor) {
-            pluginList.add(new PaginationStage1Interceptor(DatabaseType.MySQL));
+            pluginSet.add(new PaginationStage1Interceptor(DatabaseType.MySQL));
         }
         if (!paginationStage2Interceptor) {
-            pluginList.add(new PaginationStage2Interceptor());
+            pluginSet.add(new PaginationStage2Interceptor());
         }
-        this.plugins = new Interceptor[pluginList.size()];
-        pluginList.toArray(this.plugins);
+        this.plugins = pluginSet.toArray(new Interceptor[pluginSet.size()]);
     }
 
     @Override
