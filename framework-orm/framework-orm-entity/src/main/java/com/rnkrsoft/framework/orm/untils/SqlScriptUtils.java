@@ -22,6 +22,7 @@ import java.util.Map;
 
 
 /**
+ * Created by rnkrsoft.com on 2018/4/26.
  * 实体工具类，用于从实体类上提取注解，生成封装
  */
 @Slf4j
@@ -261,16 +262,7 @@ public abstract class SqlScriptUtils {
                                              WordMode keywordMode) throws IOException {
         StringBuilder sql = new StringBuilder(convert("TRUNCATE TABLE", keywordMode));
         sql.append(" ");
-        String table = tableMetadata.getTableName();
-        if (!StringUtils.isBlank(tableMetadata.getSchema())) {
-            if (!StringUtils.isBlank(tableMetadata.getPrefix())) {
-                table = tableMetadata.getPrefix() + "_" + table;
-            }
-            if (!StringUtils.isBlank(tableMetadata.getSuffix())) {
-                table = table + "_" + tableMetadata.getSuffix();
-            }
-            table = tableMetadata.getSchema() + "." + table;
-        }
+        String table = tableMetadata.getFullTableName();
         table = convert(table, sqlMode);
         sql.append(table);
         os.write(sql.toString().getBytes("UTF-8"));
@@ -413,10 +405,16 @@ public abstract class SqlScriptUtils {
             classScanner.scan(packageName, new ClassScanner.AnnotatedWithFilter(javax.persistence.Table.class));
         }
         for (Class entityClass : classScanner.getClasses()) {
+            byteBuf.put("UTF-8","-- ", "TABLE ");
+            byteBuf.put("UTF-8", System.getProperty("line.separator"));
             String dropTableSql = generateDropTable(entityClass, schemaMode, schema, prefixMode, prefix, suffixMode, suffix, sqlMode, keywordMode, true);
             byteBuf.put("UTF-8", dropTableSql, ";", System.getProperty("line.separator"));
+            byteBuf.put("UTF-8", System.getProperty("line.separator"));
+
             String createTableSql = generateCreateTable(entityClass, schemaMode, schema, prefixMode, prefix, suffixMode, suffix, engine.getValue(), sqlMode, keywordMode, true);
             byteBuf.put("UTF-8", createTableSql, ";", System.getProperty("line.separator"));
+            byteBuf.put("UTF-8", System.getProperty("line.separator"));
+            byteBuf.put("UTF-8", System.getProperty("line.separator"));
         }
         return byteBuf;
     }

@@ -8,6 +8,9 @@ import java.util.Map;
 /**
  * 分页对象
  */
+/**
+ * 分页对象
+ */
 public class Pagination<T> {
     /**
      * 总条数
@@ -59,6 +62,25 @@ public class Pagination<T> {
         this(pageSize, curPageNo, entity);
         setTotal(total);
 
+    }
+
+    /**
+     * 进行逻辑分页
+     * @param data 数据
+     * @param pageSize 分页大小
+     * @param curPageNo 当前页
+     */
+    public Pagination(List<T> data, int pageSize, int curPageNo) {
+        this(pageSize, curPageNo, null);
+        setTotal(data.size());
+        List<T> result = new ArrayList();
+        int offset = (curPageNo - 1) * pageSize;
+        for (int i = offset; i < offset + pageSize && i < data.size(); i++) {
+            result.add(data.get(i));
+        }
+        this.ready = true;
+        this.records.clear();
+        this.records.addAll(result);
     }
 
     /**

@@ -14,7 +14,6 @@ import java.util.Properties;
 @Intercepts({@Signature(method = "query", type = Executor.class, args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class PaginationStage2Interceptor implements Interceptor {
 
-    private String databaseType;
 
     public Object intercept(Invocation invocation) throws Throwable {
         Object obj = invocation.getArgs()[1];

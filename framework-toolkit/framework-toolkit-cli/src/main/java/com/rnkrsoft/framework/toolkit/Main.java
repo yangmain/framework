@@ -10,6 +10,7 @@ import com.rnkrsoft.framework.toolkit.generator.GenerateContext;
 import com.rnkrsoft.framework.toolkit.generator.Generator;
 import com.rnkrsoft.framework.toolkit.generator.jdk.JdkDaoGenerator;
 import com.rnkrsoft.framework.toolkit.generator.jdk.JdkEntityGenerator;
+import com.rnkrsoft.framework.toolkit.generator.jdk.JdkMapperGenerator;
 import com.rnkrsoft.framework.toolkit.jdbc.JdbcReverse;
 import com.rnkrsoft.framework.toolkit.jdbc.JdbcReverseMySQL;
 import jline.console.completer.Completer;
@@ -137,6 +138,7 @@ public class Main {
                 List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, prefix, suffix);
                 Generator entityGenerator = new JdkEntityGenerator();
                 Generator daoGenerator = new JdkDaoGenerator();
+                Generator mapperGenerator = new JdkMapperGenerator();
                 File outputDir = new File(output);
                if(!outputDir.exists()){
                    outputDir.mkdirs();
@@ -145,18 +147,25 @@ public class Main {
                     GenerateContext ctx = GenerateContext.builder().packageName(packageName).tableMetadata(metadata).build();
                     ByteBuf entityCode = entityGenerator.generate(ctx);
                     ByteBuf daoCode = daoGenerator.generate(ctx);
-                    File entityFile = new File(outputDir, metadata.getEntityClassName().replaceAll("\\.", "/") + ".java");
-                    File daoFile = new File(outputDir, metadata.getDaoClassName().replaceAll("\\.", "/") + ".java");
+                    ByteBuf mapperCode = mapperGenerator.generate(ctx);
+                    File entityFile = new File(outputDir, "src/main/java/" + metadata.getEntityClassName().replaceAll("\\.", "/") + ".java");
+                    File daoFile = new File(outputDir, "src/main/java/" + metadata.getDaoClassName().replaceAll("\\.", "/") + ".java");
+                    File mapperFile = new File(outputDir, "src/main/resources/" + metadata.getMapperName().replaceAll("\\.", "/") + ".xml");
+
                     entityFile.getParentFile().mkdirs();
                     daoFile.getParentFile().mkdirs();
+                    mapperFile.getParentFile().mkdirs();
                     FileOutputStream entityFileFos = new FileOutputStream(entityFile);
                     FileOutputStream daoFileFos = new FileOutputStream(daoFile);
+                    FileOutputStream mapperFileFos = new FileOutputStream(mapperFile);
                     try{
                         entityCode.write(entityFileFos);
                         daoCode.write(daoFileFos);
+                        mapperCode.write(mapperFileFos);
                     }finally {
                         IOUtils.closeQuietly(entityFileFos);
                         IOUtils.closeQuietly(daoFileFos);
+                        IOUtils.closeQuietly(mapperFileFos);
                     }
                 }
             } catch (Exception e) {

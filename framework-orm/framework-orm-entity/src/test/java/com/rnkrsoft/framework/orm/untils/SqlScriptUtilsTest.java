@@ -14,6 +14,6 @@ public class SqlScriptUtilsTest {
 
     @Test
     public void testGenerate() throws Exception {
-        SqlScriptUtils.generate("./target/sql.sql", NameMode.entity, "", NameMode.entity, "", NameMode.customize, "", DataEngineType.AUTO, WordMode.lowerCase, WordMode.lowerCase,  true, true, "com.rnkrsoft.framework");
+        SqlScriptUtils.generate("./target/sql.sql", NameMode.entity, "", NameMode.entity, "", NameMode.entity, "", DataEngineType.AUTO, WordMode.lowerCase, WordMode.lowerCase,  true, true, "com.rnkrsoft.framework");
     }
 }

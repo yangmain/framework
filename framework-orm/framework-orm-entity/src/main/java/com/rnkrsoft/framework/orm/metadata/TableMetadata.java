@@ -36,6 +36,10 @@ public class TableMetadata {
      */
     String daoClassName = "";
     /**
+     * Mapper文件名
+     */
+    String mapperName = "";
+    /**
      * 表名
      */
     String tableName = "";

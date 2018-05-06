@@ -62,11 +62,12 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     .tableName(name0)
                     .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Entity")
                     .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "DAO")
+                    .mapperName(packageName + ".mapper." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Mapper")
                     .prefix(prefix.toUpperCase())
                     .suffix(suffix.toUpperCase())
                     .dataEngine(engine)
                     .comment(comment)
-                    .schema(schema)
+//                    .schema(schema)
                     .build();
             reverse(tableMetadata, schema, connection);
             metadatas.add(tableMetadata);
@@ -82,7 +83,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
         Statement statement = connection.createStatement();
         String sql = "select cols.column_name as column_name, cols.column_default as column_default, cols.is_nullable as is_nullable, cols.data_type as data_type, cols.column_type as column_type, extra as extra, cols.column_key as column_key, cols.column_comment as column_comment " +
                 "from information_schema.columns cols " +
-                "where cols.table_schema = '" + schema + "' and table_name = '" + tableMetadata.getTableName() + "' order by cols.ordinal_position";
+                "where upper(cols.table_schema) = upper('" + schema + "') and upper(table_name) = upper('" + tableMetadata.getFullTableName() + "') order by cols.ordinal_position";
         //执行数据SQL获取表字段信息
         boolean succ = statement.execute(sql);
         ResultSet resultSet = statement.getResultSet();
