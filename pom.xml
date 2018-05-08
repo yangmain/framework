@@ -26,12 +26,23 @@
         <module>framework-sequence</module>
         <module>framework-orm</module>
         <module>framework-test</module>
+        <module>framework-config</module>
         <module>framework-toolkit</module>
         <module>framework-standalone</module>
         <module>framework-test-standalone</module>
     </modules>
     <properties>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.devops4j.skeleton4j</groupId>
+                <artifactId>skeleton4j-api</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <scm>
         <connection>http://admin@git.devops4j.com/r/framework.git </connection>
         <developerConnection>http://admin@git.devops4j.com/r/framework.git </developerConnection>
