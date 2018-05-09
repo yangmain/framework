@@ -25,12 +25,6 @@
         <logger name="com.rnkrsoft.framework" level="debug" additivity="false">
             <appender-ref ref="Console"/>
         </logger>
-        <logger name="com.zbj.finance.framework" level="info" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="com.zbj.finance.creditpremit" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
         <logger name="log4jdbc" level="info" additivity="false">
             <appender-ref ref="Console"/>
         </logger>

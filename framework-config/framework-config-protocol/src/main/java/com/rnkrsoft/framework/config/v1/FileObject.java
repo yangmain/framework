@@ -1,8 +1,6 @@
 package com.rnkrsoft.framework.config.v1;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,6 +10,8 @@ import java.util.Date;
  */
 @Data
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class FileObject {
     /**

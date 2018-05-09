@@ -45,6 +45,21 @@
             <artifactId>framework-sequence-injvm</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-config-protocol</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-config-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-config-spring</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -70,6 +85,9 @@
                                     <include>com.rnkrsoft.framework:framework-orm-spring</include>
                                     <include>com.rnkrsoft.framework:framework-sequence-api</include>
                                     <include>com.rnkrsoft.framework:framework-sequence-injvm</include>
+                                    <include>com.rnkrsoft.framework:framework-config-protocol</include>
+                                    <include>com.rnkrsoft.framework:framework-config-client</include>
+                                    <include>com.rnkrsoft.framework:framework-config-spring</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

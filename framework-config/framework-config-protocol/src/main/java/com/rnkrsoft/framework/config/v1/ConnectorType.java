@@ -5,15 +5,15 @@ import com.devops4j.logtrace4j.ErrorContextFactory;
 
 /**
  * Created by rnkrsoft.com on 2018/5/7.
- * 工作模式
+ * 连接器类型
  */
-public enum WorkMode implements EnumStringCode{
+public enum ConnectorType implements EnumStringCode{
     HTTP("HTTP", "超文本协议"),
     DUBBO("DUBBO", "DUBBO协议");
     String code;
     String desc;
 
-    WorkMode(String code, String desc) {
+    ConnectorType(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -29,8 +29,8 @@ public enum WorkMode implements EnumStringCode{
         return desc;
     }
 
-    public static WorkMode valueOfCode(String code){
-        for (WorkMode value : values()){
+    public static ConnectorType valueOfCode(String code){
+        for (ConnectorType value : values()){
             if(value.code.equals(code)){
                 return value;
             }

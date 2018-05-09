@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.config.client;
 
+import com.rnkrsoft.framework.config.v1.ConnectorType;
 import com.rnkrsoft.framework.config.v1.RuntimeMode;
-import com.rnkrsoft.framework.config.v1.WorkMode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,7 +20,7 @@ public class ConfigClientSetting {
     /**
      * 工作模式，使用的通信方式，默认HTTP
      */
-    WorkMode workMode = WorkMode.HTTP;
+    ConnectorType connectorType = ConnectorType.HTTP;
     /**
      * 运行时模式，默认使用自动模式
      */
@@ -65,10 +65,6 @@ public class ConfigClientSetting {
      * 文件编码
      */
     String fileEncoding = "UTF-8";
-    /**
-     * 本地配置文件根目录
-     */
-    String localFileHome = ".";
     /**
      * 拉取参数延时秒数
      */

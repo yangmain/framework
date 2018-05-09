@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.config.client;
 
+import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.message.MessageFormatter;
 import com.devops4j.utils.DynamicFile;
 import com.rnkrsoft.framework.config.connector.Connector;
@@ -104,15 +105,15 @@ public class ConfigClient {
                 this.connector.stop();
                 this.connector = null;
             }
-            if (setting.workMode == WorkMode.HTTP) {
+            if (setting.connectorType == ConnectorType.HTTP) {
                 //初始化HTTP连接器
                 this.connector = new HttpConnector(setting.host, setting.port);
                 //初始化定时器，每隔一段事件主动拉去一次配置
                 this.timer.schedule(new FetchConfigTask(this), setting.fetchDelaySeconds * 1000, setting.fetchIntervalSeconds * 1000);
-            } else if (setting.workMode == WorkMode.DUBBO) {
+            } else if (setting.connectorType == ConnectorType.DUBBO) {
                 //初始化 DUBBO的服务
             } else {
-                throw new Error(MessageFormatter.format("not supported workMode!"));
+                throw new Error(MessageFormatter.format("not supported connectorType!"));
             }
             log.info("finish inited config client...");
         }
@@ -385,7 +386,16 @@ public class ConfigClient {
             file.rollback();
         }
     }
-
+    public InputStream openFile(String fileName) throws IOException {
+        if (fileName == null){
+            throw ErrorContextFactory.instance().message("fileName is ").runtimeException();
+        }
+        String fileName0 = FileSystemUtils.formatPath(fileName);
+        int lastDotIdx = fileName0.lastIndexOf("/");
+        String filePath = fileName0.substring(0, lastDotIdx);
+        fileName = fileName0.substring(lastDotIdx + 1);
+        return openFile(filePath, fileName);
+    }
     /**
      * 打开一个文件
      *

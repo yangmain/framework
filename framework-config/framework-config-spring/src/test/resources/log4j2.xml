@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+    <Properties>
+        <Property name="FILE_SIZE">300M</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} sessionId[%X{sessionId}] [%thread] %-5level %logger{36} - %msg%n</Property>
+        <Property name="LOG_FILE_PATCH">./target/logs/</Property>
+        <Property name="PLATFORM_FILE_NAME">platform.log</Property>
+        <Property name="DEBUG_FILE_NAME">debug.log</Property>
+    </Properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingRandomAccessFile name="platformLogger" fileName="${LOG_FILE_PATCH}${PLATFORM_FILE_NAME}" filePattern="${LOG_FILE_PATCH}${PLATFORM_FILE_NAME}.%d{yyyy-MM-dd}.%i" immediateFlush="false">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="120"/>
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile name="debugLogger" fileName="${LOG_FILE_PATCH}${DEBUG_FILE_NAME}" filePattern="${LOG_FILE_PATCH}${DEBUG_FILE_NAME}.%d{yyyy-MM-dd}.%i" immediateFlush="false">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="120"/>
+        </RollingRandomAccessFile>
+    </appenders>
+
+    <loggers>
+        <AsyncRoot level="debug">
+            <appender-ref ref="Console"/>
+        </AsyncRoot>
+        <!--
+            additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍。
+            -->
+        <logger name="org.springframework" level="info" additivity="true">
+            <appender-ref ref="debugLogger"/>
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.zbj.finance.framework" level="info" additivity="true">
+            <appender-ref ref="debugLogger"/>
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.zbj.finance.framework" level="debug" additivity="true">
+            <appender-ref ref="platformLogger"/>
+        </logger>
+        <logger name="log4jdbc" level="info" additivity="true">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="debugLogger"/>
+        </logger>
+        <logger name="jdbc.audit" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.sqlonly" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.sqltiming" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="debugLogger"/>
+        </logger>
+        <logger name="jdbc.connection" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.resultset" level="off" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="jdbc.resultsettable" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="debugLogger"/>
+        </logger>
+    </loggers>
+</configuration>

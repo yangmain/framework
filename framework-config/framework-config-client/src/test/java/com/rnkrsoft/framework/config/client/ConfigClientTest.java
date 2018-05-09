@@ -1,10 +1,8 @@
 package com.rnkrsoft.framework.config.client;
 
 import com.rnkrsoft.framework.config.v1.RuntimeMode;
-import com.rnkrsoft.framework.config.v1.WorkMode;
+import com.rnkrsoft.framework.config.v1.ConnectorType;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by rnkrsoft.com on 2018/5/8.
@@ -21,7 +19,7 @@ public class ConfigClientTest {
                 .machine("test1")
                 .desc("测试")
                 .fileEncoding("UTF-8")
-                .workMode(WorkMode.HTTP)
+                .connectorType(ConnectorType.HTTP)
                 .runtimeMode(RuntimeMode.LOCAL)
                 .fetchDelaySeconds(1)
                 .fetchIntervalSeconds(2)
