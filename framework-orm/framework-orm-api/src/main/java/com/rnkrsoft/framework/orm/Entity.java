@@ -11,15 +11,23 @@ import java.util.List;
  */
 @Data
 @ToString
-public abstract class Entity {
-    /**
-     * 数据库模式
-     */
+public abstract class Entity implements OrderBy{
     @Ignore
-    protected String schema;
-    /**
-     * 排序字段
-     */
-    @Ignore
-    protected final List<String> orderBys = new ArrayList();
+    final List<OrderByColumn> orderByColumns = new ArrayList();
+
+    @Override
+    public OrderBy addOrderBy(String column, Order order) {
+        return addOrderBy(OrderByColumn.builder().column(column).order(order).build());
+    }
+
+    @Override
+    public OrderBy addOrderBy(OrderByColumn orderByColumn) {
+        orderByColumns.add(orderByColumn);
+        return this;
+    }
+
+    @Override
+    public List<OrderByColumn> getOrderByColumns() {
+        return orderByColumns;
+    }
 }

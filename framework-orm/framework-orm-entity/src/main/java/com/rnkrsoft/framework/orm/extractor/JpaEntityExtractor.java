@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.extractor;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.framework.orm.Ignore;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -226,9 +227,14 @@ public class JpaEntityExtractor implements EntityExtractor {
         Field field = columnMetadata.getColumnField();
         Class entityClass = columnMetadata.getEntityClass();
         Column column = field.getAnnotation(Column.class);
+        Ignore ignore = field.getAnnotation(Ignore.class);
+        if (ignore != null){
+            return false;
+        }
         if ("schema".equals(columnMetadata.getJavaName())) {
             return false;
         }
+
         //统计同一类注解使用几个
         int count = 0;
         if (column != null) {

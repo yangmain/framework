@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @Table(name = "ORM_DEMO_INF")
 @Comment("演示信息表")
-public class OrmEntity implements Serializable {
+public class OrmEntity extends Entity implements Serializable {
     @PrimaryKey(strategy = PrimaryKeyStrategy.UUID, feature = "${yyyyMMddHHmmssSSS}_${SEQ:9}_${RANDOM:5}")
     @StringColumn(name = "SERIAL_NO", nullable = false)
     @Comment("序列号")

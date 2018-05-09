@@ -13,5 +13,6 @@
     <modules>
         <module>framework-config-protocol</module>
         <module>framework-config-client</module>
+        <module>framework-config-spring</module>
     </modules>
 </project>

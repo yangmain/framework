@@ -1,7 +1,6 @@
 package com.rnkrsoft.framework.test;
 
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.*;
 import com.rnkrsoft.framework.test.dao.OrmDemoDAO;
 import com.rnkrsoft.framework.test.entity.OrmEntity;
 import org.junit.Assert;
@@ -38,7 +37,10 @@ public class DataSourceTestTest extends DataSourceTest{
         entity.setUserName(UUID.randomUUID().toString());
         entity.setCreateDate(new Date());
         entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
-        ormDemoDAO.insert(entity);
+        entity.addOrderBy(OrderByColumn.builder().column("age").order(Order.ASC).build());
+        entity.addOrderBy(OrderByColumn.builder().column("user_name").order(Order.DESC).build());
+        Pagination<OrmEntity> pagination = new Pagination<OrmEntity>(20, 1, entity);
+        ormDemoDAO.selectAnd(entity);
 
     }
 }

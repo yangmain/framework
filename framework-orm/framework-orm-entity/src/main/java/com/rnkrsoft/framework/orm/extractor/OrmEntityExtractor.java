@@ -445,6 +445,10 @@ public class OrmEntityExtractor implements EntityExtractor {
         StringColumn stringColumn = field.getAnnotation(StringColumn.class);
         DateColumn dateColumn = field.getAnnotation(DateColumn.class);
         Comment comment = field.getAnnotation(Comment.class);
+        Ignore ignore = field.getAnnotation(Ignore.class);
+        if (ignore != null){
+            return false;
+        }
         if ("schema".equals(columnMetadata.getJavaName())) {
             return false;
         }

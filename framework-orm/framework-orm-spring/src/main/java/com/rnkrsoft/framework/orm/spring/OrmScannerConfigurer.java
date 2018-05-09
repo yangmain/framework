@@ -68,8 +68,6 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
      */
     @Setter
     Class<?> markerInterface;
-
-
     /**
      * Spring 上下文
      */

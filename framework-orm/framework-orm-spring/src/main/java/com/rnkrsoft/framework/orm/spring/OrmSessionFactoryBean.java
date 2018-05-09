@@ -2,6 +2,7 @@ package com.rnkrsoft.framework.orm.spring;
 
 import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.DatabaseType;
+import com.rnkrsoft.framework.orm.mybatis.plugins.OrderByInterceptor;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage1Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage2Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.spring.transaction.SpringManagedTransactionFactory;
@@ -162,7 +163,7 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         //默认加入分页插件
         boolean paginationStage1Interceptor = false;
         boolean paginationStage2Interceptor = false;
-        Set<Interceptor> pluginSet = null;
+        List<Interceptor> pluginSet = null;
         if (plugins != null) {
             for (Interceptor plugin : plugins) {
                 if (plugin instanceof PaginationStage1Interceptor) {
@@ -172,10 +173,13 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
                     paginationStage2Interceptor = true;
                 }
             }
-            pluginSet = new HashSet(Arrays.asList(plugins));
+            pluginSet = Arrays.asList(plugins);
         } else {
-            pluginSet = new HashSet();
+            pluginSet = new ArrayList();
         }
+
+        pluginSet.add(new OrderByInterceptor());
+
         if (!paginationStage1Interceptor) {
             pluginSet.add(new PaginationStage1Interceptor(DatabaseType.MySQL));
         }
