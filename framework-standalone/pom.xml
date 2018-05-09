@@ -47,17 +47,12 @@
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-config-protocol</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-config-client</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-config-spring</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-cache-spring</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
@@ -88,6 +83,9 @@
                                     <include>com.rnkrsoft.framework:framework-config-protocol</include>
                                     <include>com.rnkrsoft.framework:framework-config-client</include>
                                     <include>com.rnkrsoft.framework:framework-config-spring</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-redis</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-client</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-spring</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

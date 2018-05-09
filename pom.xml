@@ -28,6 +28,8 @@
         <module>framework-test</module>
         <module>framework-monitor</module>
         <module>framework-config</module>
+        <module>framework-messagequeue</module>
+        <module>framework-cache</module>
         <module>framework-toolkit</module>
         <module>framework-standalone</module>
         <module>framework-test-standalone</module>
