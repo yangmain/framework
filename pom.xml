@@ -26,6 +26,7 @@
         <module>framework-sequence</module>
         <module>framework-orm</module>
         <module>framework-test</module>
+        <module>framework-monitor</module>
         <module>framework-config</module>
         <module>framework-toolkit</module>
         <module>framework-standalone</module>
