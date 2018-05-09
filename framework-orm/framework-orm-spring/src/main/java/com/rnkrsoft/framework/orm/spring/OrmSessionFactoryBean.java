@@ -178,11 +178,11 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
             pluginSet = new ArrayList();
         }
 
-        pluginSet.add(new OrderByInterceptor());
 
         if (!paginationStage1Interceptor) {
             pluginSet.add(new PaginationStage1Interceptor(DatabaseType.MySQL));
         }
+        pluginSet.add(new OrderByInterceptor());
         if (!paginationStage2Interceptor) {
             pluginSet.add(new PaginationStage2Interceptor());
         }

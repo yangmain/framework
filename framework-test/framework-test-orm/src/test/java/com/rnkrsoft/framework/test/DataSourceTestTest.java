@@ -40,7 +40,7 @@ public class DataSourceTestTest extends DataSourceTest{
         entity.addOrderBy(OrderByColumn.builder().column("age").order(Order.ASC).build());
         entity.addOrderBy(OrderByColumn.builder().column("user_name").order(Order.DESC).build());
         Pagination<OrmEntity> pagination = new Pagination<OrmEntity>(20, 1, entity);
-        ormDemoDAO.selectAnd(entity);
+        ormDemoDAO.selectPageAnd(pagination);
 
     }
 }

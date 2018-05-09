@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.Pagination;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -51,20 +52,32 @@ public class PaginationStage1Interceptor implements Interceptor {
      * 是通过Interceptor的plugin方法进行包裹的，所以我们这里拦截到的目标对象肯定是RoutingStatementHandler对象。
      */
     public Object intercept(Invocation invocation) throws Throwable {
-
-        RoutingStatementHandler handler = (RoutingStatementHandler) invocation.getTarget();
-        //通过反射获取到当前RoutingStatementHandler对象的delegate属性
-        StatementHandler delegate = (StatementHandler) ReflectUtil.getFieldValue(handler, "delegate");
-        //获取到当前StatementHandler的 boundSql，这里不管是调用handler.getBoundSql()还是直接调用delegate.getBoundSql()结果是一样的，因为之前已经说过了
-        //RoutingStatementHandler实现的所有StatementHandler接口方法里面都是调用的delegate对应的方法。
-        BoundSql boundSql = delegate.getBoundSql();
+        StatementHandler handler = (StatementHandler) invocation.getTarget();
+        BoundSql boundSql;
+        int deep = 0;
+        while (true || ++deep <= 50){
+            if (handler instanceof RoutingStatementHandler) {
+                //通过反射获取到当前RoutingStatementHandler对象的delegate属性
+                //获取到当前StatementHandler的 boundSql，这里不管是调用handler.getBoundSql()还是直接调用delegate.getBoundSql()结果是一样的，因为之前已经说过了
+                //RoutingStatementHandler实现的所有StatementHandler接口方法里面都是调用的delegate对应的方法。
+                handler = (StatementHandler) com.rnkrsoft.framework.orm.mybatis.plugins.ReflectUtil.getFieldValue(handler, "delegate");
+                break;
+            } else {
+                Plugin plugin = (Plugin) com.rnkrsoft.framework.orm.mybatis.plugins.ReflectUtil.getFieldValue(handler, "h");
+                handler = (StatementHandler) com.rnkrsoft.framework.orm.mybatis.plugins.ReflectUtil.getFieldValue(plugin, "target");
+            }
+        }
+        if (deep > 50){
+            throw ErrorContextFactory.instance().message("插件深度超过50").runtimeException();
+        }
+        boundSql = handler.getBoundSql();
         //拿到当前绑定Sql的参数对象，就是我们在调用对应的Mapper映射语句时所传入的参数对象
         Object obj = boundSql.getParameterObject();
         //这里我们简单的通过传入的是Page对象就认定它是需要进行分页操作的。
         if (obj instanceof Pagination) {
             Pagination page = (Pagination) obj;
             //通过反射获取delegate父类BaseStatementHandler的mappedStatement属性
-            MappedStatement mappedStatement = (MappedStatement) ReflectUtil.getFieldValue(delegate, "mappedStatement");
+            MappedStatement mappedStatement = (MappedStatement) ReflectUtil.getFieldValue(handler, "mappedStatement");
             //拦截到的prepare方法参数是一个Connection对象
             Connection connection = (Connection) invocation.getArgs()[0];
             //获取当前要执行的Sql语句，也就是我们直接在Mapper映射语句中写的Sql语句
