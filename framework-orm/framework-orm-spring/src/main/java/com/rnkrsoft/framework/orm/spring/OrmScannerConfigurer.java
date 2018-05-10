@@ -33,6 +33,7 @@ import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 

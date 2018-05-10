@@ -3,21 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
-        <artifactId>framework-orm</artifactId>
+        <artifactId>framework-monitor</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>framework-orm-api</artifactId>
-    <name>framework-orm-api</name>
-    <description>This is the framework-orm-api</description>
+    <artifactId>framework-monitor-boot-starter</artifactId>
+    <name>framework-monitor-boot-starter</name>
+    <description>framework monitor boot starter</description>
     <dependencies>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-annotation-orm</artifactId>
+            <artifactId>framework-monitor-heartbeat</artifactId>
             <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
         </dependency>
     </dependencies>
 </project>

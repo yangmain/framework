@@ -8,6 +8,8 @@ import com.devops4j.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.OrderBy;
 import com.rnkrsoft.framework.orm.OrderByColumn;
 import com.rnkrsoft.framework.orm.Pagination;
+import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -27,6 +29,17 @@ import java.util.Properties;
  */
 @Intercepts({@Signature(method = "prepare", type = StatementHandler.class, args = {Connection.class})})
 public class OrderByInterceptor implements Interceptor {
+    WordMode keywordMode = WordMode.upperCase;
+    WordMode sqlMode = WordMode.upperCase;
+
+    public OrderByInterceptor() {
+    }
+
+    public OrderByInterceptor(WordMode keywordMode, WordMode sqlMode) {
+        this.keywordMode = keywordMode;
+        this.sqlMode = sqlMode;
+    }
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         StatementHandler handler = (StatementHandler) invocation.getTarget();
@@ -67,23 +80,23 @@ public class OrderByInterceptor implements Interceptor {
                 //修改SQL，在后面追加 order by语句
                 StringBuilder builder = new StringBuilder(sql);
                 //排序
-                builder.append(" order by ").append(convertOrderBy(orderByColumns));
+                builder.append(KeywordsUtils.convert(" order by ", keywordMode)).append(convertOrderBy(orderByColumns));
                 //利用反射设置当前BoundSql对应的sql属性为拼接上排序字段的
                 ReflectUtil.setFieldValue(boundSql, "sql", builder.toString());
-                if (existPage){
-                    //通过反射获取delegate父类BaseStatementHandler的mappedStatement属性
-                    MappedStatement mappedStatement = (MappedStatement) ReflectUtil.getFieldValue(handler, "mappedStatement");
-                    SqlSource sqlSource = mappedStatement.getSqlSource();
-                    if (sqlSource instanceof RawSqlSource){
-                        //TODO
-                    }else if(sqlSource instanceof DynamicSqlSource){
-                        DynamicSqlSource dynamicSqlSource = (DynamicSqlSource)sqlSource;
-
-                        //TODO
-                    }else if(sqlSource instanceof StaticSqlSource){
-                        //TODO
-                    }
-                }
+//                if (existPage){
+//                    //通过反射获取delegate父类BaseStatementHandler的mappedStatement属性
+//                    MappedStatement mappedStatement = (MappedStatement) ReflectUtil.getFieldValue(handler, "mappedStatement");
+//                    SqlSource sqlSource = mappedStatement.getSqlSource();
+//                    if (sqlSource instanceof RawSqlSource){
+//                        //TODO
+//                    }else if(sqlSource instanceof DynamicSqlSource){
+//                        DynamicSqlSource dynamicSqlSource = (DynamicSqlSource)sqlSource;
+//
+//                        //TODO
+//                    }else if(sqlSource instanceof StaticSqlSource){
+//                        //TODO
+//                    }
+//                }
             }
 
         }
@@ -94,7 +107,7 @@ public class OrderByInterceptor implements Interceptor {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < orderByColumns.size(); i++) {
             OrderByColumn value = orderByColumns.get(i);
-            builder.append(value.getColumn()).append(" ").append(value.getOrder().getCode());
+            builder.append(KeywordsUtils.convert(value.getColumn(), sqlMode)).append(" ").append(KeywordsUtils.convert(value.getOrder().getCode(), keywordMode));
             if (i + 1 < orderByColumns.size()) {
                 builder.append(", ");
             }

@@ -12,5 +12,6 @@
     <description>framework MessageQueue</description>
     <modules>
         <module>framework-messagequeue-protocol</module>
+        <module>framework-messagequeue-boot-starter</module>
     </modules>
 </project>

@@ -28,7 +28,7 @@
                 <!--MAPPER文件路径数组-->
                 <property name="mapperLocations">
                     <array>
-                        <value>com/rnkrsoft/framework/orm/spring/mapper</value>
+                        <value>classpath*:com/rnkrsoft/framework/orm/spring/mapper/*.xml</value>
                     </array>
                 </property>
                 <!--全局配置-->
