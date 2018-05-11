@@ -35,7 +35,7 @@ public class DataSourceLookup {
                     || H2_DATASOURCE.equals(dsn)) {
                 log.info("unit test use :{}!", currentDataSource.get());
                 return dsn;
-            }else {//如果运行在IDE环境下，直接使用H2数据库
+            }else {//如果是自动识别，则使用H2
                     log.info("unit test use :{}!", H2_DATASOURCE);
                     return H2_DATASOURCE;
             }

@@ -11,6 +11,11 @@
     <description>This is the framework4j-test-core</description>
     <dependencies>
         <dependency>
+            <groupId>com.devops4j.reflection4j</groupId>
+            <artifactId>reflection4j</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>provided</scope>

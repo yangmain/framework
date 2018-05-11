@@ -1,9 +1,8 @@
 package com.rnkrsoft.framework.test;
 
 import com.rnkrsoft.framework.orm.*;
-import com.rnkrsoft.framework.test.dao.OrmDemoDAO;
-import com.rnkrsoft.framework.test.entity.OrmEntity;
-import org.junit.Assert;
+import com.rnkrsoft.framework.test.dao.OrderDAO;
+import com.rnkrsoft.framework.test.entity.OrderEntity;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -14,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by rnkrsoft.com on 2018/4/20.
  */
-@CreateTable(entities = OrmEntity.class,
+@CreateTable(entities = OrderEntity.class,
         keywordMode = WordMode.lowerCase,
         sqlMode = WordMode.lowerCase,
         prefixMode = NameMode.entity,
@@ -31,16 +30,24 @@ import java.util.UUID;
 public class DataSourceTestTest extends DataSourceTest{
     @Test
     public void test1(){
-        OrmDemoDAO ormDemoDAO = getBean(OrmDemoDAO.class);
-        OrmEntity entity = new OrmEntity();
-        entity.setAge(2);
+        OrderDAO orderDAO = getBean(OrderDAO.class);
+        OrderEntity entity = new OrderEntity();
+        entity.setAge(1);
         entity.setUserName(UUID.randomUUID().toString());
         entity.setCreateDate(new Date());
         entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
         entity.addOrderBy(OrderByColumn.builder().column("age").order(Order.ASC).build());
         entity.addOrderBy(OrderByColumn.builder().column("user_name").order(Order.DESC).build());
-        Pagination<OrmEntity> pagination = new Pagination<OrmEntity>(20, 1, entity);
-        ormDemoDAO.selectPageAnd(pagination);
-
+        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+        entity.setAge(2);
+        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+        entity.setAge(3);
+        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+        entity.setAge(4);
+        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+        entity.setAge(5);
+        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+        entity.setAge(6);
+        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
     }
 }
