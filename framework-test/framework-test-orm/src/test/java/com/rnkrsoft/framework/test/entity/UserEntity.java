@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Table(name = "USER_INF")
 @Comment("用户信息表")
-public class UserEntity {
+public class UserEntity extends Entity{
     @PrimaryKey(strategy = PrimaryKeyStrategy.UUID, feature = "${yyyyMMddHHmmssSSS}_${SEQ:9}_${RANDOM:5}")
     @StringColumn(name = "SERIAL_NO", nullable = false)
     @Comment("序列号")

@@ -27,7 +27,7 @@
         <property name="host" value="122.114.65.131"/>
         <property name="port" value="3306"/>
         <property name="schema" value="dudule"/>
-        <property name="username" value="dudule"/>
+        <property name="username" value="root"/>
         <property name="password" value="duduledmm@2018"/>
         <property name="initialSize" value="5"/>
         <property name="minIdle" value="5"/>

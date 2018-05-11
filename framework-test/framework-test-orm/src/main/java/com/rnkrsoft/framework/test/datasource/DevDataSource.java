@@ -101,7 +101,7 @@ public class DevDataSource extends AbstractDataSource implements InitializingBea
         if (databaseType == DatabaseType.MySQL){
             this.mysqlDataSource = new BasicDataSource();
             this.mysqlDataSource.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
-            String url = MessageFormatter.format("jdbc:log4jdbc:mysql://{}:{}/{}?useUnicode=true", host, port, schema);
+            String url = MessageFormatter.format("jdbc:log4jdbc:mysql://{}:{}/{}?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull", host, port, schema);
             log.debug("MySQL url: {}", url);
             this.mysqlDataSource.setUrl(url);
             this.mysqlDataSource.setUsername(username);
