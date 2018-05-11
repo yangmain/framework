@@ -44,7 +44,7 @@ public class CreateTableHandler {
                 context.setSuffix(createTableWrapper.getSuffix());
             }
             //测试前进行表结构的删除
-            if (createTableWrapper.isDropBeforeCreate()) {
+            if (DataSourceLookup.H2_DATASOURCE.equals(dsn) && createTableWrapper.isDropBeforeCreate()) {
                 String dropSql = SqlScriptUtils.generateDropTable(createTableWrapper.entityClass, createTableWrapper.getSchemaMode(), createTableWrapper.getSchema(), createTableWrapper.getPrefixMode(), createTableWrapper.getPrefix(), createTableWrapper.getSuffixMode(), createTableWrapper.getSuffix(), createTableWrapper.getSqlMode(), createTableWrapper.getKeywordMode(), true);
                 jdbcTemplate.execute(dropSql);
             }
