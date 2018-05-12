@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,10 +19,13 @@ import java.sql.SQLException;
  */
 @Slf4j
 public class MyISAMSequenceService implements SequenceService{
+    JdbcTemplate jdbcTemplate;
     @Override
     public int nextval(String schema, String prefix, final String sequenceName, final String feature) {
-        JdbcTemplate jdbcTemplate = SpringContextHelper.getBean(JdbcTemplate.class);
-        //TODO
+        if (jdbcTemplate == null){
+            DataSource dataSource = SpringContextHelper.getBean("defaultDataSource");
+            this.jdbcTemplate = new JdbcTemplate(dataSource);
+        }
         String tableName = "sequence_inf";
         String sql = "insert into ";
         if (schema != null && !schema.isEmpty()) {
@@ -63,7 +67,10 @@ public class MyISAMSequenceService implements SequenceService{
 
     @Override
     public int curval(String schema, String prefix, String sequenceName, String feature) {
-        JdbcTemplate jdbcTemplate = SpringContextHelper.getBean(JdbcTemplate.class);
+        if (jdbcTemplate == null){
+            DataSource dataSource = SpringContextHelper.getBean("defaultDataSource");
+            this.jdbcTemplate = new JdbcTemplate(dataSource);
+        }
         String tableName = "sequence_inf";
         String sql = "select seq_value form ";
         if (schema != null && !schema.isEmpty()) {

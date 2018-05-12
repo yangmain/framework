@@ -6,6 +6,7 @@ import com.rnkrsoft.framework.orm.WordMode;
 import org.springframework.core.io.Resource;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by rnkrsoft.com on 2018/4/2.
@@ -72,13 +73,13 @@ public interface OrmConfig {
      * 配置序号服务信息中的表所用的序号服务实现类
      * @param sequenceMappings 序号服务配置
      */
-    void setSequenceMappings(Map<String, String> sequenceMappings);
+    void setSequenceMappings(Properties sequenceMappings);
 
     /**
      * 获取序号服务配置信息
      * @return 表-生成规则
      */
-    Map<String, String> getSequenceMappings();
+    Properties getSequenceMappings();
 
     ItemConfig get(String daoInterface);
 }

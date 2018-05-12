@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.sequence.jnjvm;
+package com.rnkrsoft.framework.sequence.injvm;
 
 import com.rnkrsoft.framework.sequence.SequenceService;
 

@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by rnkrsoft.com on 2018/4/5.
  */
 @Data
-@Table(name = "ORM_DEMO_INF")
+@Table(name = "ORDER", prefix = "TB", suffix = "INF")
 @Comment("演示信息表")
 public class OrderEntity extends Entity implements Serializable {
     @PrimaryKey(strategy = PrimaryKeyStrategy.UUID, feature = "${yyyyMMddHHmmssSSS}_${SEQ:9}_${RANDOM:5}")

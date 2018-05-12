@@ -10,10 +10,5 @@
     <name>framework-sequence-redis</name>
     <description>基于Redis的序号生成</description>
     <dependencies>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-sequence-api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
 </project>

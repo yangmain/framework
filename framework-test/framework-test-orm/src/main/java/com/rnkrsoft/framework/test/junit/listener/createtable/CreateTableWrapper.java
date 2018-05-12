@@ -29,15 +29,39 @@ public class CreateTableWrapper {
      */
     WordMode sqlMode = WordMode.lowerCase;
     /**
-     * 数据库模式
+     * 数据库模式类型
      */
     NameMode schemaMode = NameMode.customize;
+    /**
+     * 数据库模式
+     */
     String schema;
+    /**
+     * 前缀模式
+     */
     NameMode prefixMode = NameMode.customize;
+    /**
+     * 前缀
+     */
     String prefix;
+    /**
+     * 后缀模式
+     */
     NameMode suffixMode = NameMode.customize;
+    /**
+     * 后缀
+     */
     String suffix;
+    /**
+     * 测试前创建表结构
+     */
     boolean createBeforeTest = true;
+    /**
+     * 创建表结构前删除表结构
+     */
     boolean dropBeforeCreate = true;
+    /**
+     * 测试后删除表结构
+     */
     boolean dropAfterTest = true;
 }

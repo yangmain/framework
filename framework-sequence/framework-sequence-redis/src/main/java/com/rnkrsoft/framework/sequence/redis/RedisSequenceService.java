@@ -4,6 +4,7 @@ import com.rnkrsoft.framework.sequence.SequenceService;
 
 /**
  * Created by rnkrsoft.com on 2018/4/23.
+ * 基于Redis的序号生成方案
  */
 public class RedisSequenceService implements SequenceService{
     @Override

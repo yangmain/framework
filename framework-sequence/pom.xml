@@ -11,10 +11,15 @@
     <name>framework-sequence</name>
     <description>framework sequence generator</description>
     <modules>
-        <module>framework-sequence-api</module>
         <module>framework-sequence-h2</module>
-        <module>framework-sequence-injvm</module>
         <module>framework-sequence-myisam</module>
         <module>framework-sequence-redis</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-sequence-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

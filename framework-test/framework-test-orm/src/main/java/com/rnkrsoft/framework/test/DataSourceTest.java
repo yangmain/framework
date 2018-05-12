@@ -6,6 +6,7 @@ import org.springframework.test.context.TestExecutionListeners;
 
 /**
  * Created by rnkrsoft.com on 2018/4/18.
+ * 用于数据库测试的基类
  */
 @TestExecutionListeners({
         CreateTableExecutionListener.class,

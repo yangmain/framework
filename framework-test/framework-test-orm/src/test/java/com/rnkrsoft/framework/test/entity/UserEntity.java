@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by woate on 2018/4/30.
  */
 @Data
-@Table(name = "USER_INF")
+@Table(name = "USER_INF", prefix = "TB", suffix = "INF")
 @Comment("用户信息表")
 public class UserEntity extends Entity{
     @PrimaryKey(strategy = PrimaryKeyStrategy.UUID, feature = "${yyyyMMddHHmmssSSS}_${SEQ:9}_${RANDOM:5}")

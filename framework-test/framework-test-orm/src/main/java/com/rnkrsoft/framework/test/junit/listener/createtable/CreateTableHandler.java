@@ -11,6 +11,7 @@ import java.util.Collection;
 
 /**
  * Created by rnkrsoft.com on 2018/4/30.
+ * @CreateTable处理器
  */
 public class CreateTableHandler {
 

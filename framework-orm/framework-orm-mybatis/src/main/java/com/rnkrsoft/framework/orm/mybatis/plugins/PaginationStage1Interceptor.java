@@ -12,6 +12,8 @@ import java.util.Properties;
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.Pagination;
+import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -40,6 +42,9 @@ import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 public class PaginationStage1Interceptor implements Interceptor {
     private DatabaseType databaseType = DatabaseType.MySQL;//数据库类型，不同的数据库有不同的分页方法
 
+    WordMode keywordMode = WordMode.lowerCase;
+    WordMode sqlMode = WordMode.lowerCase;
+
     /**
      * 拦截后要执行的方法
      * 对于StatementHandler其实只有两个实现类，一个是RoutingStatementHandler，另一个是抽象类BaseStatementHandler，
@@ -55,7 +60,7 @@ public class PaginationStage1Interceptor implements Interceptor {
         StatementHandler handler = (StatementHandler) invocation.getTarget();
         BoundSql boundSql;
         int deep = 0;
-        while (true || ++deep <= 50){
+        while (true || ++deep <= 50) {
             if (handler instanceof RoutingStatementHandler) {
                 //通过反射获取到当前RoutingStatementHandler对象的delegate属性
                 //获取到当前StatementHandler的 boundSql，这里不管是调用handler.getBoundSql()还是直接调用delegate.getBoundSql()结果是一样的，因为之前已经说过了
@@ -67,7 +72,7 @@ public class PaginationStage1Interceptor implements Interceptor {
                 handler = (StatementHandler) com.rnkrsoft.framework.orm.mybatis.plugins.ReflectUtil.getFieldValue(plugin, "target");
             }
         }
-        if (deep > 50){
+        if (deep > 50) {
             throw ErrorContextFactory.instance().message("插件深度超过50").runtimeException();
         }
         boundSql = handler.getBoundSql();
@@ -137,7 +142,7 @@ public class PaginationStage1Interceptor implements Interceptor {
     private String getMysqlPageSql(Pagination<?> page, StringBuffer sqlBuffer) {
         //计算第一条记录的位置，Mysql中记录的位置是从0开始的。
         int offset = (page.getCurPageNo() - 1) * page.getPageSize();
-        sqlBuffer.append(" limit ").append(offset).append(",").append(page.getPageSize());
+        sqlBuffer.append(KeywordsUtils.convert(" limit ", keywordMode)).append(offset).append(",").append(page.getPageSize());
         return sqlBuffer.toString();
     }
 
@@ -151,8 +156,9 @@ public class PaginationStage1Interceptor implements Interceptor {
     private String getOraclePageSql(Pagination<?> page, StringBuffer sqlBuffer) {
         //计算第一条记录的位置，Oracle分页是通过rownum进行的，而rownum是从1开始的
         int offset = (page.getCurPageNo() - 1) * page.getPageSize() + 1;
-        sqlBuffer.insert(0, "SELECT u.*, rownum r FROM (").append(") u WHERE rownum < ").append(offset + page.getPageSize());
-        sqlBuffer.insert(0, "SELECT * FROM (").append(") WHERE r >= ").append(offset);
+        String str1 = KeywordsUtils.convert("SELECT", keywordMode) + "u.*, rownum r " + KeywordsUtils.convert("FROM (", keywordMode);
+        sqlBuffer.insert(0, str1).append(") u ").append(KeywordsUtils.convert("WHERE", keywordMode)).append(" rownum < ").append(offset + page.getPageSize());
+        sqlBuffer.insert(0, KeywordsUtils.convert("SELECT * FROM (", keywordMode)).append(KeywordsUtils.convert(") WHERE", keywordMode)).append(" r >= ").append(offset);
         //上面的Sql语句拼接之后大概是这个样子：
         //select * from (select u.*, rownum r from (select * from t_user) u where rownum < 31) where r >= 16
         return sqlBuffer.toString();
@@ -222,7 +228,7 @@ public class PaginationStage1Interceptor implements Interceptor {
      */
     private String getCountSql(String sql) {
 
-        return "SELECT COUNT(1) FROM (" + sql + ") PAGE_TABLE";
+        return KeywordsUtils.convert("SELECT COUNT(1) FROM (", keywordMode) + sql + ")";
     }
 
     /**

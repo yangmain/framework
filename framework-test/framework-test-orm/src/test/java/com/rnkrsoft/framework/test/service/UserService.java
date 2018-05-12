@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.test.service;
 
 /**
- * Created by woate on 2018/4/26.
+ * Created by rnkrsoft.com on 2018/4/26.
  */
 public interface UserService {
     /**

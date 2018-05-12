@@ -10,6 +10,8 @@ import lombok.Setter;
 import org.springframework.core.io.Resource;
 
 import java.util.Map;
+import java.util.Properties;
+
 @Getter
 public class TestOrmConfig implements OrmConfig {
     boolean   strict;
@@ -50,7 +52,7 @@ public class TestOrmConfig implements OrmConfig {
     @Setter
     Map<String, ItemConfig> configs;
     @Setter
-    Map<String, String> sequenceMappings;
+    Properties sequenceMappings;
 
     @Override
     public ItemConfig get(String daoInterface) {

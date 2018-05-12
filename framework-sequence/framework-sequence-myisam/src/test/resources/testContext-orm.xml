@@ -22,6 +22,7 @@
 
     <bean class="com.rnkrsoft.framework.sequence.SpringContextHelper"/>
 
+
     <bean id="ormScannerConfigurer" class="com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer">
         <property name="ormConfig">
             <bean class="com.rnkrsoft.framework.test.config.TestOrmConfig">
@@ -77,6 +78,7 @@
             </bean>
         </property>
     </bean>
+
     <bean id="sequenceServiceConfigure" class="com.rnkrsoft.framework.orm.mybatis.sequence.SpringSequenceServiceConfigure">
         <property name="mappings">
             <props>

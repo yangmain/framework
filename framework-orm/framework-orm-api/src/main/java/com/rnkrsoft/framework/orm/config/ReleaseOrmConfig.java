@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.core.io.Resource;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by rnkrsoft.com on 2018/4/2.
@@ -57,7 +58,7 @@ public class ReleaseOrmConfig implements OrmConfig{
      */
     Map<String, ItemConfig> configs;
 
-    Map<String, String> sequenceMappings;
+    Properties sequenceMappings;
 
     @Override
     public ItemConfig get(String daoInterface) {

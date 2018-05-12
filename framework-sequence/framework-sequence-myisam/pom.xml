@@ -12,13 +12,25 @@
     <dependencies>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-sequence-api</artifactId>
+            <artifactId>framework-annotation-orm</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-annotation-orm</artifactId>
+            <artifactId>framework-test-orm</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -43,6 +55,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
