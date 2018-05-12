@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.spring.autoconfig.annotation;
 
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.spring.autoconfig.OrmRegister;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,5 +17,9 @@ import java.lang.annotation.*;
 @Configuration
 @Import(OrmRegister.class)
 public @interface EnableOrm {
-
+    /**
+     * 配置对象类
+     * @return
+     */
+    Class<OrmConfig> config();
 }
