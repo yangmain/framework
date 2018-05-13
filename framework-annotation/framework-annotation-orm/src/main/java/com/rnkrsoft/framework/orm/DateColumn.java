@@ -27,6 +27,7 @@ public @interface DateColumn {
      * @since 1.0.0
      */
     boolean nullable() default true;
+
     /**
      * 默认值
      * @return 默认值

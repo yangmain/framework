@@ -24,7 +24,7 @@ public class JdkDaoGenerator extends JdkGenerator implements DaoGenerator {
         buf.put("UTF-8", "import ", metadata.getEntityClassName(),";", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " * 版权归氡氪网络科技有限公司所有 rnkrsoft.com 框架自动生成!", "\n");
+        buf.put("UTF-8", " * 氡氪网络科技有限公司所有版权 rnkrsoft.com 框架自动生成!", "\n");
         buf.put("UTF-8", " */", "\n");
         buf.put("UTF-8", MessageFormatter.format("public interface {} extends CrudMapper<{}, String>{", daoName, entityName), "\n");
         buf.put("UTF-8", "\n");

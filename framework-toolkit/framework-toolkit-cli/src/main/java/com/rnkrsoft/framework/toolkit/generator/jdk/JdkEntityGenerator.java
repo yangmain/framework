@@ -42,7 +42,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
         buf.put("UTF-8", "import lombok.ToString;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " * 版权归氡氪网络科技有限公司所有 rnkrsoft.com 框架自动生成!", "\n");
+        buf.put("UTF-8", " * 氡氪网络科技有限公司所有版权 rnkrsoft.com 框架自动生成!", "\n");
         buf.put("UTF-8", " */", "\n");
         buf.put("UTF-8", "@Data", "\n");
         buf.put("UTF-8", "@Builder", "\n");
