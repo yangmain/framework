@@ -17,8 +17,8 @@ public interface SequenceServiceConfigure {
 
     /**
      * 注册序号服务的到指定的表
-     * @param tableName
-     * @param clazz
+     * @param tableName 表名
+     * @param clazz 服务类实现
      * @return
      */
     SequenceService register(String tableName, String clazz);

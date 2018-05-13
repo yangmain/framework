@@ -3,6 +3,8 @@ package com.rnkrsoft.framework.orm.mybatis.sequence;
 import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SequenceServiceFactory;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.activation.DataSource;
 import java.lang.reflect.Method;
@@ -12,11 +14,11 @@ import java.lang.reflect.Method;
  * 基于classpath的序号服务配置
  */
 public class ClasspathSequenceServiceConfigure extends AbstractSequenceServiceConfigure {
-    @Setter
-    DataSource dataSource;
     @Override
     public SequenceService register(String tableName, String className) {
         SequenceService instance = SequenceServiceFactory.instance(className);
-        return initDataSource(instance);
+        init(instance);
+        initDataSource(instance);
+        return instance;
     }
 }

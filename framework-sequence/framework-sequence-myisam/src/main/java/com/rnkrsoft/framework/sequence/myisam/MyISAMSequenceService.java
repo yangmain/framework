@@ -1,8 +1,10 @@
 package com.rnkrsoft.framework.sequence.myisam;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.framework.sequence.DataSourceAware;
 import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SpringContextHelper;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -18,12 +20,13 @@ import java.sql.SQLException;
  * Created by rnkrsoft.com on 2018/4/23.
  */
 @Slf4j
-public class MyISAMSequenceService implements SequenceService{
+public class MyISAMSequenceService implements SequenceService, DataSourceAware{
+    @Setter
+    DataSource dataSource;
     JdbcTemplate jdbcTemplate;
     @Override
     public int nextval(String schema, String prefix, final String sequenceName, final String feature) {
         if (jdbcTemplate == null){
-            DataSource dataSource = SpringContextHelper.getBean("defaultDataSource");
             this.jdbcTemplate = new JdbcTemplate(dataSource);
         }
         String tableName = "sequence_inf";
