@@ -228,7 +228,7 @@ public class PaginationStage1Interceptor implements Interceptor {
      */
     private String getCountSql(String sql) {
 
-        return KeywordsUtils.convert("SELECT COUNT(1) FROM (", keywordMode) + sql + ")";
+        return KeywordsUtils.convert("SELECT COUNT(1) FROM (", keywordMode) + sql + ") " + KeywordsUtils.convert("PAGE_TABLE", sqlMode);
     }
 
     /**
