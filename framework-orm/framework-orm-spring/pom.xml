@@ -82,12 +82,6 @@
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-sequence-injvm</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-sequence-h2</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>

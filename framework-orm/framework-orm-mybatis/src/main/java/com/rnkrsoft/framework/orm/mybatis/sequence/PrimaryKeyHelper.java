@@ -102,7 +102,7 @@ public class PrimaryKeyHelper {
             final Invoker invoker = metaClass.getSetter(primaryKeyMetadata.getJavaName());
             String seqFeature0 = null;
             if (feature == null) {
-            } else if (feature.equals(PrimaryKeyFeatureConstant.YYYY_MM_DD_HH_MM_SS_SSS)) {
+            } else if (feature.equals(PrimaryKeyFeatureConstant.YYYY_MM_DD_HH_MM_SS_SSS_SEQUEUE5)) {
                 seqFeature0 = DateUtils.toString(new Date(), DateStyle.FILE_FORMAT2);
             } else {
                 seqFeature0 = feature;
@@ -133,7 +133,7 @@ public class PrimaryKeyHelper {
                                 primaryKey = seqNo;
                             }
 
-                        } else if (feature.equals(PrimaryKeyFeatureConstant.YYYY_MM_DD_HH_MM_SS_SSS)) {
+                        } else if (feature.equals(PrimaryKeyFeatureConstant.YYYY_MM_DD_HH_MM_SS_SSS_SEQUEUE5)) {
                             primaryKey = seqFeature + StringUtils.fill(Integer.toString(seqNo), true, '0', 5);
                         }
                     } else if (primaryKeyMetadata.getJavaType() == Integer.class || primaryKeyMetadata.getJavaType() == Integer.TYPE) {

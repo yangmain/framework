@@ -12,6 +12,6 @@
     <description>framework toolkit</description>
     <modules>
         <module>framework-toolkit-cli</module>
-        <module>framework-toolkit-plugin</module>
+        <!--<module>framework-toolkit-plugin</module>-->
     </modules>
 </project>
