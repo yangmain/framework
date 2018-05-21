@@ -61,7 +61,7 @@ public abstract class SqlScriptUtils {
             tableMetadata.setSchema(schema);
         }
         if (prefixMode == NameMode.auto) {
-            if (StringUtils.isNotBlank(prefix)) {
+            if (!StringUtils.isBlank(prefix)) {
                 tableMetadata.setPrefix(prefix);
             }
         } else if (prefixMode == NameMode.entity) {
@@ -198,7 +198,7 @@ public abstract class SqlScriptUtils {
             tableMetadata.setSchema(schema);
         }
         if (prefixMode == NameMode.auto) {
-            if (StringUtils.isNotBlank(prefix)) {
+            if (!StringUtils.isBlank(prefix)) {
                 tableMetadata.setPrefix(prefix);
             }
         } else if (prefixMode == NameMode.entity) {
