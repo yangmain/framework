@@ -11,6 +11,7 @@
     <name>framework-cache</name>
     <description>framework cache</description>
     <modules>
+        <module>framework-cache-monitor</module>
         <module>framework-cache-redis</module>
         <module>framework-cache-client</module>
         <module>framework-cache-spring</module>

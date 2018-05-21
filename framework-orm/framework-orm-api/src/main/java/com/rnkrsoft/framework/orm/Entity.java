@@ -17,7 +17,7 @@ public abstract class Entity implements OrderBy{
 
     @Override
     public OrderBy addOrderBy(String column, Order order) {
-        return addOrderBy(OrderByColumn.builder("column").order(order).build());
+        return addOrderBy(OrderByColumn.builder(column).order(order).build());
     }
 
     @Override

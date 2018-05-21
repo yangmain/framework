@@ -25,6 +25,12 @@
             <artifactId>framework-test-orm</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-standalone</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

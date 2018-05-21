@@ -34,7 +34,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
         if (schema != null && !schema.isEmpty()) {
             sql = sql + schema + ".";
         }
-        if (prefix != null && !prefix.isEmpty()){
+        if (StringUtils.isNotBlank(prefix) && !prefix.isEmpty()){
             tableName = prefix + "_" + tableName;
         }
         sql = sql + tableName + "(seq_name, seq_feature) values(?, ?)";
@@ -79,7 +79,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
         if (schema != null && !schema.isEmpty()) {
             sql = sql + schema + ".";
         }
-        if (prefix != null && !prefix.isEmpty()){
+        if (StringUtils.isNotBlank(prefix) && !prefix.isEmpty()){
             tableName = prefix + "_" + tableName;
         }
         sql = sql + tableName + " where seq_name = ? and seq_feature = ? ";

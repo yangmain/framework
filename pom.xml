@@ -32,6 +32,7 @@
         <module>framework-messagequeue</module>
         <module>framework-cache</module>
         <module>framework-toolkit</module>
+        <module>framework-security</module>
         <module>framework-standalone</module>
         <module>framework-test-standalone</module>
     </modules>
