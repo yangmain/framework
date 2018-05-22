@@ -52,7 +52,7 @@ public class Main {
             define.addOption("suffix", "suf", false, 1, "后缀", "表名后缀", "");
             define.setName("逆向工程");
             define.setCmd("reverse");
-            define.setExample("reverse -h 122.114.65.131:3306 -u root -p duduledmm@2018 -schema dudule -package com.rnkrsoft.framework");
+            define.setExample("reverse -h mysql.rnkrsoft.com:3306 -u root -p root -schema demo -package com.rnkrsoft.framework");
             define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/framework/help");
             COMMAND_COLLECTION.addDefine(define);
         }
