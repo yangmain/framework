@@ -6,15 +6,10 @@
         <artifactId>framework-messagequeue</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>framework-messagequeue-protocol</artifactId>
-    <name>framework-messagequeue-protocol</name>
-    <description>framework messagequeue protocol</description>
+    <artifactId>framework-messagequeue-rabbitmq</artifactId>
+    <name>framework-messagequeue-rabbitmq</name>
+    <description>framework messagequeue rabbitmq</description>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>4.2.0</version>
-        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

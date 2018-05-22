@@ -12,6 +12,13 @@
     <description>framework MessageQueue</description>
     <modules>
         <module>framework-messagequeue-protocol</module>
+        <module>framework-messagequeue-core</module>
+        <module>framework-messagequeue-activemq</module>
+        <module>framework-messagequeue-rocketmq</module>
+        <module>framework-messagequeue-aliyunmq</module>
+        <module>framework-messagequeue-rabbitmq</module>
+        <module>framework-messagequeue-redis</module>
+        <module>framework-messagequeue-kafka</module>
         <module>framework-messagequeue-boot-starter</module>
     </modules>
 </project>
