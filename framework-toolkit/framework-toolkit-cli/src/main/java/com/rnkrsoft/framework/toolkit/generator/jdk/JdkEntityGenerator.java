@@ -42,7 +42,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
         buf.put("UTF-8", "import lombok.ToString;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "/**", "\n");
-        buf.put("UTF-8", " * 氡氪网络科技有限公司所有版权 rnkrsoft.com 框架自动生成!", "\n");
+        buf.put("UTF-8", " * rnkrsoft.com 框架自动生成!", "\n");
         buf.put("UTF-8", " */", "\n");
         buf.put("UTF-8", "@Data", "\n");
         buf.put("UTF-8", "@Builder", "\n");
@@ -77,8 +77,19 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR))", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType().equals("NUMERIC")) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
-                buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
+               if (columnMetadata.getDataType().equalsIgnoreCase("BIGINT")){
+                   buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.LONG)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                   buf.put("UTF-8", indent(), MessageFormatter.format("Long {};", columnMetadata.getJavaName()));
+               }else if(columnMetadata.getDataType().equalsIgnoreCase("INT")) {
+                   buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                   buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
+               }else if(columnMetadata.getDataType().equalsIgnoreCase("SMALLINT")){
+                   buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                   buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
+               }else if(columnMetadata.getDataType().equalsIgnoreCase("TINYINT")){
+                   buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                   buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
+               }
             } else if (columnMetadata.getJdbcType().equals("DECIMAL")) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.DECIMAL )", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("BigDecimal {};", columnMetadata.getJavaName()));

@@ -57,8 +57,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class OrmMappedStatementRegister {
     static final List<Class> DAO_INTERFACE_CACHE = new ArrayList();
     static final Set<String> HAVE_LOADED_MAPPER_ID_SET = new ConcurrentSkipListSet();
-    static AtomicBoolean LAZY_INIT = new AtomicBoolean(false);
-    static MetadataReaderFactory metadataReaderFactory = new SimpleMetadataReaderFactory();
 
     /**
      * 增加DAO接口

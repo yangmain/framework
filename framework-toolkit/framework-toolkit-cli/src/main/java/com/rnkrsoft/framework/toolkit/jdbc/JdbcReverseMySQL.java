@@ -97,25 +97,28 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String column_key = resultSet.getString("column_key");
             String column_comment = resultSet.getString("column_comment");
             String jdbc_type = null;
-            if (data_type.equals("int")) {
+            if (data_type.equalsIgnoreCase("bigint")) {
+                jdbc_type = "NUMERIC";
+                column_type = "BIGINT";
+            } else if (data_type.equalsIgnoreCase("int")) {
                 jdbc_type = "NUMERIC";
                 column_type = "INTEGER";
-            } else if (data_type.equals("tinyint")) {
+            } else if (data_type.equalsIgnoreCase("smallint")) {
+                jdbc_type = "NUMERIC";
+                column_type = "SMALLINT";
+            } else if (data_type.equalsIgnoreCase("tinyint")) {
                 jdbc_type = "NUMERIC";
                 column_type = "TINYINT";
-            } else if (data_type.equals("decimal")) {
+            } else if (data_type.equalsIgnoreCase("decimal")) {
                 jdbc_type = "DECIMAL";
                 column_type = "DECIMAL";
-            } else if (data_type.equals("datetime")) {
+            } else if (data_type.equalsIgnoreCase("datetime")) {
                 jdbc_type = "TIMESTAMP";
                 column_type = "TIMESTAMP";
-            } else if (data_type.equals("tinyint")) {
+            } else if (data_type.equalsIgnoreCase("varchar")) {
                 jdbc_type = "VARCHAR";
                 column_type = "VARCHAR";
-            } else if (data_type.equals("varchar")) {
-                jdbc_type = "VARCHAR";
-                column_type = "VARCHAR";
-            } else if (data_type.equals("char")) {
+            } else if (data_type.equalsIgnoreCase("char")) {
                 jdbc_type = "CHAR";
                 column_type = "CHAR";
             } else {
@@ -136,7 +139,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
             //如果是主键则添加到主键列表中
             if (column_key != null && "PRI".equalsIgnoreCase(column_key)) {
                 tableMetadata.getPrimaryKeys().add(column_name);
-                if (data_type.contentEquals("int") || data_type.contentEquals("tinyint")) {
+                if ( data_type.equalsIgnoreCase("bigint") || data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("smallint") || data_type.equalsIgnoreCase("tinyint")) {
                     builder.primaryKeyStrategy(PrimaryKeyStrategy.IDENTITY);
                 } else if (data_type.contentEquals("varchar") || data_type.contentEquals("char")) {
                     builder.primaryKeyStrategy(PrimaryKeyStrategy.UUID);

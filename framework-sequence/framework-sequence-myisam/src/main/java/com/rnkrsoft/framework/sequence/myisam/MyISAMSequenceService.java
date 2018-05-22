@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.sequence.myisam;
 
 import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.sequence.DataSourceAware;
 import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SpringContextHelper;
@@ -34,7 +35,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
         if (schema != null && !schema.isEmpty()) {
             sql = sql + schema + ".";
         }
-        if (StringUtils.isNotBlank(prefix) && !prefix.isEmpty()){
+        if (!StringUtils.isBlank(prefix) && !prefix.isEmpty()){
             tableName = prefix + "_" + tableName;
         }
         sql = sql + tableName + "(seq_name, seq_feature) values(?, ?)";
@@ -79,7 +80,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
         if (schema != null && !schema.isEmpty()) {
             sql = sql + schema + ".";
         }
-        if (StringUtils.isNotBlank(prefix) && !prefix.isEmpty()){
+        if (StringUtils.isBlank(prefix) && !prefix.isEmpty()){
             tableName = prefix + "_" + tableName;
         }
         sql = sql + tableName + " where seq_name = ? and seq_feature = ? ";

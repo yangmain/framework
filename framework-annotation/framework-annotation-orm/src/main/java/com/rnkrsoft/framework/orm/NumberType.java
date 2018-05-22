@@ -16,5 +16,9 @@ public enum NumberType {
     /**
      * 整数类型
      */
-    INTEGER
+    INTEGER,
+    /**
+     * 长整型
+     */
+    LONG
 }

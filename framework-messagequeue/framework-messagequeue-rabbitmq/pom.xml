@@ -14,5 +14,10 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-messagequeue-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

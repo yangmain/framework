@@ -1,20 +1,13 @@
 package com.rnkrsoft.framework.orm.mybatis.spring.mapper;
 
-import com.rnkrsoft.framework.orm.DatabaseType;
-import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
-import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage2Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionDaoSupport;
 import lombok.Setter;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.Configuration;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage1Interceptor;
-import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionDaoSupport;
-
-import java.io.IOException;
 
 import static org.springframework.util.Assert.notNull;
 

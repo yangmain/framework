@@ -1,7 +1,5 @@
 package com.rnkrsoft.framework.orm.mybatis.spring.mapper;
 
-import com.rnkrsoft.framework.orm.DatabaseType;
-import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionTemplate;
 import lombok.Getter;
