@@ -122,8 +122,8 @@ public class Main {
             String u = command.valueString("username");
             String p = command.valueString("password");
             String output = command.valueString("output");
-            String prefix = command.valueString("prefix");
-            String suffix = command.valueString("suffix");
+            String[] prefixes = command.valueArray("prefixes");
+            String[] suffixes = command.valueArray("suffixes");
             System.out.println("output " + output);
             if (packageName == null) {
                 System.out.println("package is empty!");
@@ -136,7 +136,7 @@ public class Main {
 
             try {
                 JdbcReverse jdbcReverse = new JdbcReverseMySQL();
-                List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, prefix, suffix);
+                List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, suffixes, suffixes);
                 Generator pomGenerator = new JdkPomGenerator();
                 Generator entityGenerator = new JdkEntityGenerator();
                 Generator daoGenerator = new JdkDaoGenerator();

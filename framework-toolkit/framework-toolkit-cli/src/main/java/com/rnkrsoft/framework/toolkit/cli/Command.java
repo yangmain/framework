@@ -53,11 +53,13 @@ public class Command {
      */
     public String[] valueArray(String name) {
         if (args.containsKey(name)) {
-            return args.get(name).toArray(new String[0]);
+            List<String> values = args.get(name);
+            return values.toArray(new String[values.size()]);
         }
         String longName = commandDefine.alias.get(name);
         if (args.containsKey(longName)) {
-            return args.get(longName).toArray(new String[0]);
+            List<String> values = args.get(longName);
+            return values.toArray(new String[values.size()]);
         } else {
             return null;
         }

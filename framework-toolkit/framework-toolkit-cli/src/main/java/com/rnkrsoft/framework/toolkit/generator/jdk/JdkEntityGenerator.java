@@ -58,11 +58,11 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
             buf.put("UTF-8", indent(), MessageFormatter.format("@Comment(\"{}\")", columnMetadata.getComment()), "\n");
             if (metadata.getPrimaryKeys().contains(columnName)) {
                 String str = indent() + "@PrimaryKey(";
-                if (columnMetadata.getJdbcType().equals("NUMERIC") && columnMetadata.getAutoIncrement() != null && columnMetadata.getAutoIncrement()) {
+                if (columnMetadata.getJdbcType().equalsIgnoreCase("NUMERIC") && columnMetadata.getAutoIncrement() != null && columnMetadata.getAutoIncrement()) {
                     str += "strategy = PrimaryKeyStrategy.IDENTITY";
-                } else if (columnMetadata.getJdbcType().equals("VARCHAR")) {
+                } else if (columnMetadata.getJdbcType().equalsIgnoreCase("VARCHAR")) {
                     str += "strategy = PrimaryKeyStrategy.UUID";
-                } else if (columnMetadata.getJdbcType().equals("CHAR")) {
+                } else if (columnMetadata.getJdbcType().equalsIgnoreCase("CHAR")) {
                     str += "strategy = PrimaryKeyStrategy.UUID";
                 } else {
 
@@ -70,17 +70,17 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 str += ")";
                 buf.put("UTF-8", str, "\n");
             }
-            if (columnMetadata.getJdbcType().equals("VARCHAR")) {
+            if (columnMetadata.getJdbcType().equalsIgnoreCase("VARCHAR")) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
-            } else if (columnMetadata.getJdbcType().equals("CHAR")) {
+            } else if (columnMetadata.getJdbcType().equalsIgnoreCase("CHAR")) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR))", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
-            } else if (columnMetadata.getJdbcType().equals("NUMERIC")) {
+            } else if (columnMetadata.getJdbcType().equalsIgnoreCase("NUMERIC")) {
                if (columnMetadata.getDataType().equalsIgnoreCase("BIGINT")){
                    buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.LONG)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                    buf.put("UTF-8", indent(), MessageFormatter.format("Long {};", columnMetadata.getJavaName()));
-               }else if(columnMetadata.getDataType().equalsIgnoreCase("INT")) {
+               }else if(columnMetadata.getDataType().equalsIgnoreCase("INTEGER")) {
                    buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                    buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
                }else if(columnMetadata.getDataType().equalsIgnoreCase("SMALLINT")){

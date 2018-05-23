@@ -6,16 +6,17 @@ import com.devops4j.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.NoRouteToHostException;
 import java.net.SocketException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by rnkrsoft.com on 2018/4/26.
  */
+@Slf4j
 public class JdbcReverseMySQL implements JdbcReverse {
 
     public static Connection connectMySQL(String url, String user, String pass) {
@@ -33,7 +34,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
 
 
     @Override
-    public List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName, String prefix, String suffix) throws Exception {
+    public List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName, String[] prefixes, String[] suffixes) throws Exception {
         Connection connection = connectMySQL("jdbc:mysql://" + url + "/" + schema, userName, password);
         Statement statement = connection.createStatement();
         List<TableMetadata> metadatas = new ArrayList();
@@ -42,18 +43,42 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 "where table_schema = '" + schema + "'";
         boolean succ = statement.execute(sql);
         ResultSet resultSet = statement.getResultSet();
-        prefix = prefix == null ? "" : prefix.toUpperCase();
-        suffix = suffix == null ? "" : suffix.toUpperCase();
-        String prefix0 = prefix.isEmpty() ? "" : (prefix + "_");
-        String suffix0 = suffix.isEmpty() ? "" : ("_" + suffix);
+        Set<String> prefixes0 = new HashSet();
+        Set<String> suffixes0 = new HashSet();
+        for (String value : prefixes) {
+            prefixes0.add(value.toUpperCase());
+        }
+        for (String value : suffixes) {
+            suffixes0.add(value.toUpperCase());
+        }
         while (resultSet.next()) {
             String name = resultSet.getString("table_name").toUpperCase();
-            String name0 = name.toUpperCase();
-            if (name0.startsWith(prefix0)) {
-                name0 = name0.substring(prefix0.length());
+            int dotIndex = name.indexOf("_");
+            int lastDotIndex = name.lastIndexOf("_");
+            String prefix = name.substring(0, dotIndex).toUpperCase();
+            String suffix = name.substring(lastDotIndex + 1).toUpperCase();
+            String name0 = name;
+            if (prefixes0.contains(prefix)) {
+                if (dotIndex + 1 >= name.length()) {
+                    log.warn("table '{}' has not suffix", name);
+                    suffix = "";
+                } else {
+                    name0 = name.substring(dotIndex + 1);
+                }
+            } else {
+                prefix = "";
+                dotIndex = 0;
             }
-            if (name0.endsWith(suffix0)) {
-                name0 = name0.substring(0, name0.length() - suffix0.length());
+            if (suffixes0.contains(suffix)) {
+                if (dotIndex + 1 >= lastDotIndex) {
+                    log.warn("table '{}' has not suffix", name);
+                    suffix = "";
+                } else {
+                    //截取不含前后缀的表名
+                    name0 = name.substring(dotIndex + 1, lastDotIndex);
+                }
+            } else {
+                suffix = "";
             }
             String engine = resultSet.getString("table_engine");
             String autoIncrement = resultSet.getString("auto_increment");
@@ -72,6 +97,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
             reverse(tableMetadata, schema, connection);
             metadatas.add(tableMetadata);
             System.out.println(MessageFormatter.format("reverse table - {}", name));
+            log.info("reverse table - {}", name);
         }
         resultSet.close();
         statement.close();
@@ -81,17 +107,30 @@ public class JdbcReverseMySQL implements JdbcReverse {
 
     void reverse(TableMetadata tableMetadata, String schema, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        String sql = "select cols.column_name as column_name, cols.column_default as column_default, cols.is_nullable as is_nullable, cols.data_type as data_type, cols.column_type as column_type, extra as extra, cols.column_key as column_key, cols.column_comment as column_comment " +
+        String sql = "select cols.column_name as column_name, " +
+                "cols.column_default as column_default, " +
+                "cols.is_nullable as is_nullable, " +
+                "cols.data_type as data_type, " +
+                "cols.column_type as column_type, " +
+                "cols.extra as extra, " +
+                "cols.character_maximum_length as character_maximum_length, " +
+                "cols.numeric_precision as numeric_precision, " +
+                "cols.numeric_scale as numeric_scale, " +
+                "cols.column_key as column_key, " +
+                "cols.column_comment as column_comment " +
                 "from information_schema.columns cols " +
                 "where upper(cols.table_schema) = upper('" + schema + "') and upper(table_name) = upper('" + tableMetadata.getFullTableName() + "') order by cols.ordinal_position";
         //执行数据SQL获取表字段信息
         boolean succ = statement.execute(sql);
         ResultSet resultSet = statement.getResultSet();
         while (resultSet.next()) {
-            String column_name = resultSet.getString("column_name");
+            String column_name = resultSet.getString("column_name").toUpperCase();
             String column_default = resultSet.getString("column_default");
-            String is_nullable = resultSet.getString("is_nullable");
-            String data_type = resultSet.getString("data_type");
+            String is_nullable = resultSet.getString("is_nullable").toUpperCase();
+            String data_type = resultSet.getString("data_type").toUpperCase();
+            long character_maximum_length = resultSet.getLong("character_maximum_length");
+            int numeric_precision = resultSet.getInt("numeric_precision");
+            int numeric_scale = resultSet.getInt("numeric_scale");
             String extra = resultSet.getString("extra");
             String column_type = resultSet.getString("column_type");
             String column_key = resultSet.getString("column_key");
@@ -100,7 +139,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
             if (data_type.equalsIgnoreCase("bigint")) {
                 jdbc_type = "NUMERIC";
                 column_type = "BIGINT";
-            } else if (data_type.equalsIgnoreCase("int")) {
+            } else if (data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("integer") ) {
                 jdbc_type = "NUMERIC";
                 column_type = "INTEGER";
             } else if (data_type.equalsIgnoreCase("smallint")) {
@@ -137,14 +176,17 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     .comment(column_comment);
 
             //如果是主键则添加到主键列表中
-            if (column_key != null && "PRI".equalsIgnoreCase(column_key)) {
+            if ("PRI".equalsIgnoreCase(column_key)) {
                 tableMetadata.getPrimaryKeys().add(column_name);
-                if ( data_type.equalsIgnoreCase("bigint") || data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("smallint") || data_type.equalsIgnoreCase("tinyint")) {
+                if (data_type.equals("BIGINT") || data_type.equals("INT")  || data_type.equals("INTEGER") || data_type.equals("SMALLINT") || data_type.equals("TINYINT")) {
                     builder.primaryKeyStrategy(PrimaryKeyStrategy.IDENTITY);
-                } else if (data_type.contentEquals("varchar") || data_type.contentEquals("char")) {
+                } else if (data_type.equals("VARCHAR") || data_type.equals("CHAR")) {
                     builder.primaryKeyStrategy(PrimaryKeyStrategy.UUID);
                 } else {
-                    throw ErrorContextFactory.instance().message("无效主键类型").runtimeException();
+                    throw ErrorContextFactory.instance().message("字段'{}.{}' 无效主键类型 '{}'", tableMetadata.getTableName(), column_name, data_type).runtimeException();
+                }
+                if ("auto_increment".equalsIgnoreCase(extra)) {
+                    builder.autoIncrement(true);
                 }
             }
             tableMetadata.getOrderColumns().add(column_name);

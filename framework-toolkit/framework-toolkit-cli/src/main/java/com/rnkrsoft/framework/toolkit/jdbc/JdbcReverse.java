@@ -16,9 +16,9 @@ public interface JdbcReverse {
      * @param schema   数据库模式
      * @param userName 用户名
      * @param password 密码
-     * @param prefix   前缀
-     * @param suffix   后缀
+     * @param prefixes   前缀
+     * @param suffixes   后缀
      * @return 表信息列表
      */
-    List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName, String prefix, String suffix) throws Exception;
+    List<TableMetadata> reverses(String url, String schema, String userName, String password, String packageName, String[] prefixes, String[] suffixes) throws Exception;
 }
