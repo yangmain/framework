@@ -45,12 +45,18 @@ public class JdbcReverseMySQL implements JdbcReverse {
         ResultSet resultSet = statement.getResultSet();
         Set<String> prefixes0 = new HashSet();
         Set<String> suffixes0 = new HashSet();
-        for (String value : prefixes) {
-            prefixes0.add(value.toUpperCase());
+        if (prefixes != null) {
+            for (String value : prefixes) {
+                prefixes0.add(value.toUpperCase());
+            }
         }
-        for (String value : suffixes) {
-            suffixes0.add(value.toUpperCase());
+        if (suffixes != null) {
+            for (String value : suffixes) {
+                suffixes0.add(value.toUpperCase());
+            }
         }
+        System.out.println(prefixes0);
+        System.out.println(suffixes0);
         while (resultSet.next()) {
             String name = resultSet.getString("table_name").toUpperCase();
             int dotIndex = name.indexOf("_");
@@ -60,12 +66,13 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String name0 = name;
             if (prefixes0.contains(prefix)) {
                 if (dotIndex + 1 >= name.length()) {
-                    log.warn("table '{}' has not suffix", name);
+                    log.warn("table '{}' has not prefix", name);
                     suffix = "";
                 } else {
                     name0 = name.substring(dotIndex + 1);
                 }
             } else {
+                log.warn("table '{}' has not prefix", name);
                 prefix = "";
                 dotIndex = 0;
             }
@@ -78,6 +85,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     name0 = name.substring(dotIndex + 1, lastDotIndex);
                 }
             } else {
+                log.warn("table '{}' has not suffix", name);
                 suffix = "";
             }
             String engine = resultSet.getString("table_engine");

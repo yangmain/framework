@@ -48,8 +48,8 @@ public class Main {
             define.addOption("schema", "s", true, 1, "数据库模式", "字符串数据库名", "");
             define.addOption("package", "f", false, 1, "保存包名", "java格式的包名",  "com.rnkrsoft");
             define.addOption("output", "o", false, 1, "输出路径", ".", ".");
-            define.addOption("prefix", "pre", false, 1, "前缀", "表名前缀", "TB");
-            define.addOption("suffix", "suf", false, 1, "后缀", "表名后缀", "");
+            define.addOption("prefixes", "pres", false, 1, "前缀", "表名前缀", "");
+            define.addOption("suffixes", "sufs", false, 1, "后缀", "表名后缀", "");
             define.setName("逆向工程");
             define.setCmd("reverse");
             define.setExample("reverse -h mysql.rnkrsoft.com:3306 -u root -p root -schema demo -package com.rnkrsoft.framework");
@@ -136,7 +136,7 @@ public class Main {
 
             try {
                 JdbcReverse jdbcReverse = new JdbcReverseMySQL();
-                List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, suffixes, suffixes);
+                List<TableMetadata> metadatas = jdbcReverse.reverses(h, schema, u, p, packageName, prefixes, suffixes);
                 Generator pomGenerator = new JdkPomGenerator();
                 Generator entityGenerator = new JdkEntityGenerator();
                 Generator daoGenerator = new JdkDaoGenerator();

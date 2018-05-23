@@ -117,30 +117,21 @@ public class OrmEntityExtractor implements EntityExtractor {
         if (numberColumn != null) {
             if (numberColumn.type() != null) {
                 if (numberColumn.type() == NumberType.AUTO) {
-                    if (fieldClass == Integer.TYPE) {
+                    if (fieldClass == Long.TYPE) {
+                        dataType = "BIGINT";
+                        jdbcType = "NUMERIC";
+                    } else  if (fieldClass == Integer.TYPE) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
                     } else if (fieldClass == Integer.class) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
-//                        if (numberColumn.nullable()) {
-//                            ErrorContextFactory.instance()
-//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-//                                    .solution("nullable属性需要设置为{}", false).throwError();
-//                        }
                     } else if (fieldClass == Boolean.TYPE) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
                     } else if (fieldClass == Boolean.class) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
-//                        if (numberColumn.nullable()) {
-//                            ErrorContextFactory.instance()
-//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-//                                    .solution("nullable属性需要设置为{}", false).throwError();
-//                        }
                     } else if (fieldClass == BigDecimal.class) {
                         if (numberColumn.scale() > 0 && numberColumn.precision() > 0 && numberColumn.precision() > numberColumn.scale()) {
                             dataType = "DECIMAL(" + numberColumn.precision() + "," + numberColumn.scale() + ")";
@@ -160,29 +151,30 @@ public class OrmEntityExtractor implements EntityExtractor {
                     } else if (fieldClass == Integer.class) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
-//                        if (numberColumn.nullable()) {
-//                            ErrorContextFactory.instance()
-//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-//                                    .solution("nullable属性需要设置为{}", false).throwError();
-//                        }
                     } else if (fieldClass == Boolean.TYPE) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
                     } else if (fieldClass == Boolean.class) {
                         dataType = "TINYINT";
                         jdbcType = "NUMERIC";
-//                        if (numberColumn.nullable()) {
-//                            ErrorContextFactory.instance()
-//                                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-//                                    .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-//                                    .solution("nullable属性需要设置为{}", false).throwError();
-//                        }
                     } else {
                         ErrorContextFactory.instance()
                                 .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                                 .message("字段{}为为非整数类型，标注注解为整数型", columnMetadata.getJavaName())
                                 .solution("将字段类型修改为[{},{},{},{}]任意一种或者修改注解", Integer.class, Integer.TYPE, Boolean.class, Boolean.TYPE).throwError();
+                    }
+                } else if (numberColumn.type() == NumberType.LONG) {
+                    if (fieldClass == Long.TYPE) {
+                        dataType = "BIGINT";
+                        jdbcType = "NUMERIC";
+                    }else if (fieldClass == Long.class) {
+                        dataType = "BIGINT";
+                        jdbcType = "NUMERIC";
+                    }else{
+                        ErrorContextFactory.instance()
+                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                                .message("字段{}为为非长整数类型，标注注解为长整数型", columnMetadata.getJavaName())
+                                .solution("将字段类型修改为[{},{}]任意一种或者修改注解", Long.class, Long.TYPE).throwError();
                     }
                 } else if (numberColumn.type() == NumberType.DECIMAL) {
                     if (fieldClass != BigDecimal.class) {
@@ -219,35 +211,29 @@ public class OrmEntityExtractor implements EntityExtractor {
                         dataType = "DECIMAL(18,2)";
                     }
                     jdbcType = "DECIMAL";
+                } else if (fieldClass == Long.TYPE) {
+                    dataType = "BIGINT";
+                    jdbcType = "NUMERIC";
+                } else if (fieldClass == Long.class) {
+                    dataType = "BIGINT";
+                    jdbcType = "NUMERIC";
                 } else if (fieldClass == Integer.TYPE) {
                     dataType = "INTEGER";
                     jdbcType = "NUMERIC";
                 } else if (fieldClass == Integer.class) {
                     dataType = "INTEGER";
                     jdbcType = "NUMERIC";
-//                    if (numberColumn.nullable()) {
-//                        ErrorContextFactory.instance()
-//                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-//                                .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-//                                .solution("nullable属性需要设置为{}", false).throwError();
-//                    }
                 } else if (fieldClass == Boolean.TYPE) {
                     dataType = "TINYINT";
                     jdbcType = "NUMERIC";
                 } else if (fieldClass == Boolean.class) {
                     dataType = "TINYINT";
                     jdbcType = "NUMERIC";
-//                    if (numberColumn.nullable()) {
-//                        ErrorContextFactory.instance()
-//                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
-//                                .message("字段{}为包装类型，该字段必须设置为非null", columnMetadata.getJavaName())
-//                                .solution("nullable属性需要设置为{}", false).throwError();
-//                    }
                 } else {
                     ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}数据类型不支持{}属性", columnMetadata.getJavaName(), columnMetadata.getJavaType())
-                            .solution("将字段{}的类型从{}修改为[{},{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, BigDecimal.class, Integer.class, Integer.TYPE, Boolean.class, Boolean.TYPE).throwError();
+                            .solution("将字段{}的类型从{}修改为[{},{},{},{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, BigDecimal.class, Long.class, Long.TYPE, Integer.class, Integer.TYPE, Boolean.class, Boolean.TYPE).throwError();
                 }
             }
             columnMetadata.setDefaultValue(numberColumn.defaultValue());

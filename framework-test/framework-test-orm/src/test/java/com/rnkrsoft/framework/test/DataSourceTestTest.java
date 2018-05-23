@@ -1,16 +1,13 @@
 package com.rnkrsoft.framework.test;
 
 import com.rnkrsoft.framework.orm.*;
-import com.rnkrsoft.framework.test.dao.OrderDAO;
 import com.rnkrsoft.framework.test.dao.UserDAO;
 import com.rnkrsoft.framework.test.entity.OrderEntity;
 import com.rnkrsoft.framework.test.entity.UserEntity;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by rnkrsoft.com on 2018/4/20.
@@ -32,15 +29,15 @@ import java.util.UUID;
 public class DataSourceTestTest extends DataSourceTest {
     @Test
     public void test1() {
-        OrderDAO orderDAO = getBean(OrderDAO.class);
-        OrderEntity entity = new OrderEntity();
+//        OrderDAO orderDAO = getBean(OrderDAO.class);
+//        OrderEntity entity = new OrderEntity();
 //        entity.setAge(1);
-//        entity.setUserName(UUID.randomUUID().toString());
-//        entity.setCreateDate(new Date());
-//        entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
-        entity.addOrderBy(OrderByColumn.builder("age").order(Order.ASC).build());
-        entity.addOrderBy(OrderByColumn.builder("user_name").order(Order.DESC).build());
-        orderDAO.selectAnd(entity);
+////        entity.setUserName(UUID.randomUUID().toString());
+////        entity.setCreateDate(new Date());
+////        entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
+//        entity.addOrderBy(OrderByColumn.builder("age").order(Order.ASC).build());
+//        entity.addOrderBy(OrderByColumn.builder("user_name").order(Order.DESC).build());
+//        orderDAO.selectAnd(entity);
 //        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
 //        entity.setAge(2);
 //        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
@@ -52,8 +49,12 @@ public class DataSourceTestTest extends DataSourceTest {
 //        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
 //        entity.setAge(6);
 //        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-//        UserDAO userDAO = getBean(UserDAO.class);
-//        userDAO.countAll();
-//        userDAO.selectAll();
+        UserDAO userDAO = getBean(UserDAO.class);
+        userDAO.countAll();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setAge1(124L);
+        userEntity.setCreateDate(new Date());
+        userDAO.insertSelective(userEntity);
+        userDAO.selectAll();
     }
 }

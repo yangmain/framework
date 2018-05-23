@@ -74,7 +74,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType().equalsIgnoreCase("CHAR")) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR))", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType().equalsIgnoreCase("NUMERIC")) {
                if (columnMetadata.getDataType().equalsIgnoreCase("BIGINT")){
