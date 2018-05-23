@@ -12,6 +12,7 @@ import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.text.MessageFormat;
@@ -51,7 +52,7 @@ public class SelectAndMappedStatementBuilder extends MappedStatementBuilder {
             String whereSql = convert(" AND ", getOrmConfig().getKeywordMode()) + convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
             SqlNode node = new IfSqlNode(new TextSqlNode(whereSql), MessageFormat.format("{0} != null", columnMetadata.getJavaName()));
             wheres.add(node);
-            parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(keyClass)).build());
+            parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(columnMetadata.getJavaType())).javaType(columnMetadata.getJavaType()).jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType())).build());
         }
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "defaultParameterMap", entityClass, parameterMappings);
         SqlNode whereSqlNode = new WhereSqlNode(config, new MixedSqlNode(wheres), getOrmConfig().getKeywordMode());

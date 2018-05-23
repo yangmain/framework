@@ -34,25 +34,26 @@ public class DataSourceTestTest extends DataSourceTest {
     public void test1() {
         OrderDAO orderDAO = getBean(OrderDAO.class);
         OrderEntity entity = new OrderEntity();
-        entity.setAge(1);
-        entity.setUserName(UUID.randomUUID().toString());
-        entity.setCreateDate(new Date());
-        entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
+//        entity.setAge(1);
+//        entity.setUserName(UUID.randomUUID().toString());
+//        entity.setCreateDate(new Date());
+//        entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
         entity.addOrderBy(OrderByColumn.builder("age").order(Order.ASC).build());
         entity.addOrderBy(OrderByColumn.builder("user_name").order(Order.DESC).build());
-        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-        entity.setAge(2);
-        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-        entity.setAge(3);
-        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-        entity.setAge(4);
-        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-        entity.setAge(5);
-        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-        entity.setAge(6);
-        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
-        UserDAO userDAO = getBean(UserDAO.class);
-        userDAO.countAll();
-        userDAO.selectAll();
+        orderDAO.selectAnd(entity);
+//        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+//        entity.setAge(2);
+//        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+//        entity.setAge(3);
+//        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+//        entity.setAge(4);
+//        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+//        entity.setAge(5);
+//        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+//        entity.setAge(6);
+//        orderDAO.selectPageAnd(new Pagination<OrderEntity>(20, 1, entity));
+//        UserDAO userDAO = getBean(UserDAO.class);
+//        userDAO.countAll();
+//        userDAO.selectAll();
     }
 }
