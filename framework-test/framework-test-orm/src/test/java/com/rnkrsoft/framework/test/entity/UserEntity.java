@@ -26,6 +26,11 @@ public class UserEntity extends Entity{
     @Comment("年龄")
     Long age1;
 
+    @NumberColumn(name = "AGE2", nullable = false)
+    @Comment("年龄2")
+    Long age2;
+
+
     @DateColumn(name = "CREATE_DATE", nullable = false)
     @Comment("创建日期")
     Date createDate;

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rnkrsoft.com on 2018/4/20.
@@ -52,9 +53,12 @@ public class DataSourceTestTest extends DataSourceTest {
         UserDAO userDAO = getBean(UserDAO.class);
         userDAO.countAll();
         UserEntity userEntity = new UserEntity();
+        userEntity.setUserName("1111");
         userEntity.setAge1(124L);
+        userEntity.setAge2(123465L);
         userEntity.setCreateDate(new Date());
         userDAO.insertSelective(userEntity);
-        userDAO.selectAll();
+        List list = userDAO.selectAll();
+        System.out.println(list);
     }
 }
