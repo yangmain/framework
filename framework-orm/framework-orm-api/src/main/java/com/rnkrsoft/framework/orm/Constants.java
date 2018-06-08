@@ -66,6 +66,7 @@ public interface Constants {
      * 按照OR条件查询
      */
     String SELECT_OR = "selectOr";
+    String SELECT_RUNTIME = "selectRuntime";
     /**
      * 无条件查询整个表，可能导致系统奔溃
      */

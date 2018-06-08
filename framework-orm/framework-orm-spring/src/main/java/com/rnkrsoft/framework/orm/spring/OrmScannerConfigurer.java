@@ -3,9 +3,9 @@ package com.rnkrsoft.framework.orm.spring;
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.devops4j.message.MessageFormatter;
 import com.devops4j.utils.StringUtils;
-import com.rnkrsoft.framework.orm.MapperMakerInterface;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
+import com.rnkrsoft.framework.orm.jdbc.JdbcInterface;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmClassPathMapperScanner;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMapperFactoryBean;
 import lombok.Getter;
@@ -23,8 +23,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.NestedIOException;
-import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -33,7 +31,6 @@ import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,7 +145,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
                             ClassMetadata classMetadata = metadataReader.getClassMetadata();
                             if (classMetadata.isInterface()) {
                                 Class clazz = Class.forName(classMetadata.getClassName());
-                                if (MapperMakerInterface.class.isAssignableFrom(clazz)) {
+                                if (JdbcInterface.class.isAssignableFrom(clazz)) {
                                     if (!configMap.containsKey(classMetadata.getClassName())) {
                                         configMap.put(classMetadata.getClassName(), itemConfig);
                                     } else {

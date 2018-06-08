@@ -69,6 +69,6 @@
     </bean>
     <bean id="ormSessionFactoryBean" class="com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean">
         <!--数据源-->
-        <property name="dataSource" ref="defaultDataSource"/>
+        <property name="database" ref="defaultDataSource"/>
     </bean>
 </beans>

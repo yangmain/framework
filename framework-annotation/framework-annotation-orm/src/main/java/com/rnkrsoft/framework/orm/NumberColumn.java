@@ -54,4 +54,10 @@ public @interface NumberColumn {
      * @since 1.0.0
      */
     NumberType type() default NumberType.AUTO;
+
+    /**
+     * 字段枚举值
+     * @return
+     */
+    Class enumClass() default Object.class;
 }

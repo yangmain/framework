@@ -50,5 +50,11 @@ public @interface StringColumn {
      * @since 1.0.0
      */
     StringType type() default StringType.AUTO;
+
+    /**
+     * 字段枚举值
+     * @return
+     */
+    Class enumClass() default Object.class;
 }
 

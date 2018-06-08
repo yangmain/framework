@@ -53,8 +53,8 @@ public class DataSourceTestTest extends DataSourceTest {
         userDAO.countAll();
         UserEntity userEntity = new UserEntity();
         userEntity.setAge1(124L);
-        userEntity.setCreateDate(new Date());
-        userDAO.insertSelective(userEntity);
-        userDAO.selectAll();
+//        userDAO.insertSelective(userEntity);
+//        userDAO.selectAll();
+        userDAO.selectAnd(userEntity);
     }
 }

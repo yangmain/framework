@@ -18,19 +18,19 @@
     <licenses>
         <license>
             <name>rnkrsoft Copyright Version 1.0</name>
-            <url>https://www.rnkrsoft.com/licenses</url>
+            <url>http://www.rnkrsoft.com/open-source/licenses</url>
         </license>
     </licenses>
     <modules>
         <module>framework-annotation</module>
         <module>framework-sequence-api</module>
+        <module>framework-cache</module>
         <module>framework-orm</module>
         <module>framework-test</module>
         <module>framework-sequence</module>
         <module>framework-monitor</module>
         <module>framework-config</module>
         <module>framework-messagequeue</module>
-        <module>framework-cache</module>
         <module>framework-toolkit</module>
         <module>framework-security</module>
         <module>framework-standalone</module>
@@ -49,25 +49,25 @@
         </dependencies>
     </dependencyManagement>
     <scm>
-        <connection>http://admin@git.devops4j.com/r/framework.git </connection>
-        <developerConnection>http://admin@git.devops4j.com/r/framework.git </developerConnection>
+        <connection>http://admin@git.rnkrsoft.com/r/framework.git </connection>
+        <developerConnection>http://admin@git.rnkrsoft.com/r/framework.git </developerConnection>
         <url>https://www.rnkrsoft.com</url>
     </scm>
     <repositories>
         <repository>
             <id>rnkrsoft</id>
             <name>RnKrSoft Repository</name>
-            <url>https://nexus.devops4j.com/content/groups/public/</url>
+            <url>http://nexus.rnkrsoft.com/content/groups/public/</url>
         </repository>
     </repositories>
     <distributionManagement>
         <snapshotRepository>
             <id>rnkrsoft</id>
-            <url>https://nexus.devops4j.com/content/repositories/snapshots/</url>
+            <url>http://nexus.rnkrsoft.com/content/repositories/snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>rnkrsoft</id>
-            <url>https://nexus.devops4j.com/content/repositories/releases/</url>
+            <url>http://nexus.rnkrsoft.com/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
 </project>

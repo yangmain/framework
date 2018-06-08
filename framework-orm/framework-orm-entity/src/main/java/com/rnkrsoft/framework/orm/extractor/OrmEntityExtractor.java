@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.extractor;
 
+import com.devops4j.interfaces.EnumStringCode;
 import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.*;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 
 /**
@@ -91,6 +94,10 @@ public class OrmEntityExtractor implements EntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
+//        Class enumClass = stringColumn.enumClass();
+//        if (new HashSet(Arrays.asList(enumClass.getInterfaces())).contains(EnumStringCode.class)){
+//
+//        }
         return this;
     }
 

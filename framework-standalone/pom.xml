@@ -77,6 +77,7 @@
                                     <include>com.rnkrsoft.framework:framework-config-protocol</include>
                                     <include>com.rnkrsoft.framework:framework-config-client</include>
                                     <include>com.rnkrsoft.framework:framework-config-spring</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-monitor</include>
                                     <include>com.rnkrsoft.framework:framework-cache-redis</include>
                                     <include>com.rnkrsoft.framework:framework-cache-client</include>
                                     <include>com.rnkrsoft.framework:framework-cache-spring</include>

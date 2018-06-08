@@ -11,6 +11,10 @@
     <description>This is the framework4j-orm-api</description>
     <dependencies>
         <dependency>
+            <groupId>com.devops4j.skeleton4j</groupId>
+            <artifactId>skeleton4j-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-api</artifactId>
             <version>1.0.0</version>

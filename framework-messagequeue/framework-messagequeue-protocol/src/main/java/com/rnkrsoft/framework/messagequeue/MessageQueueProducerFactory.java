@@ -11,11 +11,11 @@ import java.util.ServiceLoader;
  */
 public class MessageQueueProducerFactory {
 
-    public MessageQueueProducer getInstance() {
+    public static MessageQueueProducer getInstance() {
         return getInstance(null);
     }
 
-    public MessageQueueProducer getInstance(String implementClassName) {
+    public static MessageQueueProducer getInstance(String implementClassName) {
         MessageQueueProducer service = null;
         ServiceLoader<MessageQueueProducer> serviceLoader = ServiceLoader.load(MessageQueueProducer.class);
         Iterator<MessageQueueProducer> serviceIterator = serviceLoader.iterator();

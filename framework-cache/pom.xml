@@ -15,6 +15,5 @@
         <module>framework-cache-redis</module>
         <module>framework-cache-client</module>
         <module>framework-cache-spring</module>
-        <module>framework-cache-boot-starter</module>
     </modules>
 </project>

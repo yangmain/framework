@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
-import com.rnkrsoft.framework.orm.select.SelectMapper;
+import com.rnkrsoft.framework.orm.jdbc.select.SelectMapper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import lombok.extern.slf4j.Slf4j;

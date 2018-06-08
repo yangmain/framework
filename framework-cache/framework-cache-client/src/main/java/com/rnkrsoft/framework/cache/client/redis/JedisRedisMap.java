@@ -332,9 +332,13 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                 wrapper.data = data;
                 val = GSON.toJson(wrapper);
             }
-            SetParams params = SetParams.setParams();
-            params.ex(seconds);
-            jedis.set(key, val, params);
+            if (seconds > 0) {
+                SetParams params = SetParams.setParams();
+                params.ex(seconds);
+                jedis.set(key, val, params);
+            }else{
+                jedis.set(key, val);
+            }
             if (oldValue != null && oldVal != null) {
                 try {
                     Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);

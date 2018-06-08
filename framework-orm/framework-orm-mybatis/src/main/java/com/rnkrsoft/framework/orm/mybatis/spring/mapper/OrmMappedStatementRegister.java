@@ -1,21 +1,20 @@
 package com.rnkrsoft.framework.orm.mybatis.spring.mapper;
 
-import com.rnkrsoft.framework.orm.WordMode;
-import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
-import com.rnkrsoft.framework.orm.count.CountAllMapper;
-import com.rnkrsoft.framework.orm.count.CountAndMapper;
-import com.rnkrsoft.framework.orm.count.CountOrMapper;
-import com.rnkrsoft.framework.orm.delete.DeleteAndMapper;
-import com.rnkrsoft.framework.orm.delete.DeleteByPrimaryKeyMapper;
-import com.rnkrsoft.framework.orm.delete.DeleteOrMapper;
-import com.rnkrsoft.framework.orm.delete.TruncateMapper;
-import com.rnkrsoft.framework.orm.insert.InsertAllMapper;
-import com.rnkrsoft.framework.orm.insert.InsertSelectiveMapper;
-import com.rnkrsoft.framework.orm.lock.LockByForUpdateAndMapper;
-import com.rnkrsoft.framework.orm.lock.LockByForUpdateByPrimaryKeyMapper;
-import com.rnkrsoft.framework.orm.lock.LockByForUpdateOrMapper;
-import com.rnkrsoft.framework.orm.lock.LockByUpdateSetPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.CountAllMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.CountAndMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.CountOrMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.DeleteAndMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.DeleteByPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.DeleteOrMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.TruncateMapper;
+import com.rnkrsoft.framework.orm.jdbc.insert.InsertAllMapper;
+import com.rnkrsoft.framework.orm.jdbc.insert.InsertSelectiveMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.LockByForUpdateAndMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.LockByForUpdateByPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.LockByForUpdateOrMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.LockByUpdateSetPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.select.*;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.count.CountAllMappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.count.CountAndMappedStatementBuilder;
@@ -34,21 +33,16 @@ import com.rnkrsoft.framework.orm.mybatis.mapper.builder.select.*;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.update.UpdateByPrimaryKeyMappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.update.UpdateByPrimaryKeySelectiveMappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
-import com.rnkrsoft.framework.orm.select.*;
-import com.rnkrsoft.framework.orm.update.UpdateByPrimaryKeyMapper;
-import com.rnkrsoft.framework.orm.update.UpdateByPrimaryKeySelectiveMapper;
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.update.UpdateByPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.update.UpdateByPrimaryKeySelectiveMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
-import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 映射语句注册器

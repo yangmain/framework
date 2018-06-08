@@ -3,17 +3,18 @@ package com.rnkrsoft.framework.orm;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 实体基类
  */
 @Data
 @ToString
-public abstract class Entity implements OrderBy{
+public abstract class Entity implements OrderBy, ValueBy{
     @Ignore
     final List<OrderByColumn> orderByColumns = new ArrayList();
+    @Ignore
+    final Map<String, ValueByColumn> valueModes = new HashMap();
 
     @Override
     public OrderBy addOrderBy(String column, Order order) {
@@ -29,5 +30,32 @@ public abstract class Entity implements OrderBy{
     @Override
     public List<OrderByColumn> getOrderByColumns() {
         return orderByColumns;
+    }
+
+    @Override
+    public ValueBy addValueBy(String column, ValueMode valueMode) {
+        valueModes.put(column, null);
+        return this;
+    }
+
+    @Override
+    public ValueBy addValueBy(String[] columns, ValueMode valueMode) {
+        for (String column : columns){
+            addValueBy(column, valueMode);
+        }
+        return this;
+    }
+
+    @Override
+    public ValueBy addValueBy(ValueByColumn... valueByColumns) {
+        for (ValueByColumn valueByColumn : valueByColumns){
+            valueModes.put(valueByColumn.column, valueByColumn);
+        }
+        return this;
+    }
+
+    @Override
+    public Map<String, ValueByColumn> getValueByMap() {
+        return Collections.unmodifiableMap(valueModes);
     }
 }

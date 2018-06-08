@@ -11,21 +11,18 @@ import java.io.UnsupportedEncodingException;
  * Created by rnkrsoft.com on 2018/5/21.
  * 消息包装类
  */
-public class Message<T>{
+public class Message<T> {
+    @Getter
+    String routeKey;
     /**
      * 值对象
      */
-    volatile T value;
+    T value;
     /**
      * 类名
      */
     @Getter
     String className;
-    /**
-     * 字节数组数据
-     */
-    @Getter
-    byte[] data;
     /**
      * 消息年龄
      */
@@ -51,25 +48,27 @@ public class Message<T>{
         this.lastUpdateDate = System.currentTimeMillis();
     }
 
-    public T get(){
-        return get("UTF-8");
+    public static Message message(byte[] data) {
+        try {
+            Message message = GSON.fromJson(new String(data, "UTF-8"), Message.class);
+            return message;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public String asString(String encoding){
+    public String asJson() {
         String json = null;
-        try {
-            json = new String(data, encoding);
-        } catch (UnsupportedEncodingException e) {
-            throw ErrorContextFactory.instance().cause(e).runtimeException();
-        }
+        json = GSON.toJson(this);
         return json;
     }
 
-    public T get(String encoding){
+    public T get() {
         if (this.value != null) {
             return value;
-        }else{
-            String json = asString(encoding);
+        } else {
+            String json = asJson();
             Class clazz = null;
             try {
                 clazz = Class.forName(className);

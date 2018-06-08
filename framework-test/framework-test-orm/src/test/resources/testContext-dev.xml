@@ -18,7 +18,7 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="defaultDataSource"/>
+        <property name="database" ref="defaultDataSource"/>
     </bean>
 
     <!--开发数据源-->

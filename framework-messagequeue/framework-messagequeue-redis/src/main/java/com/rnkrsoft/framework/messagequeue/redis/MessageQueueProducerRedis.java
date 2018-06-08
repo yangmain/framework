@@ -8,6 +8,26 @@ import com.rnkrsoft.framework.messagequeue.protocol.Message;
  */
 public class MessageQueueProducerRedis extends AbstractMessageQueueProducer {
     @Override
+    public void setUrl(String url) {
+
+    }
+
+    @Override
+    public void setUsername(String username) {
+
+    }
+
+    @Override
+    public void setPassword(String password) {
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
     public int produce(Message message) {
         return SUCCESS;
     }

@@ -28,7 +28,7 @@ public class DebugPrintMessageListener implements MessageQueueListener {
     @Override
     public void execute(Message message) {
         if (log.isDebugEnabled()) {
-            String str = message.asString("UTF-8");
+            String str = message.asJson();
             log.info(
                     "message '{}' age '{}', create date '{}', last update date '{}'",
                     str,
