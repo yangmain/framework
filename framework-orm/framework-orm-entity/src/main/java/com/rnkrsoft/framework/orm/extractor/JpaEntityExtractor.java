@@ -75,6 +75,19 @@ public class JpaEntityExtractor implements EntityExtractor {
                     dataType = "DECIMAL(18,2)";
                 }
                 jdbcType = "DECIMAL";
+            } else if (fieldClass == Long.class) {
+                dataType = "BIGINT";
+                jdbcType = "NUMERIC";
+                if (column.nullable()) {
+                    ErrorContextFactory.instance()
+                            .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
+                            .message("字段{}为整型包装类型，不允许为空", columnMetadata.getJdbcName())
+                            .solution("在标注{}注解上的属性{}设置为{}", Column.class, "nullable", false)
+                            .throwError();
+                }
+            } else if (fieldClass == Long.TYPE) {
+                dataType = "BIGINT";
+                jdbcType = "NUMERIC";
             } else if (fieldClass == Integer.class) {
                 dataType = "INTEGER";
                 jdbcType = "NUMERIC";

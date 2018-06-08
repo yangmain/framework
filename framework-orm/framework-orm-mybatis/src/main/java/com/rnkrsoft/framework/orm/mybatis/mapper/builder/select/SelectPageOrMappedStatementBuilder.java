@@ -48,7 +48,7 @@ public class SelectPageOrMappedStatementBuilder extends MappedStatementBuilder {
             String whereSql = convert(" OR ", getOrmConfig().getKeywordMode()) + convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{entity." + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
             SqlNode node = new IfSqlNode(new TextSqlNode(whereSql), MessageFormat.format("entity.{0} != null", columnMetadata.getJavaName()));
             wheres.add(node);
-            parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(keyClass)).build());
+            parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(columnMetadata.getJavaType())).javaType(columnMetadata.getJavaType()).jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType())).build());
         }
         SqlNode whereSqlNode = new WhereSqlNode(config, new MixedSqlNode(wheres), getOrmConfig().getKeywordMode());
         DynamicSqlSource sqlSource = new DynamicSqlSource(config, mixedContents(new StaticTextSqlNode(sqlBuilder.toString()), whereSqlNode));

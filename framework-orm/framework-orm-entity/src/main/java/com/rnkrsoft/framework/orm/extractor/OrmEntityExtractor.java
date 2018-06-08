@@ -111,6 +111,8 @@ public class OrmEntityExtractor implements EntityExtractor {
         String dataType = null;
         String jdbcType = null;
         if (fieldClass != BigDecimal.class
+                && fieldClass != Long.class
+                && fieldClass != Long.TYPE
                 && fieldClass != Integer.class
                 && fieldClass != Integer.TYPE
                 && fieldClass != Boolean.class
@@ -119,7 +121,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                     .message("字段{}数据类型和注解类型支持的映射数据不一致", columnMetadata.getJavaName())
-                    .solution("将字段{}的类型从{}修改为[{},{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, BigDecimal.class, Integer.class, Integer.TYPE, Boolean.class, Boolean.TYPE).throwError();
+                    .solution("将字段{}的类型从{}修改为[{},{},{},{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, BigDecimal.class, Long.class, Long.TYPE, Integer.class, Integer.TYPE, Boolean.class, Boolean.TYPE).throwError();
         }
         if (numberColumn != null) {
             if (numberColumn.type() != null) {
@@ -127,6 +129,9 @@ public class OrmEntityExtractor implements EntityExtractor {
                     if (fieldClass == Long.TYPE) {
                         dataType = "BIGINT";
                         jdbcType = "NUMERIC";
+                    }else if (fieldClass == Long.class) {
+                            dataType = "BIGINT";
+                            jdbcType = "NUMERIC";
                     } else  if (fieldClass == Integer.TYPE) {
                         dataType = "INTEGER";
                         jdbcType = "NUMERIC";
