@@ -57,6 +57,11 @@ public interface CachedMap<K,V> extends Map<K,V>{
     long ttl(String key);
 
     /**
+     * 取消超时
+     * @param key
+     */
+    void presist(String key);
+    /**
      * 自增1
      * @param key
      * @return

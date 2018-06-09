@@ -19,5 +19,15 @@ public @interface Cache {
      */
     int expire() default -1;
 
-    int db() default 1;
+    /**
+     * 键值前缀
+     * @return
+     */
+    String prefix() default "";
+
+    /**
+     * 数据库索引
+     * @return
+     */
+    int index() default 1;
 }

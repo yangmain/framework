@@ -1,13 +1,11 @@
 package com.rnkrsoft.framework.cache.client.redis;
 
-import com.rnkrsoft.framework.cache.client.CacheClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.params.set.SetParams;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +14,7 @@ import java.util.Set;
  * Created by rnkrsoft.com on 2018/5/19.
  */
 @Slf4j
-public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
+public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
     protected abstract Jedis getJedis();
 
     @Override
@@ -45,6 +43,22 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
         }
         try {
             jedis.expire(key, seconds);
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+                jedis = null;
+            }
+        }
+    }
+
+    @Override
+    public void presist(String key) {
+        Jedis jedis = getJedis();
+        if (StringUtils.isNotBlank(prefix)) {
+            key = prefix + "_" + key;
+        }
+        try {
+            jedis.persist(key);
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -106,7 +120,6 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
     }
 
 
-
     @Override
     public int size() {
         Jedis jedis = getJedis();
@@ -130,7 +143,7 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
     public boolean containsKey(Object key) {
         String cacheKey = key == null ? null : key.toString();
         if (StringUtils.isNotBlank(prefix)) {
-            cacheKey = prefix + "_"+ cacheKey;
+            cacheKey = prefix + "_" + cacheKey;
         }
         Jedis jedis = getJedis();
         try {
@@ -158,7 +171,7 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
     Object get0(Object key) {
         String cacheKey = key == null ? null : key.toString();
         if (StringUtils.isNotBlank(prefix)) {
-            cacheKey = prefix + "_"+ cacheKey;
+            cacheKey = prefix + "_" + cacheKey;
         }
         Jedis jedis = getJedis();
         Object oldValue = null;
@@ -170,9 +183,8 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                     oldValue = Long.valueOf(oldVal);
                 } else if (isWrapper(oldVal)) {
                     try {
-                        Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                        Class clazz = Class.forName(oldWrapper.className);
-                        oldValue = GSON.fromJson(oldWrapper.data, clazz);
+                        Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                        oldValue = oldWrapper.get();
                     } catch (ClassNotFoundException e) {
                         System.err.println(e);
                     } finally {
@@ -195,7 +207,7 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
         Class clazz = value == null ? Object.class : value.getClass();
         String cacheKey = key == null ? null : key.toString();
         if (StringUtils.isNotBlank(prefix)) {
-            cacheKey = prefix + "_"+ cacheKey;
+            cacheKey = prefix + "_" + cacheKey;
         }
         Jedis jedis = getJedis();
         Object oldValue = null;
@@ -218,18 +230,14 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                     oldValue = Long.valueOf(oldVal);
                 }
             } else {
-                String data = GSON.toJson(value);
-                Wrapper wrapper = new Wrapper();
-                wrapper.className = className;
-                wrapper.data = data;
-                val = GSON.toJson(wrapper);
+                Wrapper wrapper = new Wrapper(value);
+                val = wrapper.toString();
             }
             jedis.set(cacheKey, val);
             if (oldValue != null && oldVal != null) {
                 try {
-                    Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                    Class clazz0 = Class.forName(oldWrapper.className);
-                    oldValue = GSON.fromJson(oldWrapper.data, clazz0);
+                    Wrapper oldWrapper = new Wrapper(oldVal);
+                    oldValue = oldWrapper.get();
                 } catch (ClassNotFoundException e) {
                     System.err.println(e);
                 } finally {
@@ -249,7 +257,7 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
     public <T> T put(String key, Object value, int seconds, Class clazz) {
         Jedis jedis = getJedis();
         if (StringUtils.isNotBlank(prefix)) {
-            key = prefix + "_"+ key;
+            key = prefix + "_" + key;
         }
         Object oldValue = null;
         try {
@@ -271,20 +279,16 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                     oldValue = Long.valueOf(oldVal);
                 }
             } else {
-                String data = GSON.toJson(value);
-                Wrapper wrapper = new Wrapper();
-                wrapper.className = className;
-                wrapper.data = data;
-                val = GSON.toJson(wrapper);
+                Wrapper wrapper = new Wrapper(value);
+                val = wrapper.toString();
             }
             SetParams params = SetParams.setParams();
             params.ex(seconds);
             jedis.set(key, val, params);
             if (oldValue != null && oldVal != null) {
                 try {
-                    Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                    Class clazz0 = Class.forName(oldWrapper.className);
-                    oldValue = GSON.fromJson(oldWrapper.data, clazz0);
+                    Wrapper oldWrapper = new Wrapper(oldVal);
+                    oldValue = oldWrapper.get();
                 } catch (ClassNotFoundException e) {
                     System.err.println(e);
                 } finally {
@@ -303,14 +307,13 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
     public <T> T put(String key, Object value, int seconds) {
         Class clazz = value == null ? Object.class : value.getClass();
         if (StringUtils.isNotBlank(prefix)) {
-            key = prefix + "_"+ key;
+            key = prefix + "_" + key;
         }
         Jedis jedis = getJedis();
         Object oldValue = null;
         try {
             String val = null;
             String oldVal = jedis.get(key);
-            String className = clazz.getName();
             boolean primitive = false;
             if (oldVal != null) {
                 primitive = isPrimitive(oldVal);
@@ -326,24 +329,20 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                     oldValue = Long.valueOf(oldVal);
                 }
             } else {
-                String data = GSON.toJson(value);
-                Wrapper wrapper = new Wrapper();
-                wrapper.className = className;
-                wrapper.data = data;
-                val = GSON.toJson(wrapper);
+                Wrapper wrapper = new Wrapper(value);
+                val = wrapper.toString();
             }
             if (seconds > 0) {
                 SetParams params = SetParams.setParams();
                 params.ex(seconds);
                 jedis.set(key, val, params);
-            }else{
+            } else {
                 jedis.set(key, val);
             }
             if (oldValue == null && oldVal != null) {
                 try {
-                    Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                    Class clazz0 = Class.forName(oldWrapper.className);
-                    oldValue = GSON.fromJson(oldWrapper.data, clazz0);
+                    Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                    oldValue = oldWrapper.get();
                 } catch (ClassNotFoundException e) {
                     System.err.println(e);
                 } finally {
@@ -378,9 +377,8 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                     oldValue = Long.valueOf(oldVal);
                 } else if (isWrapper(oldVal)) {
                     try {
-                        Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                        Class clazz = Class.forName(oldWrapper.className);
-                        oldValue = GSON.fromJson(oldWrapper.data, clazz);
+                        Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                        oldValue = oldWrapper.get();
                     } catch (ClassNotFoundException e) {
                         System.err.println(e);
                     } finally {
@@ -421,11 +419,8 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
                         } else if (clazz == Long.TYPE || clazz == Long.class) {
                             val = String.valueOf(value);
                         } else {
-                            String data = GSON.toJson(value);
-                            Wrapper wrapper = new Wrapper();
-                            wrapper.className = className;
-                            wrapper.data = data;
-                            val = GSON.toJson(wrapper);
+                            Wrapper oldWrapper = new Wrapper(value);
+                            val = oldWrapper.toString();
                         }
                     }
                     jedis.set(cacheKey, val);
@@ -449,7 +444,7 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
         try {
             if (prefix == null) {
                 jedis.flushDB();
-            }else{
+            } else {
                 Set<String> keys = keys("*");
                 jedis.del(keys.toArray(new String[keys.size()]));
             }

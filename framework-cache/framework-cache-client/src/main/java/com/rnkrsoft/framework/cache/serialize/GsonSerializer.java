@@ -12,13 +12,10 @@ import java.io.UnsupportedEncodingException;
  */
 @Slf4j
 public class GsonSerializer implements Serializer{
-    Gson gson = new GsonBuilder().disableHtmlEscaping().create();
     @Override
     public byte[] serialize(Object obj) {
-        Wrapper objectWrapper = new Wrapper();
-        objectWrapper.setData(gson.toJson(obj));
-        objectWrapper.setClassName(obj.getClass().getName());
-        String json = gson.toJson(objectWrapper);
+        Wrapper objectWrapper = new Wrapper(obj);
+        String json = objectWrapper.toString();
         try {
             return json.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {

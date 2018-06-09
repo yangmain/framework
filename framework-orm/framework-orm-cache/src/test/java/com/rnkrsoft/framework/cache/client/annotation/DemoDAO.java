@@ -5,31 +5,31 @@ import com.rnkrsoft.framework.orm.cache.*;
 /**
  * Created by woate on 2018/6/2.
  */
-@Cache(expire = 6000, db = 1)
-public interface UserDAO extends CacheMapper {
+@Cache(expire = 6000, index = 1)
+public interface DemoDAO extends CacheMapper {
     @Set
-    void set(String key, User user);
+    void set(String key, DemoEntity user);
 
     @Get
-    User get(String key);
+    DemoEntity get(String key);
 
     @GetSet(expire = 6000)
-    User getSet(String key, User user);
+    DemoEntity getSet(String key, DemoEntity user);
 
-    @Expire(seconds = 6000)
+    @Expire
     void expire(String key);
 
     @Presist
     void presist(String key);
 
     @Ttl
-    long ttl(String key);
+    Long ttl(String key);
 
     @Incr(increment = 2)
-    long incr(String key);
+    Long incr(String key);
 
     @Decr(decrement = 3)
-    long decr(String key);
+    Long decr(String key);
 
     @Keys
     java.util.Set<String> keys(String pattern);

@@ -25,7 +25,8 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
             return cachedMap.decr(key);
         }else if (metadata.commandType == CommandType.EXPIRE){
             String key = args[0].toString();
-            cachedMap.expire(key, metadata.seconds);
+            int second = Integer.parseInt(args[1].toString());
+            cachedMap.expire(key, second);
             return null;
         }else if (metadata.commandType == CommandType.GET){
             String key = args[0].toString();
@@ -42,6 +43,7 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
             return cachedMap.keys(pattern);
         }else if(metadata.commandType == CommandType.PRESIST){
             String key = args[0].toString();
+            cachedMap.presist(key);
             return null;
         }else if(metadata.commandType == CommandType.SET){
             String key = args[0].toString();
@@ -81,7 +83,6 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         if (expire != null){
             cnt++;
             metadata.commandType = CommandType.EXPIRE;
-            metadata.expire = expire.seconds();
         }
         if (get != null){
             cnt++;

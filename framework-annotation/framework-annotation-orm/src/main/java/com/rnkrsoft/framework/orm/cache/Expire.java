@@ -11,9 +11,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Expire {
-    /**
-     * 永不过期
-     * @return
-     */
-    int seconds() default 0;
 }

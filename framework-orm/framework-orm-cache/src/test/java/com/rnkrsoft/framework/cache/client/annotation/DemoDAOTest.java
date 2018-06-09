@@ -9,28 +9,28 @@ import org.junit.Test;
 /**
  * Created by woate on 2018/6/2.
  */
-public class UserDAOTest {
+public class DemoDAOTest {
     @Test
     public void test1(){
         CacheClient client = new CacheClient();
         CacheClientSetting setting = CacheClientSetting.builder().redisType(RedisType.AUTO).hosts("localhost:6379").build();
         client.init(setting);
-        CacheProxyFactory<UserDAO> cacheProxyFactory = new CacheProxyFactory(UserDAO.class, client);
-        UserDAO userDAO = cacheProxyFactory.newInstance();
-        userDAO.set("sss", new User("xxx", 12, false));
-        User user = userDAO.get("sss");
+        CacheProxyFactory<DemoDAO> cacheProxyFactory = new CacheProxyFactory(DemoDAO.class, client);
+        DemoDAO demoDAO = cacheProxyFactory.newInstance();
+        demoDAO.set("sss", new DemoEntity("xxx", 12, false));
+        DemoEntity user = demoDAO.get("sss");
         System.out.println(user);
-        long x = userDAO.incr("xxxxx");
+        long x = demoDAO.incr("xxxxx");
         System.out.println(x);
 
-        long y = userDAO.decr("yyyyy");
+        long y = demoDAO.decr("yyyyy");
         System.out.println(y);
 
-        java.util.Set<String> keys = userDAO.keys("*");
+        java.util.Set<String> keys = demoDAO.keys("*");
         System.out.println(keys);
 
-        userDAO.expire("yyyyy");
+        demoDAO.expire("yyyyy");
 
-        System.out.println(userDAO.ttl("yyyyy"));
+        System.out.println(demoDAO.ttl("yyyyy"));
     }
 }

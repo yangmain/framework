@@ -23,17 +23,11 @@ public class GsonDeserializer implements Deserializer<Object> {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-        Wrapper objectWrapper = gson.fromJson(json, Wrapper.class);
-        Class clazz = CACHE.get(objectWrapper.getClassName());
-        if (clazz == null) {
-            try {
-                clazz = Class.forName(objectWrapper.getClassName());
-                CACHE.put(objectWrapper.getClassName(), clazz);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            Wrapper objectWrapper = Wrapper.valueOf(json);
+            return objectWrapper.get();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        return gson.fromJson((String) objectWrapper.getData(), clazz);
-
     }
 }

@@ -3,6 +3,7 @@ package com.rnkrsoft.framework.cache.client.redis;
 import com.rnkrsoft.framework.cache.client.CacheClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.exceptions.JedisDataException;
 import redis.clients.jedis.params.set.SetParams;
@@ -36,8 +37,8 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
         }
         JedisCluster jedisCluster = client.getJedisCluster();
         try {
-//            return jedisCluster.hkeys(pattern);
-            return null;
+            //TODO
+            return jedisCluster.hkeys(pattern);
         } finally {
 
         }
@@ -64,9 +65,8 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
                     oldValue = Long.valueOf(oldVal);
                 } else if (isWrapper(oldVal)) {
                     try {
-                        Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                        Class clazz = Class.forName(oldWrapper.className);
-                        oldValue = GSON.fromJson(oldWrapper.data, clazz);
+                        Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                        oldValue = oldWrapper.get();
                     } catch (ClassNotFoundException e) {
                         System.err.println(e);
                     } finally {
@@ -109,18 +109,14 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
                     oldValue = Long.valueOf(oldVal);
                 }
             } else {
-                String data = GSON.toJson(value);
-                Wrapper wrapper = new Wrapper();
-                wrapper.className = className;
-                wrapper.data = data;
-                val = GSON.toJson(wrapper);
+                Wrapper wrapper = new Wrapper(value);
+                val = wrapper.toString();
             }
             jedisCluster.set(cacheKey, val);
-            if (oldValue != null && oldVal != null) {
+            if (oldValue == null && oldVal != null) {
                 try {
-                    Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                    Class clazz0 = Class.forName(oldWrapper.className);
-                    oldValue = GSON.fromJson(oldWrapper.data, clazz0);
+                    Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                    oldValue = oldWrapper.get();
                 } catch (ClassNotFoundException e) {
                     System.err.println(e);
                 } finally {
@@ -159,20 +155,20 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
                     oldValue = Long.valueOf(oldVal);
                 }
             } else {
-                String data = GSON.toJson(value);
-                Wrapper wrapper = new Wrapper();
-                wrapper.className = className;
-                wrapper.data = data;
-                val = GSON.toJson(wrapper);
+                Wrapper wrapper = new Wrapper(value);
+                val = wrapper.toString();
             }
-            SetParams params = SetParams.setParams();
-            params.ex(seconds);
-            jedisCluster.set(key, val, params);
+            if (seconds > 0) {
+                SetParams params = SetParams.setParams();
+                params.ex(seconds);
+                jedisCluster.set(key, val, params);
+            } else {
+                jedisCluster.set(key, val);
+            }
             if (oldValue == null && oldVal != null) {
                 try {
-                    Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                    Class clazz0 = Class.forName(oldWrapper.className);
-                    oldValue = GSON.fromJson(oldWrapper.data, clazz0);
+                    Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                    oldValue = oldWrapper.get();
                 } catch (ClassNotFoundException e) {
                     System.err.println(e);
                 } finally {
@@ -210,20 +206,16 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
                     oldValue = Long.valueOf(oldVal);
                 }
             } else {
-                String data = GSON.toJson(value);
-                Wrapper wrapper = new Wrapper();
-                wrapper.className = className;
-                wrapper.data = data;
-                val = GSON.toJson(wrapper);
+                Wrapper wrapper = new Wrapper(value);
+                val = wrapper.toString();
             }
             SetParams params = SetParams.setParams();
             params.ex(seconds);
             jedisCluster.set(key, val, params);
-            if (oldValue != null && oldVal != null) {
+            if (oldValue == null && oldVal != null) {
                 try {
-                    Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                    Class clazz0 = Class.forName(oldWrapper.className);
-                    oldValue = GSON.fromJson(oldWrapper.data, clazz0);
+                    Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                    oldValue = oldWrapper.get();
                 } catch (ClassNotFoundException e) {
                     System.err.println(e);
                 } finally {
@@ -247,7 +239,18 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
 
         }
     }
+    @Override
+    public void presist(String key) {
+        JedisCluster jedisCluster = client.getJedisCluster();
+        if (StringUtils.isNotBlank(prefix)) {
+            key = prefix + "_" + key;
+        }
+        try {
+            jedisCluster.persist(key);
+        } finally {
 
+        }
+    }
     @Override
     public long ttl(String key) {
         JedisCluster jedisCluster = client.getJedisCluster();
@@ -346,9 +349,8 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
                     oldValue = Long.valueOf(oldVal);
                 } else if (isWrapper(oldVal)) {
                     try {
-                        Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
-                        Class clazz = Class.forName(oldWrapper.className);
-                        oldValue = GSON.fromJson(oldWrapper.data, clazz);
+                        Wrapper oldWrapper = new Wrapper(oldVal);
+                        oldValue = oldWrapper.get();
                     } catch (ClassNotFoundException e) {
                         System.err.println(e);
                     } finally {
