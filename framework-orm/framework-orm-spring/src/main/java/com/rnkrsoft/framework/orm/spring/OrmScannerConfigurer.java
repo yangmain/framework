@@ -88,6 +88,7 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
         if (this.ormMapperFactoryBean == null) {
             this.ormMapperFactoryBean = new OrmMapperFactoryBean();
         }
+        String[] daoPackages = ormConfig.getDaoPackages();
         OrmClassPathMapperScanner scanner = new OrmClassPathMapperScanner(registry);
         scanner.setOrmConfig(this.ormConfig);
         scanner.setOrmSessionFactoryBeanName(this.ormSessionFactoryBeanName);
@@ -95,7 +96,6 @@ public class OrmScannerConfigurer  implements BeanDefinitionRegistryPostProcesso
         scanner.setResourceLoader(this.applicationContext);
         scanner.setMarkerInterface(this.markerInterface);
         scanner.registerFilters();
-        String[] daoPackages = ormConfig.getDaoPackages();
         scanner.doScan(daoPackages);
     }
 

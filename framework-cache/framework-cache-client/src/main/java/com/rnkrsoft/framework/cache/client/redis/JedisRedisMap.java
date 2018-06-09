@@ -339,7 +339,7 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V>{
             }else{
                 jedis.set(key, val);
             }
-            if (oldValue != null && oldVal != null) {
+            if (oldValue == null && oldVal != null) {
                 try {
                     Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
                     Class clazz0 = Class.forName(oldWrapper.className);

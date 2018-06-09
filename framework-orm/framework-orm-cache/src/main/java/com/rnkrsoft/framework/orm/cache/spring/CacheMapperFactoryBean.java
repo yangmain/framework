@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.orm.cache.spring;
 
 import com.rnkrsoft.framework.cache.client.CacheClient;
-import com.rnkrsoft.framework.orm.cache.proxy.CacheProxy;
 import com.rnkrsoft.framework.orm.cache.proxy.CacheProxyFactory;
+import lombok.Setter;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -10,23 +10,29 @@ import org.springframework.beans.factory.InitializingBean;
  * Created by rnkrsoft.com on 2018/6/7.
  */
 public class CacheMapperFactoryBean<T> implements InitializingBean, FactoryBean<T> {
-    Class<T> mapperInterface;
+    @Setter
+    Class<T> cacheInterface;
 
-    CacheProxyFactory<T> cacheProxyFactory;
+    @Setter
+    CacheClient cacheClient;
 
-    public CacheMapperFactoryBean(Class<T> mapperInterface, CacheClient cacheClient) {
-        this.mapperInterface = mapperInterface;
-        this.cacheProxyFactory = new CacheProxyFactory<T>(mapperInterface, cacheClient);
+    public CacheMapperFactoryBean(Class<T> cacheInterface, CacheClient cacheClient) {
+        this.cacheInterface = cacheInterface;
+        this.cacheClient = cacheClient;
+    }
+
+    public CacheMapperFactoryBean() {
     }
 
     @Override
     public T getObject() throws Exception {
-        return  this.cacheProxyFactory.newInstance();
+        CacheProxyFactory<T> cacheProxyFactory = new CacheProxyFactory<T>(cacheInterface, cacheClient);
+        return cacheProxyFactory.newInstance();
     }
 
     @Override
     public Class<?> getObjectType() {
-        return mapperInterface;
+        return cacheInterface;
     }
 
     @Override

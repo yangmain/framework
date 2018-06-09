@@ -168,7 +168,7 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
             SetParams params = SetParams.setParams();
             params.ex(seconds);
             jedisCluster.set(key, val, params);
-            if (oldValue != null && oldVal != null) {
+            if (oldValue == null && oldVal != null) {
                 try {
                     Wrapper oldWrapper = GSON.fromJson(oldVal, Wrapper.class);
                     Class clazz0 = Class.forName(oldWrapper.className);

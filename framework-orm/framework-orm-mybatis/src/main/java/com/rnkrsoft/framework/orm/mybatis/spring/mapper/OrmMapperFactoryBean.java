@@ -12,8 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.util.Assert.notNull;
 
 public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements FactoryBean<T> {
-    @Setter
     Class<T> mapperInterface;
+
+    public OrmMapperFactoryBean setMapperInterface(Class<T> mapperInterface) {
+        this.mapperInterface = mapperInterface;
+        return this;
+    }
+
     @Setter
     OrmConfig ormConfig;
     /**

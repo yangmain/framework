@@ -2,6 +2,8 @@ package com.rnkrsoft.framework.orm.cache.spring;
 
 import com.devops4j.reflection4j.resource.ClassScanner;
 import com.rnkrsoft.framework.cache.client.CacheClient;
+import com.rnkrsoft.framework.cache.client.CacheClientSetting;
+import com.rnkrsoft.framework.cache.client.RedisType;
 import com.rnkrsoft.framework.orm.cache.Cache;
 import lombok.Setter;
 import org.springframework.beans.BeansException;
@@ -17,16 +19,18 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * Created by rnkrsoft.com on 2018/6/6.
  */
-public class CacheScannerConfigure implements BeanDefinitionRegistryPostProcessor, InitializingBean, ApplicationContextAware, BeanNameAware {
+public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcessor, InitializingBean, ApplicationContextAware, BeanNameAware {
     ApplicationContext applicationContext;
     String beanName;
     @Setter
+    CacheMapperFactoryBean cacheMapperFactoryBean;
+    @Setter
     String[] basePackages;
+    @Setter
+    Class<?> cacheInterface;
     CacheClient cacheClient;
     @Setter
-    String host = "127.0.0.1";
-    @Setter
-    int port = 4796;
+    String host = "127.0.0.1:6479";
     @Setter
     int index = 0;
 
@@ -37,19 +41,14 @@ public class CacheScannerConfigure implements BeanDefinitionRegistryPostProcesso
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        ClassScanner classScanner = new ClassScanner();
-        for (String basePackage: basePackages){
-            classScanner.scan(basePackage, new ClassScanner.AnnotatedWithFilter(Cache.class));
-        }
-        for (Class clazz :classScanner.getClasses()){
-            CacheMapperFactoryBean cacheMapperFactoryBean = new CacheMapperFactoryBean(clazz, cacheClient);
-            GenericBeanDefinition definition = new GenericBeanDefinition();
-            definition.setBeanClass(cacheMapperFactoryBean.getClass());    //设置类
-            definition.setScope("singleton");       //设置scope
-            definition.setLazyInit(false);          //设置是否懒加载
-            definition.setAutowireCandidate(true);  //设置是否可以被其他对象自动注入
-            registry.registerBeanDefinition(clazz.getName(), definition);
-        }
+        CacheClassPathScanner scanner = new CacheClassPathScanner(registry);
+        scanner.setCacheInterface(this.cacheInterface);
+        this.cacheClient = new CacheClient();
+        this.cacheClient.init(CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.STANDALONE).build());
+        scanner.setCacheClient(this.cacheClient);
+        scanner.setCacheMapperFactoryBean(this.cacheMapperFactoryBean);
+        scanner.registerFilters();
+        scanner.doScan(basePackages);
     }
 
     @Override
