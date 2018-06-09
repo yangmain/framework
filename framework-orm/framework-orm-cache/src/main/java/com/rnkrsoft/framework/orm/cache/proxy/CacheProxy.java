@@ -34,7 +34,7 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         }else if(metadata.commandType == CommandType.GETSET){
             String key = args[0].toString();
             Object value = args[1];
-            return cachedMap.put(key, value, metadata.seconds);
+            return cachedMap.put(key, value, metadata.expire);
         }else if(metadata.commandType == CommandType.INCR){
             String key = args[0].toString();
             return cachedMap.incr(key);
@@ -56,6 +56,8 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         }else if(metadata.commandType == CommandType.TYPE){
             String key = args[0].toString();
             return cachedMap.getNativeClass(key);
+        }else if(metadata.commandType == CommandType.CACHED_MAP){
+            return cachedMap;
         }else{
             return null;
         }
@@ -125,6 +127,14 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         if (type != null){
             cnt++;
             metadata.commandType = CommandType.TYPE;
+        }
+        if (method.getReturnType().isAssignableFrom(CachedMap.class)){
+           if (method.getParameterTypes().length != 0){
+               throw ErrorContextFactory.instance().message("不支持的类型").runtimeException();
+           }else{
+               metadata.commandType = CommandType.CACHED_MAP;
+               return metadata;
+           }
         }
         if (cnt == 0){
             throw ErrorContextFactory.instance().message("未标注注解").runtimeException();

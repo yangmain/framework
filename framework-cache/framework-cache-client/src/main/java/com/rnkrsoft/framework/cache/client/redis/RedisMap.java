@@ -36,7 +36,7 @@ public abstract class RedisMap<K, V> implements CachedMap<K, V> {
                 }
             }
         }
-        return String.class;
+        return Object.class;
     }
 
 

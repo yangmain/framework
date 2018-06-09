@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.cache.mapper;
 
+import com.rnkrsoft.framework.cache.client.CachedMap;
 import com.rnkrsoft.framework.test.SpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +21,26 @@ public class UserDAOTest extends SpringTest {
 
 //        userDAO.expire("xxxxxxx", 60);
 //        Thread.sleep(50 * 1000);
-        while (true) {
+//        while (true) {
 //            System.out.println( userDAO.incr("xxxxxxx"));
 //            System.out.println(userDAO.decr("xxxxxxx"));
 //            System.out.println(userDAO.get1("xxxxxxx"));
-            userDAO.getSet("yyyyyy", new User(UUID.randomUUID().toString(), 21, false));
+
+        CachedMap cachedMap = userDAO.get();
+//        System.out.println(cachedMap.keys("*"));
+        userDAO.getSet("yyyyyy", new User(UUID.randomUUID().toString(), 2, false));
+        System.out.println(userDAO.type("yyyyyy"));;
 //            System.out.println(userDAO.get("yyyyyy"));
-            userDAO.expire("yyyyyy", 2);
-            System.out.println(userDAO.ttl("yyyyyy"));
-//            userDAO.presist("yyyyyy");
-            Thread.sleep(3000);
-            System.out.println(userDAO.ttl("yyyyyy"));
-            System.out.println("----------" + userDAO.get("yyyyyy"));
-        }
+//            userDAO.expire("yyyyyy", 2);
+        System.out.println(userDAO.ttl("yyyyyy"));
+//            userDAO.presist("yyyyyy");'
+//        Thread.sleep(3000);
+//        System.out.println(userDAO.ttl("yyyyyy"));
+//        System.out.println("----------" + userDAO.get("yyyyyy"));
+//        Thread.sleep(3000);
+//        System.out.println(userDAO.ttl("yyyyyy"));
+//        System.out.println("----------" + userDAO.get("yyyyyy"));
+//        }
         //System.out.println(userDAO.keys("*"));
 //        String key = UUID.randomUUID().toString();
 //        System.out.println(userDAO.getSet(key, new User(UUID.randomUUID().toString(), 21, false)));

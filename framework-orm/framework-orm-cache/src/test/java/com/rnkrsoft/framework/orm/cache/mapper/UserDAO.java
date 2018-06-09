@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.cache.mapper;
 
+import com.rnkrsoft.framework.cache.client.CachedMap;
 import com.rnkrsoft.framework.orm.cache.*;
 
 /**
@@ -16,8 +17,8 @@ public interface UserDAO extends CacheMapper{
     @Get
     Long get1(String key);
 
-    @GetSet(expire = 6000)
-    void getSet(String key, User user);
+    @GetSet(expire = 5)
+    User getSet(String key, User user);
 
     @Expire
     void expire(String key, int second);
@@ -36,4 +37,8 @@ public interface UserDAO extends CacheMapper{
 
     @Keys
     java.util.Set<String> keys(String pattern);
+
+    @Type
+    Class type(String key);
+    CachedMap get();
 }

@@ -107,6 +107,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                     Ttl ttlAnnotation = method.getAnnotation(Ttl.class);
                     Presist presistAnnotation = method.getAnnotation(Presist.class);
                     Keys keysAnnotation = method.getAnnotation(Keys.class);
+                    Type typeAnnotation = method.getAnnotation(Type.class);
                     boolean annotation = false;
                     boolean match = false;
                     if (getAnnotation != null) {
@@ -282,6 +283,28 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                             throw ErrorContextFactory.instance()
                                     .message("{}.{}参数输入过多", mapperClassName, method.getName())
                                     .solution("修改为public {} {}(String pattern)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (typeAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Class.class) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型不为Class", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", Class.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length < 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
                                     .runtimeException();
                         }
                     }

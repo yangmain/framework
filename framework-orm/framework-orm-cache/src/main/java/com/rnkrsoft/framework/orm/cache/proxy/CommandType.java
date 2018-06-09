@@ -13,5 +13,6 @@ public enum CommandType {
     PRESIST,
     SET,
     TTL,
-    TYPE
+    TYPE,
+    CACHED_MAP
 }
