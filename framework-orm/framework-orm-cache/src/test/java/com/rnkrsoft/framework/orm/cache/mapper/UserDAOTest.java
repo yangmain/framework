@@ -24,7 +24,7 @@ public class UserDAOTest extends SpringTest {
 //            System.out.println( userDAO.incr("xxxxxxx"));
 //            System.out.println(userDAO.decr("xxxxxxx"));
 //            System.out.println(userDAO.get1("xxxxxxx"));
-            System.out.println(userDAO.getSet("yyyyyy", new User(UUID.randomUUID().toString(), 21, false)));
+            userDAO.getSet("yyyyyy", new User(UUID.randomUUID().toString(), 21, false));
 //            System.out.println(userDAO.get("yyyyyy"));
             userDAO.expire("yyyyyy", 2);
             System.out.println(userDAO.ttl("yyyyyy"));

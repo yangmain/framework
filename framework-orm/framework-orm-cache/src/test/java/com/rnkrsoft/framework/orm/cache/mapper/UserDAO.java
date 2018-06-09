@@ -17,7 +17,7 @@ public interface UserDAO extends CacheMapper{
     Long get1(String key);
 
     @GetSet(expire = 6000)
-    User getSet(String key, User user);
+    void getSet(String key, User user);
 
     @Expire
     void expire(String key, int second);

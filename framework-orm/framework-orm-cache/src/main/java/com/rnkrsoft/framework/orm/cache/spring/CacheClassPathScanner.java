@@ -1,8 +1,10 @@
 package com.rnkrsoft.framework.orm.cache.spring;
 
+import com.devops4j.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.cache.client.CacheClient;
-import com.rnkrsoft.framework.orm.cache.CacheMapper;
+import com.rnkrsoft.framework.orm.cache.*;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -16,12 +18,15 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Created by rnkrsoft.com on 2018/6/7.
  */
+@Slf4j
 public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
     CacheMapperFactoryBean cacheMapperFactoryBean;
     @Setter
@@ -89,10 +94,209 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
             if (logger.isDebugEnabled()) {
                 logger.debug("Creating CacheMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
-
+            String mapperClassName = definition.getBeanClassName();
+            try {
+                Class mapperClass = Class.forName(mapperClassName);
+                Method[] methods = mapperClass.getMethods();
+                for (Method method : methods) {
+                    Get getAnnotation = method.getAnnotation(Get.class);
+                    GetSet getSetAnnotation = method.getAnnotation(GetSet.class);
+                    Incr incrAnnotation = method.getAnnotation(Incr.class);
+                    Decr decrAnnotation = method.getAnnotation(Decr.class);
+                    Expire expireAnnotation = method.getAnnotation(Expire.class);
+                    Ttl ttlAnnotation = method.getAnnotation(Ttl.class);
+                    Presist presistAnnotation = method.getAnnotation(Presist.class);
+                    Keys keysAnnotation = method.getAnnotation(Keys.class);
+                    boolean annotation = false;
+                    boolean match = false;
+                    if (getAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() == Void.TYPE) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", "XxxBean", method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length == 0) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (getSetAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() == Void.TYPE) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key, {} val)", "XxxBean", method.getName(), "XxxBean")
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length < 2) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入不匹配", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key, {} val)", method.getReturnType().getSimpleName(), method.getName(), method.getReturnType().getSimpleName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 2) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 2) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key, {} val)", method.getReturnType().getSimpleName(), method.getName(), method.getReturnType().getSimpleName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (incrAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Long.class) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", Long.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length == 0) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (decrAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Long.class) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", Long.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length == 0) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (expireAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Void.TYPE) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key, int second)", Void.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length < 2) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key, int second)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 2) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 2) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key, int second)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (ttlAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Long.class) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", Long.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length == 0) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (presistAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Void.TYPE) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", Void.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length < 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (keysAnnotation != null) {
+                        annotation = true;
+                        if (!Arrays.asList(List.class, java.util.Set.class).contains(method.getReturnType())) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型不为List或Set", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String pattern)", List.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length < 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String pattern)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String pattern)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (annotation) {
+                        if (match) {
+                            log.info("{}.{} match CacheMapper", mapperClassName, method.getName());
+                        }
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             // the mapper interface is the original class of the bean
             // but, the actual class of the bean is OrmMapperFactoryBean
-            definition.getPropertyValues().add("cacheInterface", definition.getBeanClassName());
+            definition.getPropertyValues().add("cacheInterface", mapperClassName);
             definition.setBeanClass(this.cacheMapperFactoryBean.getClass());
             definition.getPropertyValues().add("cacheClient", this.cacheClient);
             if (logger.isDebugEnabled()) {
