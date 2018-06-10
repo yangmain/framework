@@ -9,7 +9,7 @@ import com.rnkrsoft.framework.toolkit.generator.entity.OrmEntity;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/4/26.
+ * Created by rnkrsoft.com on 2018/4/26.
  */
 public class JdkDaoGeneratorTest {
 

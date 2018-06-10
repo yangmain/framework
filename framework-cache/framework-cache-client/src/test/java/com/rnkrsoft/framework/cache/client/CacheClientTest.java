@@ -7,7 +7,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 /**
- * Created by woate on 2018/5/18.
+ * Created by rnkrsoft.com on 2018/5/18.
  */
 public class CacheClientTest {
 

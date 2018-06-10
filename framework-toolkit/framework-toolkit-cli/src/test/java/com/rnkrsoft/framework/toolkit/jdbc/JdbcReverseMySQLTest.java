@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * Created by woate on 2018/4/27.
+ * Created by rnkrsoft.com on 2018/4/27.
  */
 public class JdbcReverseMySQLTest {
 

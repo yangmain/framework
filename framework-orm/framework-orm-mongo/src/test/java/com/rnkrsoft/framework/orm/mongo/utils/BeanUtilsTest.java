@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.Map;
 
 /**
- * Created by woate on 2018/6/10.
+ * Created by rnkrsoft.com on 2018/6/10.
  */
 public class BeanUtilsTest {
     @ToString

@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.test.junit.listener.createtable;
 
 /**
- * Created by woate on 2018/4/30.
+ * Created by rnkrsoft.com on 2018/4/30.
  * @CreateTable注解作用范围
  */
 public enum CreateTableScope {

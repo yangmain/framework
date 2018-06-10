@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.messagequeue.annotation.SelectorType;
 import com.rnkrsoft.framework.messagequeue.annotation.ListenerDefinition;
 
 /**
- * Created by woate on 2018/5/21.
+ * Created by rnkrsoft.com on 2018/5/21.
  */
 @ListenerDefinition(selectors = {
         @Selector(type = SelectorType.fusing, routingKey = "test")

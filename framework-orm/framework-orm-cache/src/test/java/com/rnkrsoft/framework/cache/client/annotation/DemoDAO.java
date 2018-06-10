@@ -3,7 +3,7 @@ package com.rnkrsoft.framework.cache.client.annotation;
 import com.rnkrsoft.framework.orm.cache.*;
 
 /**
- * Created by woate on 2018/6/2.
+ * Created by rnkrsoft.com on 2018/6/2.
  */
 @Cache(expire = 6000, index = 1)
 public interface DemoDAO extends CacheMapper {

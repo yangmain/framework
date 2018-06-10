@@ -3,7 +3,7 @@ package com.rnkrsoft.framework.orm.mongo.delete;
 import java.util.Map;
 
 /**
- * Created by woate on 2018/6/3.
+ * Created by rnkrsoft.com on 2018/6/3.
  */
 public interface DeleteMongoMapper<Entity> {
     /**

@@ -7,7 +7,7 @@ import com.rnkrsoft.framework.orm.mongo.proxy.MongoProxyFactory;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/6/3.
+ * Created by rnkrsoft.com on 2018/6/3.
  */
 public class OperateLogDAOTest {
 

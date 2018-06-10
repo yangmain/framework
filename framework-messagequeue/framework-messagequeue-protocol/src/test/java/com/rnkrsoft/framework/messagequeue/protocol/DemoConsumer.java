@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by woate on 2018/5/21.
+ * Created by rnkrsoft.com on 2018/5/21.
  */
 public class DemoConsumer implements MessageQueueConsumer{
     final List<MessageQueueListener> listeners = new ArrayList();

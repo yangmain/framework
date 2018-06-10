@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Created by woate on 2018/4/26.
+ * Created by rnkrsoft.com on 2018/4/26.
  */
 @Service
 public class UserServiceImpl implements UserService{

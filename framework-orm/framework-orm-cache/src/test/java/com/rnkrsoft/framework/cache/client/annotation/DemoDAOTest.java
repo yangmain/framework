@@ -7,7 +7,7 @@ import com.rnkrsoft.framework.orm.cache.proxy.CacheProxyFactory;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/6/2.
+ * Created by rnkrsoft.com on 2018/6/2.
  */
 public class DemoDAOTest {
     @Test

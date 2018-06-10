@@ -9,7 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.UUID;
 
 /**
- * Created by woate on 2018/6/8.
+ * Created by rnkrsoft.com on 2018/6/8.
  */
 @ContextConfiguration(locations = "classpath*:testContext-cache.xml")
 public class UserDAOTest extends SpringTest {

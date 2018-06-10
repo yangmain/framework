@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Created by woate on 2018/4/30.
+ * Created by rnkrsoft.com on 2018/4/30.
  */
 @Data
 @Table(name = "USER_INF", prefix = "TB", suffix = "INF")

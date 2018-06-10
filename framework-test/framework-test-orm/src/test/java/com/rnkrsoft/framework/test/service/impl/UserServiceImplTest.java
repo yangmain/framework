@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * Created by woate on 2018/4/26.
+ * Created by rnkrsoft.com on 2018/4/26.
  */
 @ContextConfiguration("classpath*:testContext-orm.xml")
 @DataSource(DataSourceType.H2)

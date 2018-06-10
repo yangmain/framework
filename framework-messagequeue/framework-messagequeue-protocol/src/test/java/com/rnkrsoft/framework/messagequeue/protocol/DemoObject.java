@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.messagequeue.protocol;
 
 /**
- * Created by woate on 2018/5/21.
+ * Created by rnkrsoft.com on 2018/5/21.
  */
 public class DemoObject {
     String msg;

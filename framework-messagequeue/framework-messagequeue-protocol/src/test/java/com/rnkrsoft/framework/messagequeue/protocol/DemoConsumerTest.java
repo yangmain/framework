@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Created by woate on 2018/5/21.
+ * Created by rnkrsoft.com on 2018/5/21.
  */
 public class DemoConsumerTest {
 

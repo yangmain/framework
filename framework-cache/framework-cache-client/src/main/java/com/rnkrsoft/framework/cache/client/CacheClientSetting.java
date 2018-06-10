@@ -8,7 +8,7 @@ import redis.clients.jedis.Protocol;
 import java.util.*;
 
 /**
- * Created by woate on 2018/5/16.
+ * Created by rnkrsoft.com on 2018/5/16.
  */
 
 public class CacheClientSetting {
