@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.cache.spring;
 
-import com.devops4j.reflection4j.resource.ClassScanner;
+import com.rnkrsoft.reflection4j.resource.ClassScanner;
 import com.rnkrsoft.framework.cache.client.CacheClient;
 import com.rnkrsoft.framework.cache.client.CacheClientSetting;
 import com.rnkrsoft.framework.cache.client.RedisType;
@@ -44,7 +44,7 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
         CacheClassPathScanner scanner = new CacheClassPathScanner(registry);
         scanner.setCacheInterface(this.cacheInterface);
         this.cacheClient = new CacheClient();
-        this.cacheClient.init(CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.STANDALONE).build());
+        this.cacheClient.init(CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.AUTO).build());
         scanner.setCacheClient(this.cacheClient);
         scanner.setCacheMapperFactoryBean(this.cacheMapperFactoryBean);
         scanner.registerFilters();

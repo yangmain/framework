@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.mybatis.sequence;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.sequence.DataSourceAware;
 import com.rnkrsoft.framework.sequence.SequenceService;
 import lombok.Setter;

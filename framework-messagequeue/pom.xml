@@ -21,4 +21,10 @@
         <module>framework-messagequeue-kafka</module>
         <module>framework-messagequeue-boot-starter</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
+        </dependency>
+    </dependencies>
 </project>

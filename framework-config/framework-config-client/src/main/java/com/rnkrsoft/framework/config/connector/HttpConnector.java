@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.config.connector;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.message.MessageFormatter;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.message.MessageFormatter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rnkrsoft.framework.config.Debug;

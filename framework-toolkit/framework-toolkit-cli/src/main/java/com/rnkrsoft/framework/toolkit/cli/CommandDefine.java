@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.toolkit.cli;
 
-import com.devops4j.message.MessageFormatter;
+import com.rnkrsoft.message.MessageFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

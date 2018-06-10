@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.test.sequence;
 
-import com.devops4j.utils.DateUtils;
+import com.rnkrsoft.utils.DateUtils;
 import com.rnkrsoft.framework.orm.NameMode;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.sequence.SequenceService;

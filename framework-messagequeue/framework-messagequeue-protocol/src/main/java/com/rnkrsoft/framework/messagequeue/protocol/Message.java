@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.messagequeue.protocol;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;

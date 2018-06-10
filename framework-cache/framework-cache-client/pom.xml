@@ -11,6 +11,10 @@
     <description>framework cache client</description>
     <dependencies>
         <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-cache-redis</artifactId>
             <version>1.0.0</version>

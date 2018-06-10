@@ -1,11 +1,11 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.reflection4j.GlobalSystemMetadata;
-import com.devops4j.reflection4j.Invoker;
-import com.devops4j.reflection4j.MetaClass;
-import com.devops4j.reflection4j.Reflector;
-import com.devops4j.reflection4j.invoker.GetFieldInvoker;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
+import com.rnkrsoft.reflection4j.Invoker;
+import com.rnkrsoft.reflection4j.MetaClass;
+import com.rnkrsoft.reflection4j.Reflector;
+import com.rnkrsoft.reflection4j.invoker.GetFieldInvoker;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;

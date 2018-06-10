@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.messagequeue.consumer.listener;
 
-import com.devops4j.utils.DateStyle;
-import com.devops4j.utils.DateUtils;
+import com.rnkrsoft.time.DateStyle;
+import com.rnkrsoft.utils.DateUtils;
 import com.rnkrsoft.framework.messagequeue.annotation.ListenerDefinition;
 import com.rnkrsoft.framework.messagequeue.annotation.Selector;
 import com.rnkrsoft.framework.messagequeue.annotation.SelectorType;

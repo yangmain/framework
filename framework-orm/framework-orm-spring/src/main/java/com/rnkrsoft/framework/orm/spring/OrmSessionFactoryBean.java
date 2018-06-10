@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.spring;
 
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.mybatis.plugins.OrderByInterceptor;

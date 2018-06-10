@@ -11,7 +11,7 @@
     <description>This is the framework4j-orm-api</description>
     <dependencies>
         <dependency>
-            <groupId>com.devops4j.skeleton4j</groupId>
+            <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-api</artifactId>
         </dependency>
         <dependency>
@@ -26,9 +26,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.devops4j.reflection4j</groupId>
+            <groupId>com.rnkrsoft.groundwork</groupId>
+            <artifactId>groundwork</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.reflection4j</groupId>
             <artifactId>reflection4j</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
@@ -36,9 +39,8 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.devops4j.io</groupId>
-            <artifactId>devops4j-io</artifactId>
-            <version>0.0.1-alpha</version>
+            <groupId>com.rnkrsoft.io</groupId>
+            <artifactId>io</artifactId>
         </dependency>
     </dependencies>
 </project>

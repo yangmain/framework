@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.toolkit.generator;
 
-import com.devops4j.io.buffer.ByteBuf;
+import com.rnkrsoft.io.buffer.ByteBuf;
 
 /**
  * Created by rnkrsoft.com on 2018/4/23.

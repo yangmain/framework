@@ -11,9 +11,8 @@
     <description>framework orm cache</description>
     <dependencies>
         <dependency>
-            <groupId>com.devops4j.reflection4j</groupId>
+            <groupId>com.rnkrsoft.reflection4j</groupId>
             <artifactId>reflection4j</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>

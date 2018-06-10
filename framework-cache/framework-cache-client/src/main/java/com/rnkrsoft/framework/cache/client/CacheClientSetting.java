@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.cache.client;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Data;
 import lombok.Getter;
 import redis.clients.jedis.Protocol;

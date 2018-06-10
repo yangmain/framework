@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.extractor;
 
-import com.devops4j.interfaces.EnumStringCode;
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.interfaces.EnumStringCode;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.*;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;

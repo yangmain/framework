@@ -1,10 +1,10 @@
 package com.rnkrsoft.framework.orm.mybatis.plugins;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.reflection4j.GlobalSystemMetadata;
-import com.devops4j.reflection4j.Invoker;
-import com.devops4j.reflection4j.MetaObject;
-import com.devops4j.reflection4j.Reflector;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
+import com.rnkrsoft.reflection4j.Invoker;
+import com.rnkrsoft.reflection4j.MetaObject;
+import com.rnkrsoft.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.OrderBy;
 import com.rnkrsoft.framework.orm.OrderByColumn;
 import com.rnkrsoft.framework.orm.Pagination;

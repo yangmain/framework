@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.toolkit.generator.jdk;
 
-import com.devops4j.io.buffer.ByteBuf;
-import com.devops4j.message.MessageFormatter;
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.message.MessageFormatter;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.toolkit.generator.GenerateContext;

@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.orm.extractor;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.reflection4j.GlobalSystemMetadata;
-import com.devops4j.reflection4j.Reflector;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
+import com.rnkrsoft.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.PrimaryKey;
 import com.rnkrsoft.framework.orm.Table;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;

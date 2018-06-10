@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.cache.proxy;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.cache.client.CacheClient;
 import com.rnkrsoft.framework.orm.cache.Cache;
 import com.rnkrsoft.framework.orm.cache.CacheMapper;

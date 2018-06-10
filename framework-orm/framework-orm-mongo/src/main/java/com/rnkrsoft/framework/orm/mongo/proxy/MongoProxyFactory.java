@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.proxy;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.mongodb.MongoClient;
 import com.rnkrsoft.framework.orm.mongo.MongoMapper;
 

@@ -11,12 +11,16 @@
     <description>framework config protocol</description>
     <dependencies>
         <dependency>
-            <groupId>com.devops4j.groundwork</groupId>
+            <groupId>com.rnkrsoft.groundwork</groupId>
             <artifactId>groundwork</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.devops4j.skeleton4j</groupId>
+            <groupId>com.rnkrsoft.skeleton4j</groupId>
             <artifactId>skeleton4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

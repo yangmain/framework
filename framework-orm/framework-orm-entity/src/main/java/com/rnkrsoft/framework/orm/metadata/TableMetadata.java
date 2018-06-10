@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.metadata;
 
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.WordMode;
 import lombok.*;
 

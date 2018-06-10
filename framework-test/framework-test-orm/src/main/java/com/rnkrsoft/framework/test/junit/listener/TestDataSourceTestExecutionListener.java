@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.test.junit.listener;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.test.DataSource;
 import com.rnkrsoft.framework.test.datasource.DataSourceLookup;
 import lombok.extern.slf4j.Slf4j;

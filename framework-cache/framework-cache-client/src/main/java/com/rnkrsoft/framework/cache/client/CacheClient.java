@@ -1,16 +1,21 @@
 package com.rnkrsoft.framework.cache.client;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.cache.client.redis.ClusterMap;
 import com.rnkrsoft.framework.cache.client.redis.SentinelMap;
 import com.rnkrsoft.framework.cache.client.redis.StandaloneMap;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import redis.clients.jedis.*;
+import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisSentinelPool;
 
-import javax.swing.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -40,41 +45,46 @@ public class CacheClient {
         this.poolConfig.setJmxNamePrefix("jedis-pool");
         this.poolConfig.setJmxEnabled(true);
         this.setting = setting;
-        if (setting.redisType == RedisType.AUTO) {
-            try {
-                log.info("try to connect standalone redis instance...");
-                JedisPool instance = initStandalone(setting);
-                this.jedisPool = instance;
-                this.setting.redisType = RedisType.STANDALONE;
-                return this;
-            } catch (Exception e) {
-                log.warn("try to connect standalone redis instance fail");
+        try {
+            if (setting.redisType == RedisType.AUTO) {
+                try {
+                    log.info("try to connect standalone redis instance...");
+                    JedisPool instance = initStandalone(setting);
+                    this.jedisPool = instance;
+                    this.setting.redisType = RedisType.STANDALONE;
+                    return this;
+                } catch (Exception e) {
+                    log.warn("try to connect standalone redis instance fail");
+                }
+                try {
+                    log.info("try to connect sentinel redis instance...");
+                    JedisSentinelPool instance = initSentinel(setting);
+                    this.sentinelPool = instance;
+                    this.setting.redisType = RedisType.SENTINEL;
+                    return this;
+                } catch (Exception e) {
+                    log.warn("try to connect sentinel redis instance fail");
+                }
+                try {
+                    log.info("try to connect cluster redis instance...");
+                    JedisCluster instance = initCluster(setting);
+                    this.jedisCluster = instance;
+                    this.setting.redisType = RedisType.CLUSTER;
+                    return this;
+                } catch (Exception e) {
+                    log.warn("try to connect cluster redis instance fail");
+                }
+
+                throw ErrorContextFactory.instance().message("auto detect redis fail").solution("please check redis instance type or instance is online").runtimeException();
+            } else if (setting.redisType == RedisType.STANDALONE) {
+                this.jedisPool = initStandalone(setting);
+            } else if (setting.redisType == RedisType.SENTINEL) {
+                this.sentinelPool = initSentinel(setting);
+            } else if (setting.redisType == RedisType.CLUSTER) {
+                this.jedisCluster = initCluster(setting);
             }
-            try {
-                log.info("try to connect sentinel redis instance...");
-                JedisSentinelPool instance = initSentinel(setting);
-                this.sentinelPool = instance;
-                this.setting.redisType = RedisType.SENTINEL;
-                return this;
-            } catch (Exception e) {
-                log.warn("try to connect sentinel redis instance fail");
-            }
-            try {
-                log.info("try to connect cluster redis instance...");
-                JedisCluster instance = initCluster(setting);
-                this.jedisCluster = instance;
-                this.setting.redisType = RedisType.CLUSTER;
-                return this;
-            } catch (Exception e) {
-                log.warn("try to connect cluster redis instance fail");
-            }
-            throw ErrorContextFactory.instance().message("auto detect redis fail").solution("please check redis instance type or instance is online").runtimeException();
-        } else if (setting.redisType == RedisType.STANDALONE) {
-            this.jedisPool = initStandalone(setting);
-        } else if (setting.redisType == RedisType.SENTINEL) {
-            this.sentinelPool = initSentinel(setting);
-        } else if (setting.redisType == RedisType.CLUSTER) {
-            this.jedisCluster = initCluster(setting);
+        } finally {
+            log.info("cacheClient use {}", this.setting.redisType);
         }
         return this;
     }
@@ -174,7 +184,7 @@ public class CacheClient {
             if (jedisPool != null && !jedisPool.isClosed()) {
                 jedisPool.close();
             }
-        }else if (setting.redisType == RedisType.SENTINEL) {
+        } else if (setting.redisType == RedisType.SENTINEL) {
             if (sentinelPool != null && !sentinelPool.isClosed()) {
                 sentinelPool.close();
             }

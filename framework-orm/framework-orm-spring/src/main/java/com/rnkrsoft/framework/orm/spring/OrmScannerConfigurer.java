@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.orm.spring;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.message.MessageFormatter;
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.message.MessageFormatter;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.jdbc.JdbcInterface;

@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.sequence.myisam;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.sequence.DataSourceAware;
 import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SpringContextHelper;

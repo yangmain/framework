@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.orm.untils;
 
-import com.devops4j.io.buffer.ByteBuf;
-import com.devops4j.reflection4j.resource.ClassScanner;
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.reflection4j.resource.ClassScanner;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.Table;
 import com.rnkrsoft.framework.orm.WordMode;

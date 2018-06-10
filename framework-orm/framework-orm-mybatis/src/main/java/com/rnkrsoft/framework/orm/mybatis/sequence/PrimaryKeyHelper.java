@@ -1,13 +1,13 @@
 package com.rnkrsoft.framework.orm.mybatis.sequence;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.message.MessageFormatter;
-import com.devops4j.reflection4j.GlobalSystemMetadata;
-import com.devops4j.reflection4j.Invoker;
-import com.devops4j.reflection4j.MetaClass;
-import com.devops4j.utils.DateStyle;
-import com.devops4j.utils.DateUtils;
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.message.MessageFormatter;
+import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
+import com.rnkrsoft.reflection4j.Invoker;
+import com.rnkrsoft.reflection4j.MetaClass;
+import com.rnkrsoft.time.DateStyle;
+import com.rnkrsoft.utils.DateUtils;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyFeatureConstant;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.expression.Expression;

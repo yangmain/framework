@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.config.v1;
 
-import com.devops4j.interfaces.EnumStringCode;
-import com.devops4j.message.MessageFormatter;
+import com.rnkrsoft.interfaces.EnumStringCode;
+import com.rnkrsoft.message.MessageFormatter;
 
 /**
  * Created by liyue on 2017/2/8.

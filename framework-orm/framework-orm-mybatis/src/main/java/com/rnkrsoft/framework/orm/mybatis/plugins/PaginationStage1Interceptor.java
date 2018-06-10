@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.DatabaseType;
 import com.rnkrsoft.framework.orm.Pagination;
 import com.rnkrsoft.framework.orm.WordMode;

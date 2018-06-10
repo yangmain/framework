@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.config.spring;
 
-import com.devops4j.io.buffer.ByteBuf;
-import com.devops4j.message.MessageFormatter;
+import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.message.MessageFormatter;
 import com.rnkrsoft.framework.config.annotation.DynamicFile;
 import com.rnkrsoft.framework.config.annotation.DynamicParam;
 import com.rnkrsoft.framework.config.client.ConfigClient;

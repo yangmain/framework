@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.messagequeue;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueConsumer;
 
 import java.util.Iterator;

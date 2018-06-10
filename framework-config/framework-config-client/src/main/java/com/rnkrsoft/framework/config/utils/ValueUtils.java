@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.config.utils;
 
-import com.devops4j.utils.DateUtils;
+import com.rnkrsoft.utils.DateUtils;
 
 import java.math.BigDecimal;
 

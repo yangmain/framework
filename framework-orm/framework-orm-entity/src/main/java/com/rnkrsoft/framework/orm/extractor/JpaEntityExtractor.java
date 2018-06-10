@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.extractor;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.Ignore;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;

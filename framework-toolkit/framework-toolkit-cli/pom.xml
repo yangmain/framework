@@ -29,13 +29,12 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.devops4j.groundwork</groupId>
+            <groupId>com.rnkrsoft.groundwork</groupId>
             <artifactId>groundwork</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.devops4j.io</groupId>
-            <artifactId>devops4j-io</artifactId>
-            <version>0.0.1-alpha</version>
+            <groupId>com.rnkrsoft.io</groupId>
+            <artifactId>io</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>

@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm;
 
-import com.devops4j.interfaces.EnumStringCode;
+import com.rnkrsoft.interfaces.EnumStringCode;
 
 /**
  * Created by rnkrsoft.com on 2018/6/3.

@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.config.v1;
 
-import com.devops4j.interfaces.EnumStringCode;
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.interfaces.EnumStringCode;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 
 /**
  * Created by rnkrsoft.com on 2018/5/7.

@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.toolkit.generator.jdk;
 
-import com.devops4j.io.buffer.ByteBuf;
+import com.rnkrsoft.io.buffer.ByteBuf;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.toolkit.generator.GenerateContext;

@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.test.junit.listener;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.utils.StringUtils;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.WordMode;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;

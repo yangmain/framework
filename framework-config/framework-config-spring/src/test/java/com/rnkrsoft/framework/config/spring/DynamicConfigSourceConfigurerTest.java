@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.config.spring;
 
-import com.devops4j.io.buffer.ByteBuf;
+import com.rnkrsoft.io.buffer.ByteBuf;
 import com.rnkrsoft.framework.config.spring.aspect.DynamicConfigAspectJ;
 import com.rnkrsoft.framework.config.spring.config.DemoConfig;
 import org.junit.Test;

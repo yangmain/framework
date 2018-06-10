@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.cache.serialize;
 
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 
 /**
  * Created by rnkrsoft.com on 2017/5/17.

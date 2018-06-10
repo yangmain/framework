@@ -1,8 +1,5 @@
 package com.rnkrsoft.framework.config.client;
 
-import com.devops4j.logtrace4j.ErrorContextFactory;
-import com.devops4j.message.MessageFormatter;
-import com.devops4j.utils.DynamicFile;
 import com.rnkrsoft.framework.config.connector.Connector;
 import com.rnkrsoft.framework.config.connector.HttpConnector;
 import com.rnkrsoft.framework.config.security.AesUtils;
@@ -11,6 +8,10 @@ import com.rnkrsoft.framework.config.utils.Http;
 import com.rnkrsoft.framework.config.utils.PropertiesUtils;
 import com.rnkrsoft.framework.config.utils.ValueUtils;
 import com.rnkrsoft.framework.config.v1.*;
+import com.rnkrsoft.io.file.DynamicFile;
+import com.rnkrsoft.io.file.FileTransaction;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import com.rnkrsoft.message.MessageFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -294,10 +295,10 @@ public class ConfigClient {
         if (!path0.startsWith("/")) {
             path0 = "/" + path0;
         }
-        DynamicFile file = new DynamicFile(new File(setting.workHome + "/files" + path0), fileObject.getFileName());
+        DynamicFile file = DynamicFile.file(new File(setting.workHome + "/files" + path0), fileObject.getFileName());
         final String fileKey = FileSystemUtils.formatPath(path0 + File.separator + fileObject.getFileName());
         if (fileObject.getFileFingerprint().equals(oldFileFingerprint) && file.exists()) {
-            byte[] oldData = FileUtils.readFileToByteArray(file.getRealFile());
+            byte[] oldData = FileUtils.readFileToByteArray(file.getFile().getFile());
             String oldFileFingerprint1 = DigestUtils.md5Hex(oldData);
             if (oldFileFingerprint1.equals(fileObject.getFileFingerprint())) {
                 return;
@@ -305,8 +306,9 @@ public class ConfigClient {
                 //指纹不一样，可能存在人为修改
             }
         }
+        FileTransaction transaction = file.begin();
         try {
-            File tempFile = file.begin();
+            File tempFile = transaction.getFile();
             //实现HTTP的下载方式
             String downloadUrl = fileObject.getTransferType().getCode() + "://" + fileObject.getHost() + ":" + fileObject.getPort()
                     + "/file/download?"
@@ -347,10 +349,10 @@ public class ConfigClient {
                 if (setting.printLog) {
                     log.info("commit file '{}/{}' fingerprint:{} is ok!", fileObject.getFilePath(), fileObject.getFileName(), fileFingerprint);
                 }
-                file.commit();
+                transaction.commit();
                 //如果存在分发路径,则使用线程池执行，避免主线程阻塞
                 if (StringUtils.isNotBlank(fileObject.getDistPath())) {
-                    final File newFile = file.getRealFile();
+                    final File newFile = transaction.getFile();
                     final String copyFilePath = fileObject.getDistPath();
                     final String filePath = fileKey;
                     final boolean printLog0 = setting.printLog;
@@ -379,15 +381,16 @@ public class ConfigClient {
                 if (setting.printLog) {
                     log.error("error file '{}/{}' local fingerprint:{}, remote fingerprint:{}!", fileObject.getFilePath(), fileObject.getFileName(), fileFingerprint, fileObject.getFileFingerprint());
                 }
-                file.rollback();
+                transaction.rollback();
             }
         } catch (IOException e) {
             log.error(MessageFormatter.format("rollback file '{}/{}' , happens error!", fileObject.getFilePath(), fileObject.getFileName()), e);
-            file.rollback();
+            transaction.rollback();
         }
     }
+
     public InputStream openFile(String fileName) throws IOException {
-        if (fileName == null){
+        if (fileName == null) {
             throw ErrorContextFactory.instance().message("fileName is ").runtimeException();
         }
         String fileName0 = FileSystemUtils.formatPath(fileName);
@@ -396,6 +399,7 @@ public class ConfigClient {
         fileName = fileName0.substring(lastDotIdx + 1);
         return openFile(filePath, fileName);
     }
+
     /**
      * 打开一个文件
      *
@@ -413,7 +417,7 @@ public class ConfigClient {
             throw new FileNotFoundException(MessageFormatter.format("'{}' not found !", filePath + "/" + fileName));
         }
         //从动态文件读取缓存文件
-        DynamicFile file = new DynamicFile(new File(setting.workHome + "/files" + filePath), fileName);
+        DynamicFile file = DynamicFile.file(new File(setting.workHome + "/files" + filePath), fileName);
         //懒下载
         if (newFileObject.isLazyDownload()) {
             //下载
@@ -432,14 +436,15 @@ public class ConfigClient {
         if (!file.exists()) {
             throw new FileNotFoundException(MessageFormatter.format("'{}' not found!", filePath + "/" + fileName));
         }
-        return file.read();
+        return file.getFile().stream();
     }
 
     /**
      * 获取一个参数
-     * @param name 参数名
+     *
+     * @param name         参数名
      * @param defaultValue 默认值
-     * @param type 数据类型
+     * @param type         数据类型
      * @param <T>
      * @return 数据
      */
