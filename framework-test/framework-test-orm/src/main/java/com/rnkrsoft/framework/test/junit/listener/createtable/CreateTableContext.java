@@ -1,15 +1,13 @@
 package com.rnkrsoft.framework.test.junit.listener.createtable;
 
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import lombok.Data;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by rnkrsoft.com on 2018/4/30.

@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.test.config;
 
-import com.rnkrsoft.framework.orm.DatabaseType;
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.DatabaseType;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import lombok.Getter;

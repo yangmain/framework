@@ -1,20 +1,16 @@
 package com.test.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 import java.sql.Timestamp;
 
-import com.rnkrsoft.framework.orm.Table;
-import com.rnkrsoft.framework.orm.Comment;
+import com.rnkrsoft.framework.orm.jdbc.Table;
+import com.rnkrsoft.framework.orm.jdbc.Comment;
 import com.rnkrsoft.framework.orm.PrimaryKey;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
-import com.rnkrsoft.framework.orm.StringColumn;
-import com.rnkrsoft.framework.orm.NumberColumn;
-import com.rnkrsoft.framework.orm.DateColumn;
-import com.rnkrsoft.framework.orm.StringType;
-import com.rnkrsoft.framework.orm.NumberType;
-import com.rnkrsoft.framework.orm.DateType;
+import com.rnkrsoft.framework.orm.jdbc.StringColumn;
+import com.rnkrsoft.framework.orm.jdbc.DateColumn;
+import com.rnkrsoft.framework.orm.jdbc.StringType;
+import com.rnkrsoft.framework.orm.jdbc.DateType;
 
 import lombok.Data;
 import lombok.Builder;

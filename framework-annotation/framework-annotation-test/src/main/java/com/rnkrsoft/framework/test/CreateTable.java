@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.test;
 
 
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

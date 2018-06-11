@@ -8,8 +8,6 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.NoRouteToHostException;
-import java.net.SocketException;
 import java.sql.*;
 import java.util.*;
 

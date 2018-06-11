@@ -1,17 +1,17 @@
-package com.rnkrsoft.framework.orm;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+package com.rnkrsoft.framework.orm.jdbc;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Created by rnkrsoft.com on 2017/1/4.
- * 字符串类型的数据定义
+ * 日期字段类型
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface StringColumn {
+public @interface DateColumn {
     /**
      * 字段名称
      *
@@ -29,14 +29,6 @@ public @interface StringColumn {
     boolean nullable() default true;
 
     /**
-     * 字段长度
-     * 超过255的VARCHAR，在MySQL数据库自动使用TEXT
-     * @return 字段长度
-     * @since 1.0.0
-     */
-    int length() default 255;
-
-    /**
      * 默认值
      * @return 默认值
      * @since 1.0.0
@@ -49,12 +41,5 @@ public @interface StringColumn {
      * @return 数据类型
      * @since 1.0.0
      */
-    StringType type() default StringType.AUTO;
-
-    /**
-     * 字段枚举值
-     * @return
-     */
-    Class enumClass() default Object.class;
+    DateType type() default DateType.AUTO;
 }
-

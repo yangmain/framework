@@ -1,19 +1,17 @@
 package com.rnkrsoft.framework.orm.extractor;
 
-import com.rnkrsoft.interfaces.EnumStringCode;
+import com.rnkrsoft.framework.orm.PrimaryKey;
+import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.jdbc.*;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.*;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.orm.mysql.DataEngine;
-import com.rnkrsoft.framework.orm.mysql.DataEngineType;
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngine;
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
 
 /**
  * Created by rnkrsoft.com on 2017/1/7.

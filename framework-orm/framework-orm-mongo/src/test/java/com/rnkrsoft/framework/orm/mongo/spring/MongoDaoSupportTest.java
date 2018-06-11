@@ -2,17 +2,20 @@ package com.rnkrsoft.framework.orm.mongo.spring;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoDatabase;
+import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.jdbc.NumberColumn;
 import com.rnkrsoft.framework.orm.PrimaryKey;
-import com.rnkrsoft.framework.orm.Table;
+import com.rnkrsoft.framework.orm.jdbc.StringColumn;
+import com.rnkrsoft.framework.orm.jdbc.Table;
+import com.rnkrsoft.framework.orm.mongo.MongoCollection;
+import com.rnkrsoft.framework.orm.mongo.MongoColumn;
 import com.rnkrsoft.framework.test.SpringTest;
 import lombok.Data;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.Assert.*;
+import java.util.UUID;
 
 /**
  * Created by liucheng on 2018/6/5.
@@ -20,34 +23,40 @@ import static org.junit.Assert.*;
 @ContextConfiguration("classpath*:testContext-mongo.xml")
 public class MongoDaoSupportTest extends SpringTest {
 
+    @Data
+    @MongoCollection(name = "table1")
+    static class Bean {
+        @PrimaryKey(strategy = PrimaryKeyStrategy.UUID)
+        @MongoColumn(name = "_id")
+        String _id;
 
-    @Test
-    public void testDeleteByPrimaryKey() throws Exception {
-        MongoClient mongoClient = new MongoClient(new ServerAddress("192.168.0.111", 3017), MongoClientOptions.builder().build());
-        Bean bean = new Bean();
-        bean.id = "";
-        new MongoDaoSupport(mongoClient.getDatabase("xxxx"), Bean.class){}.deleteByPrimaryKey(bean);
+        @MongoColumn(name = "name")
+        String name;
+
+        @MongoColumn(name = "age")
+        Integer age;
+
+        public Bean(String id, String name, Integer age) {
+            this._id = id;
+            this.name = name;
+            this.age = age;
+        }
     }
 
     @Data
-    @Table(name = "tb_bean_info")
-    static class Bean{
-        @PrimaryKey()
-        String id;
+    static class Bean1 {
+        @MongoColumn(name = "name")
+        String name;
+
+        @MongoColumn(name = "age")
+        Integer age;
     }
+
     @Test
     public void testInsert() throws Exception {
         MongoClient mongoClient = new MongoClient(new ServerAddress("192.168.0.111", 3017), MongoClientOptions.builder().build());
-        new MongoDaoSupport(mongoClient.getDatabase("xxxx"), Bean.class){}.insert(new Bean());
+//        new MongoDaoSupport(mongoClient.getDatabase("xxxx"), Bean.class) {
+//        }.insert(new Bean(null, "this is a test", 21));
 
-    }
-
-    @Test
-    public void testSelect() throws Exception {
-        MongoClient mongoClient = new MongoClient(new ServerAddress("192.168.0.111", 3017), MongoClientOptions.builder().build());
-        Bean bean1 = new Bean();
-//        bean1.id = "1234";
-//        new MongoDaoSupport(mongoClient.getDatabase("xxxx"), Bean.class){}.select(bean1);
-//        mongoClient.getDatabase("xxxx").getCollection("tb_bean_info").find(Filters)
     }
 }

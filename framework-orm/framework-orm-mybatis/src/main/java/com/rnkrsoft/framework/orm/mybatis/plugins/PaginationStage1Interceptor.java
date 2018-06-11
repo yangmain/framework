@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.DatabaseType;
+import com.rnkrsoft.framework.orm.jdbc.DatabaseType;
 import com.rnkrsoft.framework.orm.Pagination;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;

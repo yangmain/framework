@@ -55,13 +55,13 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
             if (args.length != 1) {
 
             }
-            mongoDaoSupport.insert(args[0]);
+//            mongoDaoSupport.insert(new Object[]{args[0]});
             return null;
         } else if (methodName.equals(Constants.INSERT_SELECTIVE)) {
             if (args.length != 1) {
 
             }
-            mongoDaoSupport.insertSelective(args[0]);
+//            mongoDaoSupport.insertSelective(args[0]);
             return null;
         } else if (methodName.equals(Constants.DELETE_AND)) {
             if (args.length != 1) {

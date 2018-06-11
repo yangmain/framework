@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.mybatis.mapper.builder;
 
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;

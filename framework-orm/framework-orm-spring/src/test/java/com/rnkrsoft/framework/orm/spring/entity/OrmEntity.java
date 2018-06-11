@@ -1,6 +1,8 @@
 package com.rnkrsoft.framework.orm.spring.entity;
 
-import com.rnkrsoft.framework.orm.*;
+import com.rnkrsoft.framework.orm.PrimaryKey;
+import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.jdbc.*;
 import lombok.Data;
 
 import java.io.Serializable;

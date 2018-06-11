@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm.mysql;
+package com.rnkrsoft.framework.orm.jdbc.mysql;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

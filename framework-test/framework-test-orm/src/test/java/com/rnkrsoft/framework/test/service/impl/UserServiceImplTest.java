@@ -1,9 +1,9 @@
 package com.rnkrsoft.framework.test.service.impl;
 
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import com.rnkrsoft.framework.orm.Order;
 import com.rnkrsoft.framework.orm.OrderByColumn;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.test.CreateTable;
 import com.rnkrsoft.framework.test.DataSource;
 import com.rnkrsoft.framework.test.DataSourceTest;

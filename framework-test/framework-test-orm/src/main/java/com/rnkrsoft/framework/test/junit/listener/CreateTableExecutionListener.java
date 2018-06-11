@@ -2,14 +2,14 @@ package com.rnkrsoft.framework.test.junit.listener;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.utils.StringUtils;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
 import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer;
 import com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean;
 import com.rnkrsoft.framework.test.CreateTable;
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import com.rnkrsoft.framework.test.config.TestOrmConfig;
 import com.rnkrsoft.framework.test.junit.listener.createtable.CreateTableContext;
 import com.rnkrsoft.framework.test.junit.listener.createtable.CreateTableHandler;
@@ -23,9 +23,6 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by rnkrsoft.com on 2018/4/2.

@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.test.junit.listener.createtable;
 
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import lombok.Builder;
 import lombok.Data;

@@ -4,7 +4,7 @@ import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Reflector;
 import com.rnkrsoft.framework.orm.PrimaryKey;
-import com.rnkrsoft.framework.orm.Table;
+import com.rnkrsoft.framework.orm.jdbc.Table;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;

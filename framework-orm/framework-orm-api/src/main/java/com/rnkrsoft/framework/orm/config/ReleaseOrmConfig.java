@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.orm.config;
 
-import com.rnkrsoft.framework.orm.DatabaseType;
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.DatabaseType;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,5 +1,8 @@
 package com.rnkrsoft.framework.orm;
 
+import com.rnkrsoft.framework.orm.PrimaryKeyFeatureConstant;
+import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

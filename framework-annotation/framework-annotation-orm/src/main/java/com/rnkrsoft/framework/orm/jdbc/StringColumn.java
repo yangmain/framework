@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm;
+package com.rnkrsoft.framework.orm.jdbc;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -7,11 +7,11 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.RetentionPolicy;
 /**
  * Created by rnkrsoft.com on 2017/1/4.
- * 数字类型的字段定义
+ * 字符串类型的数据定义
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NumberColumn {
+public @interface StringColumn {
     /**
      * 字段名称
      *
@@ -29,31 +29,27 @@ public @interface NumberColumn {
     boolean nullable() default true;
 
     /**
+     * 字段长度
+     * 超过255的VARCHAR，在MySQL数据库自动使用TEXT
+     * @return 字段长度
+     * @since 1.0.0
+     */
+    int length() default 255;
+
+    /**
      * 默认值
      * @return 默认值
      * @since 1.0.0
      */
     String defaultValue() default "";
-    /**
-     * 整个数字,不算点号,例如Decimal(5,2)可最大存放999.99
-     * @return 整个数字,不算点号
-     * @since 1.0.0
-     */
-    int precision() default 0;
 
     /**
-     * 小数部分
-     * @return 小数部分
+     * 字段数据类型
+     *
+     * @return 数据类型
      * @since 1.0.0
      */
-    int scale() default 0;
-
-    /**
-     * 数字类型
-     * @return 数字类型
-     * @since 1.0.0
-     */
-    NumberType type() default NumberType.AUTO;
+    StringType type() default StringType.AUTO;
 
     /**
      * 字段枚举值
@@ -61,3 +57,4 @@ public @interface NumberColumn {
      */
     Class enumClass() default Object.class;
 }
+

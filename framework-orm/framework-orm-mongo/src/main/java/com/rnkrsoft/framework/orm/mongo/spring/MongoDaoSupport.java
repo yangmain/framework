@@ -1,29 +1,27 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.rnkrsoft.framework.orm.Pagination;
+import com.rnkrsoft.framework.orm.ValueBy;
+import com.rnkrsoft.framework.orm.ValueByColumn;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
+import com.rnkrsoft.framework.orm.jdbc.Table;
+import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
+import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import com.rnkrsoft.framework.orm.mongo.utils.BeanUtils;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Invoker;
 import com.rnkrsoft.reflection4j.MetaClass;
 import com.rnkrsoft.reflection4j.Reflector;
-import com.rnkrsoft.reflection4j.invoker.GetFieldInvoker;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import com.rnkrsoft.framework.orm.Pagination;
-import com.rnkrsoft.framework.orm.Table;
-import com.rnkrsoft.framework.orm.ValueBy;
-import com.rnkrsoft.framework.orm.ValueByColumn;
-import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
-import com.rnkrsoft.framework.orm.extractor.OrmEntityExtractor;
-import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
-import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import org.apache.commons.beanutils.BeanUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.dao.support.DaoSupport;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,25 +67,16 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     /**
      * 插入数据
      *
-     * @param entities
+     * @param parameters
      */
-    public void insert(Entity... entities) {
-        if (entities.length == 0) {
+    public void insert(Map<String, Object>... parameters) {
+        if (parameters.length == 0) {
 
         }
         List<Document> documents = new ArrayList();
-        for (Entity entity : entities) {
-            try {
-                Map parameter = BeanUtils.describe(entity);
-                Document document = new Document(parameter);
-                documents.add(document);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+        for (Map<String, Object> parameter : parameters) {
+            Document document = new Document(parameter);
+            documents.add(document);
         }
         getTable().insertMany(documents);
     }
@@ -95,25 +84,22 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     /**
      * 插入非null字段
      *
-     * @param entities
+     * @param parameters
      */
-    public void insertSelective(Entity... entities) {
-        if (entities.length == 0) {
-
+    public void insertSelective(Map<String, Object>... parameters) {
+        if (parameters.length == 0) {
+            throw ErrorContextFactory.instance().message("输入的parameter不能为空").runtimeException();
         }
         List<Document> documents = new ArrayList();
-        for (Entity entity : entities) {
-            try {
-                Map parameter = BeanUtils.describe(entity);
-                Document document = new Document(parameter);
-                documents.add(document);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+        for (Map<String, Object> parameter : parameters) {
+            Map<String, Object> newParameter = new HashMap<String, Object>();
+            for (Map.Entry<String, Object> entry : parameter.entrySet()){
+                if (entry.getValue() != null){
+                    newParameter.put(entry.getKey(), entry.getValue());
+                }
             }
+            Document document = new Document(newParameter);
+            documents.add(document);
         }
         getTable().insertMany(documents);
     }
@@ -123,12 +109,7 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
      *
      * @param entity
      */
-    public void delete(Entity entity) {
-        ValueBy valueBy = (ValueBy) entity;
-        Map<String, ValueByColumn> valueByMap = valueBy.getValueByMap();
-        for (ValueByColumn valueByColumn : valueByMap.values()) {
-
-        }
+    public void delete(Object entity) {
         Bson filters = Filters.eq("", "");
         getTable().deleteMany(filters);
     }
@@ -145,17 +126,9 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     }
 
     public void updateByPrimaryKey(Entity condition, Entity entity) {
-        try {
-            Map conditionMap = BeanUtils.describe(condition);
-            Map entityMap = BeanUtils.describe(entity);
-            updateByPrimaryKey(conditionMap, entityMap);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        Map conditionMap = BeanUtils.describe(condition, null);
+        Map entityMap = BeanUtils.describe(entity, null);
+        updateByPrimaryKey(conditionMap, entityMap);
     }
 
     public void updateByPrimaryKey(Map<String, Object> condition, Map<String, Object> parameter) {
@@ -163,41 +136,24 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     }
 
     public void updateByPrimaryKeySelective(Entity condition, Entity entity) {
-        try {
-            Map conditionMap = BeanUtils.describe(condition);
-            Map entityMap = BeanUtils.describe(entity);
-            //TODO 将为null的值去除
-            updateByPrimaryKey(conditionMap, entityMap);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        Map conditionMap = BeanUtils.describe(condition, null);
+        Map entityMap = BeanUtils.describe(entity, null);
+        //TODO 将为null的值去除
+        updateByPrimaryKey(conditionMap, entityMap);
     }
 
     public List<Entity> select(Entity entity) {
-        try {
-            Map entityMap = BeanUtils.describe(entity);
-            //TODO 将为null的值去除
-            List<Map> result = select(entityMap);
-            List<Entity> list = new ArrayList();
-            MetaClass metaClass = GlobalSystemMetadata.forClass(entityClass);
-            for (Map map : result) {
-                Entity object = metaClass.newInstance();
-                BeanUtils.populate(object, map);
-                list.add(object);
-            }
-            return list;
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+        Map entityMap = BeanUtils.describe(entity, null);
+        //TODO 将为null的值去除
+        List<Map> result = select(entityMap);
+        List<Entity> list = new ArrayList();
+        MetaClass metaClass = GlobalSystemMetadata.forClass(entityClass);
+        for (Map map : result) {
+            Entity object = metaClass.newInstance();
+            BeanUtils.populate(map, entityClass, null);
+            list.add(object);
         }
-        return null;
+        return list;
     }
 
     public List<Map> select(Map<String, Object> parameter) {
@@ -211,18 +167,9 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     }
 
     public long count(Entity entity) {
-        try {
-            Map entityMap = BeanUtils.describe(entity);
-            //TODO 将为null的值去除
-            return count(entityMap);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return 0;
+        Map entityMap = BeanUtils.describe(entity, null);
+        //TODO 将为null的值去除
+        return count(entityMap);
     }
 
     public long count(Map<String, Object> parameter) {

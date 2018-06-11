@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.test.sequence;
 
 import com.rnkrsoft.utils.DateUtils;
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SequenceServiceFactory;
 import com.rnkrsoft.framework.sequence.myisam.MyISAMSequenceService;

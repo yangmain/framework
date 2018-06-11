@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.sequence.myisam.entity;
 
-import com.rnkrsoft.framework.orm.Comment;
-import com.rnkrsoft.framework.orm.mysql.DataEngine;
-import com.rnkrsoft.framework.orm.mysql.DataEngineType;
+import com.rnkrsoft.framework.orm.jdbc.Comment;
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngine;
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

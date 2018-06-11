@@ -4,13 +4,13 @@ import com.rnkrsoft.io.buffer.ByteBuf;
 import com.rnkrsoft.reflection4j.resource.ClassScanner;
 import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
-import com.rnkrsoft.framework.orm.Table;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.Table;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.orm.NameMode;
-import com.rnkrsoft.framework.orm.mysql.DataEngineType;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 

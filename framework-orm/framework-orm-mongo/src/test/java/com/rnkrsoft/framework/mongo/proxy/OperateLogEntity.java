@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.mongo.proxy;
 
 import com.rnkrsoft.framework.orm.Entity;
-import com.rnkrsoft.framework.orm.Table;
+import com.rnkrsoft.framework.orm.jdbc.Table;
 
 /**
  * Created by rnkrsoft.com on 2018/6/2.

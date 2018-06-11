@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm;
 
+import com.rnkrsoft.framework.orm.jdbc.Ignore;
 import lombok.Data;
 import lombok.ToString;
 

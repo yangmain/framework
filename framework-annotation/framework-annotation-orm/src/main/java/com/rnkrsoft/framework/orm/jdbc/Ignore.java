@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm;
+package com.rnkrsoft.framework.orm.jdbc;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

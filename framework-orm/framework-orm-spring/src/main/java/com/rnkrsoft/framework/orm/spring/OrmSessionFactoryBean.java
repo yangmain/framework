@@ -1,8 +1,7 @@
 package com.rnkrsoft.framework.orm.spring;
 
 import com.rnkrsoft.utils.StringUtils;
-import com.rnkrsoft.framework.orm.DatabaseType;
-import com.rnkrsoft.framework.orm.config.OrmConfig;
+import com.rnkrsoft.framework.orm.jdbc.DatabaseType;
 import com.rnkrsoft.framework.orm.mybatis.plugins.OrderByInterceptor;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage1Interceptor;
 import com.rnkrsoft.framework.orm.mybatis.plugins.PaginationStage2Interceptor;

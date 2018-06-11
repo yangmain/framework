@@ -1,12 +1,8 @@
 package com.rnkrsoft.framework.orm.untils;
 
-import com.rnkrsoft.framework.orm.WordMode;
-import com.rnkrsoft.framework.orm.extractor.EntityExtractor;
-import com.rnkrsoft.framework.orm.extractor.JpaEntityExtractor;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by rnkrsoft.com on 2018/4/6.

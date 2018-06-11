@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.test.entity;
 
 import com.rnkrsoft.framework.orm.*;
+import com.rnkrsoft.framework.orm.jdbc.*;
 import lombok.Data;
 
 import java.io.Serializable;

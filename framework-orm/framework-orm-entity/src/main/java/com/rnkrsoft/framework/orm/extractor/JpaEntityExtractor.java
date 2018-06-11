@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.extractor;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.Ignore;
+import com.rnkrsoft.framework.orm.jdbc.Ignore;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;

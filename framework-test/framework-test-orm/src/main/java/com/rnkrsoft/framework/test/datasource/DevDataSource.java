@@ -2,7 +2,7 @@ package com.rnkrsoft.framework.test.datasource;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.message.MessageFormatter;
-import com.rnkrsoft.framework.orm.DatabaseType;
+import com.rnkrsoft.framework.orm.jdbc.DatabaseType;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.dbcp.BasicDataSource;

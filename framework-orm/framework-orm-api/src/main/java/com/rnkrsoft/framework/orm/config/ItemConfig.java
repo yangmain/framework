@@ -5,7 +5,7 @@ package com.rnkrsoft.framework.orm.config;
  * 配置项
  */
 
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import lombok.*;
 
 @Data

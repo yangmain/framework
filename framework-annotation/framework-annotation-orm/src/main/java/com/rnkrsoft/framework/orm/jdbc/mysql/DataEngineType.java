@@ -1,6 +1,5 @@
-package com.rnkrsoft.framework.orm.mysql;
+package com.rnkrsoft.framework.orm.jdbc.mysql;
 
-import com.rnkrsoft.framework.orm.DatabaseType;
 import lombok.Getter;
 
 /**

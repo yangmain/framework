@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.test.junit.listener.createtable;
 
-import com.rnkrsoft.framework.orm.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import com.rnkrsoft.framework.test.datasource.DataSourceLookup;
 import org.springframework.jdbc.core.JdbcTemplate;

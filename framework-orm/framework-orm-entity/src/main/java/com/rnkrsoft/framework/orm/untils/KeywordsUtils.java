@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.untils;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import lombok.extern.slf4j.Slf4j;
 

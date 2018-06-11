@@ -1,8 +1,8 @@
 package com.rnkrsoft.framework.orm.entity;
 
-import com.rnkrsoft.framework.orm.*;
+import com.rnkrsoft.framework.orm.PrimaryKey;
+import com.rnkrsoft.framework.orm.jdbc.*;
 
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
