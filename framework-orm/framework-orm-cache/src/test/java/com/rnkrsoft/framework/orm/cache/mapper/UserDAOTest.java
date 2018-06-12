@@ -26,13 +26,14 @@ public class UserDAOTest extends SpringTest {
 //            System.out.println(userDAO.decr("xxxxxxx"));
 //            System.out.println(userDAO.get1("xxxxxxx"));
 
-        CachedMap cachedMap = userDAO.get();
+//        CachedMap cachedMap = userDAO.get();
 //        System.out.println(cachedMap.keys("*"));
-        userDAO.getSet("yyyyyy", new User(UUID.randomUUID().toString(), 2, false));
-        System.out.println(userDAO.type("yyyyyy"));;
+        User user = userDAO.getSet("yyyyyy", new User(UUID.randomUUID().toString(), 1000, false));
+        System.out.println(user);
+        System.out.println(userDAO.type("yyyyyy"));
 //            System.out.println(userDAO.get("yyyyyy"));
 //            userDAO.expire("yyyyyy", 2);
-        System.out.println(userDAO.ttl("yyyyyy"));
+//        System.out.println(userDAO.ttl("yyyyyy"));
 //            userDAO.presist("yyyyyy");'
 //        Thread.sleep(3000);
 //        System.out.println(userDAO.ttl("yyyyyy"));

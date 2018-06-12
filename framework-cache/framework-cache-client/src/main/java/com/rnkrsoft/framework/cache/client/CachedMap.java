@@ -20,7 +20,7 @@ public interface CachedMap<K,V> extends Map<K,V>{
      * @param key
      * @return
      */
-    Class getNativeClass(String key);
+    Class getNativeClass(K key);
 
     <T> T get(String key);
     /**

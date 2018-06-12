@@ -3,6 +3,7 @@ package com.rnkrsoft.framework.cache.client.redis;
 import com.rnkrsoft.framework.cache.client.CacheClient;
 import com.rnkrsoft.framework.cache.client.CachedMap;
 import org.apache.commons.lang.StringUtils;
+import redis.clients.jedis.Jedis;
 
 
 /**
@@ -14,30 +15,6 @@ public abstract class RedisMap<K, V> implements CachedMap<K, V> {
      */
     protected String prefix;
     protected CacheClient client;
-
-    @Override
-    public Class getNativeClass(String key) {
-        String cacheKey = key == null ? null : key.toString();
-        if (StringUtils.isNotBlank(prefix)) {
-            cacheKey = prefix  + "_"+ cacheKey;
-        }
-        String oldVal = get(cacheKey);
-        if (oldVal != null) {
-            if (isPrimitive(oldVal)) {
-                return Long.class;
-            } else if (isWrapper(oldVal)) {
-                try {
-                    Wrapper oldWrapper = Wrapper.valueOf(oldVal);
-                    Class clazz = Class.forName(oldWrapper.className);
-                    return clazz;
-                } catch (ClassNotFoundException e) {
-                    System.err.println(e);
-                } finally {
-                }
-            }
-        }
-        return Object.class;
-    }
 
 
     boolean isPrimitive(String value) {

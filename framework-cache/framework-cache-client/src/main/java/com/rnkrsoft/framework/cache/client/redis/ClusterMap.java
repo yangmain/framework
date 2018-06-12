@@ -29,7 +29,30 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
         this.client = client;
     }
 
-
+    @Override
+    public Class getNativeClass(K key) {
+        String cacheKey = key == null ? null : key.toString();
+        if (StringUtils.isNotBlank(prefix)) {
+            cacheKey = prefix + "_" + cacheKey;
+        }
+        JedisCluster jedisCluster = client.getJedisCluster();
+        String oldVal = jedisCluster.get(cacheKey);
+        if (oldVal != null) {
+            if (isPrimitive(oldVal)) {
+                return Long.class;
+            } else if (isWrapper(oldVal)) {
+                try {
+                    Wrapper oldWrapper = Wrapper.valueOf(oldVal);
+                    Class clazz = Class.forName(oldWrapper.className);
+                    return clazz;
+                } catch (ClassNotFoundException e) {
+                    System.err.println(e);
+                } finally {
+                }
+            }
+        }
+        return null;
+    }
     @Override
     public Set<String> keys(String pattern) {
         if (StringUtils.isNotBlank(prefix)) {
