@@ -73,6 +73,9 @@
                             <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
                             <artifactSet>
                                 <includes>
+                                    <include>com.rnkrsoft.io:io</include>
+                                    <include>com.rnkrsoft.logtrace4j:logtrace4j</include>
+                                    <include>com.rnkrsoft.groundwork:groundwork</include>
                                     <include>com.rnkrsoft.framework:framework-annotation-orm</include>
                                     <include>com.rnkrsoft.framework:framework-orm-api</include>
                                     <include>com.rnkrsoft.framework:framework-orm-entity</include>
