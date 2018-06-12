@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.toolkit.generator.jdk;
 
 import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.message.MessageFormatter;
 import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
@@ -19,8 +20,18 @@ public class JdkDaoGenerator extends JdkGenerator implements DaoGenerator {
         TableMetadata metadata = ctx.getTableMetadata();
         String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "Entity";
         String daoName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "DAO";
+        if (metadata.getPrimaryKeys().isEmpty()){
+            throw ErrorContextFactory.instance().message("table {} has not primary key", metadata.getTableName()).runtimeException();
+        }
         String pkName = metadata.getPrimaryKeys().get(0);
+        System.out.println("--------------" + pkName);
         ColumnMetadata columnMetadata = metadata.getColumnMetadataSet().get(pkName);
+        if (columnMetadata == null){
+            throw ErrorContextFactory.instance().message("table {} has not primary key", metadata.getTableName()).runtimeException();
+        }
+        if (columnMetadata.getJavaType() == null){
+            throw ErrorContextFactory.instance().message("table {} has not primary key", metadata.getTableName()).runtimeException();
+        }
         buf.put("UTF-8", MessageFormatter.format("package {}.dao;", ctx.getPackageName()), "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "import com.rnkrsoft.framework.orm.jdbc.JdbcMapper;", "\n");

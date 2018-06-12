@@ -8,6 +8,7 @@ import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
@@ -142,39 +143,50 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String column_key = resultSet.getString("column_key");
             String column_comment = resultSet.getString("column_comment");
             String jdbc_type = null;
+            Class java_type = String.class;
             if (data_type.equalsIgnoreCase("bigint")) {
                 jdbc_type = "NUMERIC";
                 column_type = "BIGINT";
+                java_type = Long.class;
             } else if (data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("integer") ) {
                 jdbc_type = "NUMERIC";
                 column_type = "INTEGER";
+                java_type = Integer.class;
             } else if (data_type.equalsIgnoreCase("smallint")) {
                 jdbc_type = "NUMERIC";
                 column_type = "SMALLINT";
+                java_type = Integer.class;
             } else if (data_type.equalsIgnoreCase("tinyint")) {
                 jdbc_type = "NUMERIC";
                 column_type = "TINYINT";
+                java_type = Integer.class;
             } else if (data_type.equalsIgnoreCase("decimal")) {
                 jdbc_type = "DECIMAL";
                 column_type = "DECIMAL";
+                java_type = BigDecimal.class;
             } else if (data_type.equalsIgnoreCase("datetime")) {
                 jdbc_type = "TIMESTAMP";
                 column_type = "TIMESTAMP";
+                java_type = java.sql.Timestamp.class;
             } else if (data_type.equalsIgnoreCase("varchar")) {
                 jdbc_type = "VARCHAR";
                 column_type = "VARCHAR";
+                java_type = String.class;
             } else if (data_type.equalsIgnoreCase("char")) {
                 jdbc_type = "CHAR";
                 column_type = "CHAR";
+                java_type = String.class;
             } else {
                 jdbc_type = "VARCHAR";
                 column_type = "VARCHAR";
+                java_type = String.class;
             }
 
             ColumnMetadata.ColumnMetadataBuilder builder = ColumnMetadata.builder()
                     .javaName(StringUtils.underlineToCamel(column_name))
                     .tableMetadata(tableMetadata)
                     .jdbcName(column_name.toUpperCase())
+                    .javaType(java_type)
                     .defaultValue(column_default)
                     .nullable("YES".equals(is_nullable))
                     .jdbcType(jdbc_type.toUpperCase())

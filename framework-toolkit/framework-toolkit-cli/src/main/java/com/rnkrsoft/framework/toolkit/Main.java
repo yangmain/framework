@@ -48,7 +48,7 @@ public class Main {
             define.addOption("schema", "s", true, 1, "数据库模式", "字符串数据库名", "");
             define.addOption("package", "f", false, 1, "保存包名", "java格式的包名",  "com.rnkrsoft");
             define.addOption("output", "o", false, 1, "输出路径", ".", ".");
-            define.addOption("prefixes", "pres", false, 1, "前缀", "表名前缀", "");
+            define.addOption("prefixes", "pres", false, 1, "前缀", "表名前缀", "tb");
             define.addOption("suffixes", "sufs", false, 1, "后缀", "表名后缀", "");
             define.setName("逆向工程");
             define.setCmd("reverse");
