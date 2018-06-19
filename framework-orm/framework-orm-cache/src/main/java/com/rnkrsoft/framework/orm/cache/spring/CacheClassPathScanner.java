@@ -108,6 +108,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                     Presist presistAnnotation = method.getAnnotation(Presist.class);
                     Keys keysAnnotation = method.getAnnotation(Keys.class);
                     Type typeAnnotation = method.getAnnotation(Type.class);
+                    Remove removeAnnotation = method.getAnnotation(Remove.class);
                     boolean annotation = false;
                     boolean match = false;
                     if (getAnnotation != null) {
@@ -292,6 +293,28 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                             throw ErrorContextFactory.instance()
                                     .message("{}.{}参数返回类型不为Class", mapperClassName, method.getName())
                                     .solution("修改为public {} {}(String key)", Class.class.getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                        if (method.getParameterTypes().length < 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}无参数输入", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        } else if (method.getParameterTypes().length == 1) {
+                            match = true;
+                        } else if (method.getParameterTypes().length > 1) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数输入过多", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", method.getReturnType().getSimpleName(), method.getName())
+                                    .runtimeException();
+                        }
+                    }
+                    if (removeAnnotation != null) {
+                        annotation = true;
+                        if (method.getReturnType() != Void.TYPE) {
+                            throw ErrorContextFactory.instance()
+                                    .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
+                                    .solution("修改为public {} {}(String key)", Void.class.getSimpleName(), method.getName())
                                     .runtimeException();
                         }
                         if (method.getParameterTypes().length < 1) {
