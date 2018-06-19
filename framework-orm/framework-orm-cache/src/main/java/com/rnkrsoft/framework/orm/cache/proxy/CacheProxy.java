@@ -56,6 +56,9 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         }else if(metadata.commandType == CommandType.TYPE){
             String key = args[0].toString();
             return cachedMap.getNativeClass(key);
+        }else if(metadata.commandType == CommandType.REMOVE){
+            String key = args[0].toString();
+            return cachedMap.remove(key);
         }else if(metadata.commandType == CommandType.CACHED_MAP){
             return cachedMap;
         }else{
@@ -75,6 +78,7 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         Set set = method.getAnnotation(Set.class);
         Ttl ttl = method.getAnnotation(Ttl.class);
         Type type = method.getAnnotation(Type.class);
+        Remove remove = method.getAnnotation(Remove.class);
         int cnt = 0;
         if (decr != null){
             cnt++;
@@ -127,6 +131,10 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
         if (type != null){
             cnt++;
             metadata.commandType = CommandType.TYPE;
+        }
+        if (remove != null){
+            cnt++;
+            metadata.commandType = CommandType.REMOVE;
         }
         if (method.getReturnType().isAssignableFrom(CachedMap.class)){
            if (method.getParameterTypes().length != 0){

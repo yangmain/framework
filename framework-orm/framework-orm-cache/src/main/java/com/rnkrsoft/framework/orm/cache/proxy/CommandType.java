@@ -14,5 +14,6 @@ public enum CommandType {
     SET,
     TTL,
     TYPE,
+    REMOVE,
     CACHED_MAP
 }
