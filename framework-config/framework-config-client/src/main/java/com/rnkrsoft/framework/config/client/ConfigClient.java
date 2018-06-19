@@ -241,7 +241,7 @@ public class ConfigClient {
                         });
 
                     } else {
-                        log.error("'{}'not support transfer Type '{}'", newFileObject.getFilePath() + File.separator + newFileObject.getFileName(), newFileObject.getTransferType());
+                        log.error("'{}'not support transfer Type '{}'", newFileObject.getFileFullName(), newFileObject.getTransferType());
                     }
                 }
             }
@@ -291,12 +291,12 @@ public class ConfigClient {
      * @param oldFileFingerprint 文件签字
      */
     public void downloadFile(FileObject fileObject, String oldFileFingerprint) throws IOException {
-        String path0 = FileSystemUtils.formatPath(fileObject.getFilePath());
+        String path0 = FileSystemUtils.formatPath(fileObject.getFileFullName());
         if (!path0.startsWith("/")) {
             path0 = "/" + path0;
         }
-        DynamicFile file = DynamicFile.file(new File(setting.workHome + "/files" + path0), fileObject.getFileName());
-        final String fileKey = FileSystemUtils.formatPath(path0 + File.separator + fileObject.getFileName());
+        DynamicFile file = DynamicFile.file(setting.workHome + "/files" + path0);
+        final String fileKey = FileSystemUtils.formatPath(path0 + File.separator + fileObject.getFileFullName());
         if (fileObject.getFileFingerprint().equals(oldFileFingerprint) && file.exists()) {
             byte[] oldData = FileUtils.readFileToByteArray(file.getFile().getFile());
             String oldFileFingerprint1 = DigestUtils.md5Hex(oldData);
@@ -317,8 +317,7 @@ public class ConfigClient {
                     + "&version=" + setting.version
                     + "&env=" + setting.env
                     + "&machine=" + setting.machine
-                    + "&filePath=" + FileSystemUtils.formatPath(fileObject.getFilePath())
-                    + "&fileName=" + fileObject.getFileName();
+                    + "&fileFullName=" + FileSystemUtils.formatPath(fileObject.getFileFullName());
             log.info("download url: {}", downloadUrl);
 
             Http http = Http.post(downloadUrl)
@@ -341,13 +340,13 @@ public class ConfigClient {
             fos.close();
 
             if (setting.printLog) {
-                log.info("download file '{}/{}'", fileObject.getFilePath(), fileObject.getFileName());
+                log.info("download file '{}'", fileObject.getFileFullName());
             }
             String fileFingerprint = DigestUtils.md5Hex(newData);
             //检查新的指纹和下载文件指纹是否一致，否则可能损坏
             if (fileFingerprint.equals(fileObject.getFileFingerprint())) {
                 if (setting.printLog) {
-                    log.info("commit file '{}/{}' fingerprint:{} is ok!", fileObject.getFilePath(), fileObject.getFileName(), fileFingerprint);
+                    log.info("commit file '{}' fingerprint:{} is ok!", fileObject.getFileFullName(), fileFingerprint);
                 }
                 transaction.commit();
                 //如果存在分发路径,则使用线程池执行，避免主线程阻塞
@@ -379,12 +378,12 @@ public class ConfigClient {
                 }
             } else {
                 if (setting.printLog) {
-                    log.error("error file '{}/{}' local fingerprint:{}, remote fingerprint:{}!", fileObject.getFilePath(), fileObject.getFileName(), fileFingerprint, fileObject.getFileFingerprint());
+                    log.error("error file '{}' local fingerprint:{}, remote fingerprint:{}!", fileObject.getFileFullName(), fileFingerprint, fileObject.getFileFingerprint());
                 }
                 transaction.rollback();
             }
         } catch (IOException e) {
-            log.error(MessageFormatter.format("rollback file '{}/{}' , happens error!", fileObject.getFilePath(), fileObject.getFileName()), e);
+            log.error(MessageFormatter.format("rollback file '{}' , happens error!", fileObject.getFileFullName()), e);
             transaction.rollback();
         }
     }

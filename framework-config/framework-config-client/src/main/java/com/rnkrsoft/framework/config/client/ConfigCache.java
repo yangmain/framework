@@ -36,7 +36,7 @@ class ConfigCache {
             params.put(paramObject.getKey(), paramObject);
         }
         for (FileObject fileObject : response.getFiles()) {
-            String fileKey = fileObject.getFilePath() + File.separator + fileObject.getFileName();
+            String fileKey = fileObject.getFileFullName();
             files.put(FileSystemUtils.formatPath(fileKey), fileObject);
         }
     }

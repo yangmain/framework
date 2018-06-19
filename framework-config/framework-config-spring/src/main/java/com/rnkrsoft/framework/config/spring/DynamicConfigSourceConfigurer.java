@@ -351,11 +351,7 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
             if (fileItem == null) {
                 fileItem = new FileObject();
                 String file = FileSystemUtils.formatPath(dynamicFile.value());
-                int fileIdx = file.lastIndexOf("/");
-                String filePath = file.substring(0, fileIdx);
-                String fileName = file.substring(fileIdx + 1);
-                fileItem.setFilePath(filePath);
-                fileItem.setFileName(fileName);
+                fileItem.setFileFullName(file);
                 files.put(file, fileItem);
             }
             fileItem.setEnabled(true);

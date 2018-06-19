@@ -25,12 +25,7 @@ public class FileObject {
     /**
      * 文件名称
      */
-    String fileName;
-
-    /**
-     * 文件路径
-     */
-    String filePath;
+    String fileFullName;
     /**
      * 描述
      */
@@ -75,12 +70,12 @@ public class FileObject {
     /**
      * 创建时间
      */
-    Date createTime;
+    String createTime;
 
     /**
      * 修改时间
      */
-    Date updateTime;
+    String updateTime;
 
     public void setTransferType(FileTransferType fileTransferType){
         this.transferType = fileTransferType.code;

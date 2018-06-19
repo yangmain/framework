@@ -21,8 +21,8 @@
             <artifactId>groundwork</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rnkrsoft.io</groupId>
-            <artifactId>io</artifactId>
+            <groupId>com.rnkrsoft.io4j</groupId>
+            <artifactId>io4j</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

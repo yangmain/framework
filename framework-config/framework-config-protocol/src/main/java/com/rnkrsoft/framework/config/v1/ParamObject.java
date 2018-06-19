@@ -1,7 +1,6 @@
 package com.rnkrsoft.framework.config.v1;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
@@ -11,6 +10,9 @@ import java.util.Date;
  */
 @Data
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ParamObject {
     /**
      * 参数名
@@ -57,12 +59,12 @@ public class ParamObject {
     /**
      * 创建时间
      */
-    Date createTime;
+    String createTime;
 
     /**
      * 修改时间
      */
-    Date updateTime;
+    String updateTime;
 
     public void setParamType(ParamType paramType){
         this.type = paramType.code;

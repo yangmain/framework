@@ -74,7 +74,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.rnkrsoft.skeleton4j:skeleton4j-api</include>
-                                    <include>com.rnkrsoft.io:io</include>
+                                    <include>com.rnkrsoft.io4j:io4j</include>
                                     <include>com.rnkrsoft.logtrace4j:logtrace4j</include>
                                     <include>com.rnkrsoft.groundwork:groundwork</include>
                                     <include>com.rnkrsoft.framework:framework-annotation-orm</include>
