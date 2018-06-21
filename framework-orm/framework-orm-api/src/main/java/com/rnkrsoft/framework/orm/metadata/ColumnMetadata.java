@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.metadata;
 
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.ValueMode;
 import lombok.*;
 
 import java.lang.reflect.Field;
@@ -8,9 +9,9 @@ import java.lang.reflect.Field;
 @Data
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class ColumnMetadata {
+    boolean primaryKey = false;
     /**
      * 所属表元信息
      */
@@ -67,6 +68,29 @@ public class ColumnMetadata {
      * 如果字段为物理主键时，是否为自增字段
      */
     Boolean autoIncrement = false;
+    /**
+     * 作为条件时的值模式
+     */
+    ValueMode valueMode = ValueMode.EQUAL;
+
+    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String dataType, String jdbcType, Boolean nullable, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
+        this.primaryKey = primaryKey;
+        this.tableMetadata = tableMetadata;
+        this.entityClass = entityClass;
+        this.columnField = columnField;
+        this.javaName = javaName;
+        this.javaType = javaType;
+        this.jdbcName = jdbcName;
+        this.dataType = dataType;
+        this.jdbcType = jdbcType;
+        this.nullable = nullable;
+        this.comment = comment;
+        this.primaryKeyStrategy = primaryKeyStrategy;
+        this.primaryKeyFeature = primaryKeyFeature;
+        this.defaultValue = defaultValue;
+        this.autoIncrement = autoIncrement == null ? false : autoIncrement;
+        this.valueMode = valueMode == null ? ValueMode.EQUAL : valueMode;
+    }
 
     @Override
     public String toString() {
@@ -82,6 +106,7 @@ public class ColumnMetadata {
         sb.append(", comment='").append(comment).append('\'');
         sb.append(", primaryKeyStrategy=").append(primaryKeyStrategy);
         sb.append(", defaultValue='").append(defaultValue).append('\'');
+        sb.append(", valueMode='").append(valueMode.getCode()).append('\'');
         sb.append('}');
         return sb.toString();
     }

@@ -29,14 +29,16 @@ public class SequenceServiceFactory {
         SequenceService service = null;
         ServiceLoader<SequenceService> serviceLoader = ServiceLoader.load(SequenceService.class);
         Iterator<SequenceService> serviceIterator = serviceLoader.iterator();
-        while (service == null && serviceIterator.hasNext()) {
+        while (serviceIterator.hasNext()) {
             SequenceService service0 = serviceIterator.next();
             //如果没有指定实现类，发现则赋值
             if (className == null) {
                 service = service0;
+                return service;
             } else {//如果指实现类，只有匹配实现类才赋值
                 if (service0.getClass().getName().equals(className)) {
                     service = service0;
+                    return service;
                 }
             }
         }

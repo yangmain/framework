@@ -79,7 +79,7 @@
         </property>
     </bean>
 
-    <bean id="sequenceServiceConfigure" class="com.rnkrsoft.framework.orm.mybatis.sequence.SpringSequenceServiceConfigure">
+    <bean id="sequenceServiceConfigure" class="com.rnkrsoft.framework.orm.spring.sequence.SpringSequenceServiceConfigure">
         <property name="mappings">
             <props>
                 <prop key="TB_ORDER_INF">com.rnkrsoft.framework.sequence.injvm.InjvmSequenceService</prop>

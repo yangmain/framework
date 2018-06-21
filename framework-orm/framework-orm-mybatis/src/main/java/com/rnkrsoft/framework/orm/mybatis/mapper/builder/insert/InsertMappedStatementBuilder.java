@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
-import com.rnkrsoft.framework.orm.mybatis.sequence.PrimaryKeyHelper;
+import com.rnkrsoft.framework.orm.mybatis.spring.sequence.PrimaryKeyHelper;
 import com.rnkrsoft.framework.orm.jdbc.select.SelectMapper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
-import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
+import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
 
 
 import java.util.*;

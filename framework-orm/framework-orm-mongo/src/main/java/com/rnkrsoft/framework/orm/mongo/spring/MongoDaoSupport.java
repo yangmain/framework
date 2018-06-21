@@ -1,27 +1,24 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.rnkrsoft.framework.orm.Pagination;
-import com.rnkrsoft.framework.orm.ValueBy;
-import com.rnkrsoft.framework.orm.ValueByColumn;
-import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
-import com.rnkrsoft.framework.orm.jdbc.Table;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mongo.utils.BeanUtils;
+import com.rnkrsoft.framework.orm.mongo.utils.BsonUtils;
+import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Invoker;
-import com.rnkrsoft.reflection4j.MetaClass;
 import com.rnkrsoft.reflection4j.Reflector;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.springframework.dao.support.DaoSupport;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,30 +30,20 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     MongoDatabase database;
     Class<Entity> entityClass;
     Invoker primaryKeyInvoker;
-    String tableName;
+    TableMetadata tableMetadata;
 
     String getTableName() {
-        if (this.tableName == null) {
-            Table table = (Table) entityClass.getAnnotation(Table.class);
-            return table.name();
-        } else {
-            return this.tableName;
-        }
+        return tableMetadata.getTableName();
     }
 
     public MongoDaoSupport(MongoDatabase database, Class<Entity> entityClass) {
         this.database = database;
         this.entityClass = entityClass;
+        this.tableMetadata = MongoEntityUtils.extractTable(entityClass);
         Reflector reflector = GlobalSystemMetadata.reflector(entityClass);
-        TableMetadata tableMetadata = new EntityExtractorHelper().extractTable(entityClass, true);
         String primaryKey = tableMetadata.getPrimaryKeys().get(0);
         ColumnMetadata columnMetadata = tableMetadata.getColumnMetadataSet().get(primaryKey);
         this.primaryKeyInvoker = reflector.getGetter(columnMetadata.getJavaName());
-    }
-
-    public MongoDaoSupport(MongoDatabase database, String tableName) {
-        this.database = database;
-        this.tableName = tableName;
     }
 
     MongoCollection<Document> getTable() {
@@ -72,36 +59,25 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     public void insert(Map<String, Object>... parameters) {
         if (parameters.length == 0) {
 
+        } else if (parameters.length == 1) {
+            Document document = new Document(parameters[0]);
+            getTable().insertOne(document);
+        } else {
+            List<Document> documents = new ArrayList();
+            for (Map<String, Object> parameter : parameters) {
+                Document document = new Document(parameter);
+                documents.add(document);
+            }
+            getTable().insertMany(documents);
         }
-        List<Document> documents = new ArrayList();
-        for (Map<String, Object> parameter : parameters) {
-            Document document = new Document(parameter);
-            documents.add(document);
-        }
-        getTable().insertMany(documents);
     }
 
-    /**
-     * 插入非null字段
-     *
-     * @param parameters
-     */
-    public void insertSelective(Map<String, Object>... parameters) {
-        if (parameters.length == 0) {
-            throw ErrorContextFactory.instance().message("输入的parameter不能为空").runtimeException();
+    public void insert(boolean nullable, Entity... entities) {
+        List<Map> list = new ArrayList();
+        for (Entity entity : entities) {
+            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(nullable).build()));
         }
-        List<Document> documents = new ArrayList();
-        for (Map<String, Object> parameter : parameters) {
-            Map<String, Object> newParameter = new HashMap<String, Object>();
-            for (Map.Entry<String, Object> entry : parameter.entrySet()){
-                if (entry.getValue() != null){
-                    newParameter.put(entry.getKey(), entry.getValue());
-                }
-            }
-            Document document = new Document(newParameter);
-            documents.add(document);
-        }
-        getTable().insertMany(documents);
+        insert(list.toArray(new Map[list.size()]));
     }
 
     /**
@@ -110,72 +86,53 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
      * @param entity
      */
     public void delete(Object entity) {
-        Bson filters = Filters.eq("", "");
-        getTable().deleteMany(filters);
+        getTable().deleteMany(BsonUtils.and(entity, false));
     }
 
     public void deleteByPrimaryKey(Entity entity) {
-        ValueBy valueBy = (ValueBy) entity;
         String id = null;
         try {
             id = this.primaryKeyInvoker.invoke(entity, new Object[0]);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         getTable().deleteMany(Filters.eq("_id", id));
     }
 
     public void updateByPrimaryKey(Entity condition, Entity entity) {
-        Map conditionMap = BeanUtils.describe(condition, null);
-        Map entityMap = BeanUtils.describe(entity, null);
-        updateByPrimaryKey(conditionMap, entityMap);
+        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).build())));
     }
 
     public void updateByPrimaryKey(Map<String, Object> condition, Map<String, Object> parameter) {
-
+        getTable().updateMany(new Document(condition), new Document(parameter));
     }
 
     public void updateByPrimaryKeySelective(Entity condition, Entity entity) {
-        Map conditionMap = BeanUtils.describe(condition, null);
-        Map entityMap = BeanUtils.describe(entity, null);
-        //TODO 将为null的值去除
-        updateByPrimaryKey(conditionMap, entityMap);
+        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).build())));
     }
 
     public List<Entity> select(Entity entity) {
-        Map entityMap = BeanUtils.describe(entity, null);
-        //TODO 将为null的值去除
-        List<Map> result = select(entityMap);
         List<Entity> list = new ArrayList();
-        MetaClass metaClass = GlobalSystemMetadata.forClass(entityClass);
-        for (Map map : result) {
-            Entity object = metaClass.newInstance();
-            BeanUtils.populate(map, entityClass, null);
-            list.add(object);
+        FindIterable fi = getTable().find(BsonUtils.and(entity, false));
+        Iterator<Document> it = fi.iterator();
+        while (it.hasNext()) {
+            Document document = it.next();
+            list.add(BeanUtils.populate(document, entityClass, BeanUtils.BeanSetting.builder().nullable(true).build()));
         }
         return list;
     }
 
-    public List<Map> select(Map<String, Object> parameter) {
-
-        System.out.println(parameter);
-        return null;
-    }
-
     public Pagination<Entity> selectPage(Pagination<Entity> pagination) {
+        Entity entity = pagination.getEntity();
+        Document document = BsonUtils.and(entity, false);
+//        getTable().
         return null;
     }
 
     public long count(Entity entity) {
-        Map entityMap = BeanUtils.describe(entity, null);
-        //TODO 将为null的值去除
-        return count(entityMap);
+        Document document = BsonUtils.and(entity, false);
+        return getTable().count(document);
     }
-
-    public long count(Map<String, Object> parameter) {
-        return 0L;
-    }
-
 
     @Override
     protected void checkDaoConfig() throws IllegalArgumentException {

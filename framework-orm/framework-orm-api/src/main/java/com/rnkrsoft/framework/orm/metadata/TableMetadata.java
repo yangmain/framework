@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.metadata;
 
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.utils.StringUtils;
 import lombok.*;
 
@@ -74,6 +75,27 @@ public class TableMetadata {
      * 表后缀
      */
     String suffix = "";
+
+    public TableMetadata addColumn(ColumnMetadata columnMetadata){
+        columnMetadataSet.put(columnMetadata.getJdbcName(), columnMetadata);
+        orderColumns.add(columnMetadata.getJdbcName());
+        if (columnMetadata.isPrimaryKey()){
+            primaryKeys.add(columnMetadata.getJdbcName());
+        }
+        return this;
+    }
+    public ColumnMetadata getColumn(String columnName){
+        return columnMetadataSet.get(columnName);
+    }
+
+    public ColumnMetadata getColumnByJavaName(String javaName){
+        for (ColumnMetadata columnMetadata : columnMetadataSet.values()){
+            if (columnMetadata.getJavaName().equals(javaName)){
+                return columnMetadata;
+            }
+        }
+        throw ErrorContextFactory.instance().message("不存在字段'{}'", javaName).runtimeException();
+    }
 
     public String getFullTableName(){
         String table = tableName;
