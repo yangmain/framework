@@ -1,13 +1,7 @@
-package com.rnkrsoft.framework.orm.mybatis.sequence;
+package com.rnkrsoft.framework.orm.spring.sequence;
 
 import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SequenceServiceFactory;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import javax.activation.DataSource;
-import java.lang.reflect.Method;
 
 /**
  * Created by rnkrsoft.com on 2017/1/8.

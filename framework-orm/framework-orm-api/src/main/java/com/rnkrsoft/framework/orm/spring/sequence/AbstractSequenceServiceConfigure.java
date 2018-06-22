@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm.mybatis.sequence;
+package com.rnkrsoft.framework.orm.spring.sequence;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.sequence.DataSourceAware;

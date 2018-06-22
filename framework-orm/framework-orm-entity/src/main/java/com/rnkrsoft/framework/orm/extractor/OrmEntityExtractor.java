@@ -422,6 +422,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                     .solution("在字段{}将{}属性修改为{}", field.getName(), "nullabe", false)
                     .runtimeException();
         }
+        columnMetadata.setPrimaryKey(true);
         columnMetadata.getTableMetadata().getPrimaryKeys().add(columnMetadata.getJdbcName());
         columnMetadata.setPrimaryKeyStrategy(strategy);
         columnMetadata.setPrimaryKeyFeature(primaryKey.feature());

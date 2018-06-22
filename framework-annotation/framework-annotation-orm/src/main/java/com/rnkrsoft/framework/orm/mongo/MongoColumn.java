@@ -1,5 +1,7 @@
 package com.rnkrsoft.framework.orm.mongo;
 
+import com.rnkrsoft.framework.orm.ValueMode;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,4 +31,10 @@ public @interface MongoColumn {
      * @return
      */
     String defaultValue() default "";
+
+    /**
+     * 作为条件时作为and
+     * @return
+     */
+    ValueMode valueMode() default ValueMode.EQUAL;
 }

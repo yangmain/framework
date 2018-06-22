@@ -16,7 +16,7 @@ public class ExpressionHelperTest {
 
     @Test
     public void testEval() throws Exception {
-        ExpressionContext ctx = ExpressionContext.builder().expression("ABCD_${yyyyMMddHHmmssSSS}_${SEQ:5}_${SEQ:8}_${RANDOM:8}_EFGH").useCache(true).build();
+        ExpressionContext ctx = ExpressionContext.builder().expression("ABCD_${yyyyMMddHHmmssSSS}_${SEQ:5}_${SEQ:8}_${RANDOM:8}_EFGH").sequenceClassName(null).useCache(true).build();
         String value = ExpressionHelper.eval(ctx);
         System.out.println(value);
         String[] values = value.split("_");

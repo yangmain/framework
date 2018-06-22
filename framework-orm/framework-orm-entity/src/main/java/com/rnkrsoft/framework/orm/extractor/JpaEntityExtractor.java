@@ -224,6 +224,7 @@ public class JpaEntityExtractor implements EntityExtractor {
                         .solution("在字段{}将{}属性修改为{}", field.getName(), "nullabe", false).throwError();
             }
         }
+        columnMetadata.setPrimaryKey(true);
         columnMetadata.getTableMetadata().getPrimaryKeys().add(columnMetadata.getJdbcName());
         columnMetadata.setPrimaryKeyStrategy(primaryKeyStrategy);
         return this;

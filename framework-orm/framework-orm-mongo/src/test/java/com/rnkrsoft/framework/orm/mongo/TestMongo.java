@@ -71,9 +71,11 @@ public class TestMongo {
         MongoCollection table = mongoDatabase.getCollection("table1");
 //        FindIterable fi = table.find(and(gte("age", 12)));
         FindIterable fi = table.find(new Document("age", new Document("$gte", 12)));
-        Iterator it = fi.iterator();
+        Iterator<Document> it = fi.iterator();
         while (it.hasNext()){
-            System.out.println(it.next());
+//            System.out.println(it.next());
+            Document document = it.next();
+            System.out.println(document);
         }
     }
 

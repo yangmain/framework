@@ -18,7 +18,6 @@ public class OperateLogDAOTest {
         ValueByColumn valueByColumn = new ValueByColumn();
         valueByColumn.setColumn("test1");
         valueByColumn.setValueMode(ValueMode.EQUAL);
-        operateLogEntity.addValueBy(valueByColumn);
         operateLogDAO.selectRuntime(operateLogEntity);
     }
 }

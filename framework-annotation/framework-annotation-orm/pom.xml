@@ -9,4 +9,10 @@
     <artifactId>framework-annotation-orm</artifactId>
     <name>framework-annotation-orm</name>
     <description>This is the framework4j-annotation-orm</description>
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.groundwork</groupId>
+            <artifactId>groundwork</artifactId>
+        </dependency>
+    </dependencies>
 </project>

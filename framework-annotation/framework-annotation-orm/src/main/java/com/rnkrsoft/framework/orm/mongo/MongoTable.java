@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MongoCollection {
+public @interface MongoTable {
     /**
      * 表名
      * @return 表名

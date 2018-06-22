@@ -4,18 +4,16 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
-import com.rnkrsoft.framework.orm.jdbc.NumberColumn;
 import com.rnkrsoft.framework.orm.PrimaryKey;
-import com.rnkrsoft.framework.orm.jdbc.StringColumn;
-import com.rnkrsoft.framework.orm.jdbc.Table;
-import com.rnkrsoft.framework.orm.mongo.MongoCollection;
+import com.rnkrsoft.framework.orm.mongo.MongoTable;
 import com.rnkrsoft.framework.orm.mongo.MongoColumn;
 import com.rnkrsoft.framework.test.SpringTest;
 import lombok.Data;
+import lombok.ToString;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.UUID;
+import java.util.List;
 
 /**
  * Created by liucheng on 2018/6/5.
@@ -24,39 +22,43 @@ import java.util.UUID;
 public class MongoDaoSupportTest extends SpringTest {
 
     @Data
-    @MongoCollection(name = "table1")
+    @ToString
+    @MongoTable(name = "table1")
     static class Bean {
         @PrimaryKey(strategy = PrimaryKeyStrategy.UUID)
         @MongoColumn(name = "_id")
         String _id;
 
         @MongoColumn(name = "name")
-        String name;
+        String name1;
 
         @MongoColumn(name = "age")
-        Integer age;
+        Integer age2;
+
+        @MongoColumn(name = "title")
+        String title1;
+
+        public Bean() {
+        }
 
         public Bean(String id, String name, Integer age) {
             this._id = id;
-            this.name = name;
-            this.age = age;
+            this.name1 = name;
+            this.age2 = age;
         }
-    }
-
-    @Data
-    static class Bean1 {
-        @MongoColumn(name = "name")
-        String name;
-
-        @MongoColumn(name = "age")
-        Integer age;
     }
 
     @Test
     public void testInsert() throws Exception {
+        Bean bean = new Bean(null, "张三", null);
         MongoClient mongoClient = new MongoClient(new ServerAddress("192.168.0.111", 3017), MongoClientOptions.builder().build());
-//        new MongoDaoSupport(mongoClient.getDatabase("xxxx"), Bean.class) {
-//        }.insert(new Bean(null, "this is a test", 21));
+        MongoDaoSupport mongoDaoSupport = new MongoDaoSupport(mongoClient.getDatabase("xxxx"), Bean.class) {};
+        long count = mongoDaoSupport.count(bean);
+        System.out.println(count);
+        List<Bean> list = mongoDaoSupport.select(bean);
+        System.out.println(list);
+
+        mongoDaoSupport.insert(false, new Bean(null, "张三", 12213));
 
     }
 }

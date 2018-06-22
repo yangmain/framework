@@ -1,5 +1,6 @@
-package com.rnkrsoft.framework.orm.mybatis.sequence;
+package com.rnkrsoft.framework.orm.mybatis.spring.sequence;
 
+import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Invoker;

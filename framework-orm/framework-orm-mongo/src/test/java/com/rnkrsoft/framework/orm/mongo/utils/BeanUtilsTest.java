@@ -1,8 +1,11 @@
 package com.rnkrsoft.framework.orm.mongo.utils;
 
+import com.rnkrsoft.framework.mongo.proxy.OperateLogEntity;
+import com.rnkrsoft.framework.orm.spring.sequence.ClasspathSequenceServiceConfigure;
 import lombok.ToString;
 import org.junit.Test;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -10,7 +13,7 @@ import java.util.Map;
  */
 public class BeanUtilsTest {
     @ToString
-    static class Demo {
+    static class Demo implements Serializable{
         String name;
         int age;
         Demo1 address1;
@@ -24,7 +27,7 @@ public class BeanUtilsTest {
         }
     }
     @ToString
-    static class Demo1 {
+    static class Demo1 implements Serializable{
         String address;
         long count;
         Demo2 demo2;
@@ -38,7 +41,7 @@ public class BeanUtilsTest {
         }
     }
     @ToString
-    static class Demo2 {
+    static class Demo2 implements Serializable{
         String title;
 
         public Demo2() {
@@ -51,17 +54,20 @@ public class BeanUtilsTest {
 
     @Test
     public void testDescribe() throws Exception {
-        Demo demo = new Demo("xxx", 5);
+        Demo demo = new Demo(null, 5);
         demo.address1 = new Demo1("xssss", 123456L);
         demo.address1.demo2 = new Demo2("dsxsxs");
-        Map<String, Object> map = BeanUtils.describe(demo, null);
+        Map<String, Object> map = BeanUtils.describe(demo, BeanUtils.BeanSetting.builder().nullable(true).build());
         System.out.println(map);
-        Demo demo11 = BeanUtils.populate(map, Demo.class, null);
+        Demo demo11 = BeanUtils.populate(map, Demo.class,  BeanUtils.BeanSetting.builder().nullable(true).build());
         System.out.println(demo11);
     }
 
     @Test
-    public void testPopulate() throws Exception {
-
+    public void testMongoAnn() throws Exception {
+        OperateLogEntity operateLogEntity = new OperateLogEntity();
+        operateLogEntity.setName("this is a test");
+        Map<String, Object> map = BeanUtils.describe(operateLogEntity, BeanUtils.BeanSetting.builder().nullable(true).sequenceServiceConfigure(new ClasspathSequenceServiceConfigure()).tableMetadata(MongoEntityUtils.extractTable(operateLogEntity.getClass())).build());
+        System.out.println(map);
     }
 }

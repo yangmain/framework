@@ -32,7 +32,7 @@ import com.rnkrsoft.framework.orm.mybatis.mapper.builder.lock.LockByUpdateSetPri
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.select.*;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.update.UpdateByPrimaryKeyMappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.update.UpdateByPrimaryKeySelectiveMappedStatementBuilder;
-import com.rnkrsoft.framework.orm.mybatis.sequence.SequenceServiceConfigure;
+import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.jdbc.update.UpdateByPrimaryKeyMapper;
 import com.rnkrsoft.framework.orm.jdbc.update.UpdateByPrimaryKeySelectiveMapper;
 import lombok.extern.slf4j.Slf4j;
