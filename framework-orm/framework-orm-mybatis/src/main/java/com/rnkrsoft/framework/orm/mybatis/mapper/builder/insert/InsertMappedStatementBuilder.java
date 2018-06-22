@@ -6,7 +6,7 @@ import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.spring.sequence.PrimaryKeyHelper;
-import com.rnkrsoft.framework.orm.jdbc.select.SelectMapper;
+import com.rnkrsoft.framework.orm.jdbc.select.JdbcSelectMapper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -16,7 +16,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
-import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
+import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 
 
 import java.util.*;
@@ -33,7 +33,7 @@ public class InsertMappedStatementBuilder extends MappedStatementBuilder {
     protected SequenceServiceConfigure sequenceConfigure;
 
     public InsertMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass, SequenceServiceConfigure sequenceConfigure) {
-        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, JdbcSelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, JdbcSelectMapper.class));
         this.sequenceConfigure = sequenceConfigure;
     }
 

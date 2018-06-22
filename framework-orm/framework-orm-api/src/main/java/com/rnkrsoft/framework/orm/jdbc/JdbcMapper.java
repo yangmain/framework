@@ -1,21 +1,21 @@
 package com.rnkrsoft.framework.orm.jdbc;
 
-import com.rnkrsoft.framework.orm.jdbc.delete.DeleteMapper;
-import com.rnkrsoft.framework.orm.jdbc.update.UpdateMapper;
-import com.rnkrsoft.framework.orm.jdbc.count.CountMapper;
-import com.rnkrsoft.framework.orm.jdbc.insert.InsertMapper;
-import com.rnkrsoft.framework.orm.jdbc.lock.LockMapper;
-import com.rnkrsoft.framework.orm.jdbc.select.SelectMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.JdbcDeleteMapper;
+import com.rnkrsoft.framework.orm.jdbc.update.JdbcUpdateMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.JdbcCountMapper;
+import com.rnkrsoft.framework.orm.jdbc.insert.JdbcInsertMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.JdbcLockMapper;
+import com.rnkrsoft.framework.orm.jdbc.select.JdbcSelectMapper;
 
 /**
  * Created by rnkrsoft.com on 2016/12/18.
  */
 public interface JdbcMapper<Entity, PrimaryKey> extends
-        CountMapper<Entity, PrimaryKey>,
-        SelectMapper<Entity, PrimaryKey>,
-        InsertMapper<Entity, PrimaryKey>,
-        UpdateMapper<Entity, PrimaryKey>,
-        DeleteMapper<Entity, PrimaryKey>,
-        LockMapper<Entity, PrimaryKey>
+        JdbcCountMapper<Entity, PrimaryKey>,
+        JdbcSelectMapper<Entity, PrimaryKey>,
+        JdbcInsertMapper<Entity, PrimaryKey>,
+        JdbcUpdateMapper<Entity, PrimaryKey>,
+        JdbcDeleteMapper<Entity, PrimaryKey>,
+        JdbcLockMapper<Entity, PrimaryKey>
 {
 }

@@ -64,6 +64,10 @@ public class TableMetadata {
      */
     String dataEngine;
     /**
+     * 当前已自增到的数值
+     */
+    Long autoIncrement;
+    /**
      * 数据库模式
      */
     String schema = "";
@@ -76,6 +80,11 @@ public class TableMetadata {
      */
     String suffix = "";
 
+    /**
+     * 增加字段定义
+     * @param columnMetadata 字段元信息
+     * @return 表元信息
+     */
     public TableMetadata addColumn(ColumnMetadata columnMetadata){
         columnMetadataSet.put(columnMetadata.getJdbcName(), columnMetadata);
         orderColumns.add(columnMetadata.getJdbcName());
@@ -84,17 +93,32 @@ public class TableMetadata {
         }
         return this;
     }
+
+    /**
+     * 获取字段元信息
+     * @param columnName 字段名
+     * @return 字段元信息
+     */
     public ColumnMetadata getColumn(String columnName){
-        return columnMetadataSet.get(columnName);
+        ColumnMetadata columnMetadata = columnMetadataSet.get(columnName);
+        if (columnMetadata == null){
+            throw ErrorContextFactory.instance().message("不存在JDBC字段'{}'", columnName).runtimeException();
+        }
+        return  columnMetadata;
     }
 
+    /**
+     * 获取字段元信息
+     * @param javaName java字段名
+     * @return 字段元信息
+     */
     public ColumnMetadata getColumnByJavaName(String javaName){
         for (ColumnMetadata columnMetadata : columnMetadataSet.values()){
             if (columnMetadata.getJavaName().equals(javaName)){
                 return columnMetadata;
             }
         }
-        throw ErrorContextFactory.instance().message("不存在字段'{}'", javaName).runtimeException();
+        throw ErrorContextFactory.instance().message("不存在Java字段'{}'", javaName).runtimeException();
     }
 
     public String getFullTableName(){

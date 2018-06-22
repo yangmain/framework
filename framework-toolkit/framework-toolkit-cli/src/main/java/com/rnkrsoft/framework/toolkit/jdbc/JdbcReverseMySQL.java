@@ -88,18 +88,18 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 suffix = "";
             }
             String engine = resultSet.getString("table_engine");
-            String autoIncrement = resultSet.getString("auto_increment");
+            Long autoIncrement = resultSet.getLong("auto_increment");
             String comment = resultSet.getString("table_comment");
             TableMetadata tableMetadata = TableMetadata.builder()
                     .tableName(name0)
                     .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Entity")
                     .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "DAO")
                     .mapperName(packageName + ".mapper." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Mapper")
+                    .autoIncrement(autoIncrement)
                     .prefix(prefix.toUpperCase())
                     .suffix(suffix.toUpperCase())
                     .dataEngine(engine)
                     .comment(comment)
-//                    .schema(schema)
                     .build();
             reverse(tableMetadata, schema, connection);
             metadatas.add(tableMetadata);
@@ -116,9 +116,9 @@ public class JdbcReverseMySQL implements JdbcReverse {
         Statement statement = connection.createStatement();
         String sql = "select cols.column_name as column_name, " +
                 "cols.column_default as column_default, " +
-                "cols.is_nullable as is_nullable, " +
+                "cols.is_nullable as nullable, " +
                 "cols.data_type as data_type, " +
-                "cols.column_type as column_type, " +
+                "cols.column_type as full_jdbc_type, " +
                 "cols.extra as extra, " +
                 "cols.character_maximum_length as character_maximum_length, " +
                 "cols.numeric_precision as numeric_precision, " +
@@ -133,52 +133,43 @@ public class JdbcReverseMySQL implements JdbcReverse {
         while (resultSet.next()) {
             String column_name = resultSet.getString("column_name").toUpperCase();
             String column_default = resultSet.getString("column_default");
-            String is_nullable = resultSet.getString("is_nullable").toUpperCase();
+            String nullable = resultSet.getString("nullable").toUpperCase();
             String data_type = resultSet.getString("data_type").toUpperCase();
-            long character_maximum_length = resultSet.getLong("character_maximum_length");
+            String full_jdbc_type = resultSet.getString("full_jdbc_type").toUpperCase();
+            int character_maximum_length = (int)resultSet.getLong("character_maximum_length");
             int numeric_precision = resultSet.getInt("numeric_precision");
             int numeric_scale = resultSet.getInt("numeric_scale");
             String extra = resultSet.getString("extra");
-            String column_type = resultSet.getString("column_type");
             String column_key = resultSet.getString("column_key");
             String column_comment = resultSet.getString("column_comment");
             String jdbc_type = null;
             Class java_type = String.class;
             if (data_type.equalsIgnoreCase("bigint")) {
                 jdbc_type = "NUMERIC";
-                column_type = "BIGINT";
                 java_type = Long.class;
             } else if (data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("integer") ) {
                 jdbc_type = "NUMERIC";
-                column_type = "INTEGER";
                 java_type = Integer.class;
             } else if (data_type.equalsIgnoreCase("smallint")) {
                 jdbc_type = "NUMERIC";
-                column_type = "SMALLINT";
                 java_type = Integer.class;
             } else if (data_type.equalsIgnoreCase("tinyint")) {
                 jdbc_type = "NUMERIC";
-                column_type = "TINYINT";
                 java_type = Integer.class;
             } else if (data_type.equalsIgnoreCase("decimal")) {
                 jdbc_type = "DECIMAL";
-                column_type = "DECIMAL";
                 java_type = BigDecimal.class;
             } else if (data_type.equalsIgnoreCase("datetime")) {
                 jdbc_type = "TIMESTAMP";
-                column_type = "TIMESTAMP";
                 java_type = java.sql.Timestamp.class;
             } else if (data_type.equalsIgnoreCase("varchar")) {
                 jdbc_type = "VARCHAR";
-                column_type = "VARCHAR";
                 java_type = String.class;
             } else if (data_type.equalsIgnoreCase("char")) {
                 jdbc_type = "CHAR";
-                column_type = "CHAR";
                 java_type = String.class;
             } else {
                 jdbc_type = "VARCHAR";
-                column_type = "VARCHAR";
                 java_type = String.class;
             }
 
@@ -188,9 +179,12 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     .jdbcName(column_name.toUpperCase())
                     .javaType(java_type)
                     .defaultValue(column_default)
-                    .nullable("YES".equals(is_nullable))
+                    .nullable("YES".equalsIgnoreCase(nullable))
                     .jdbcType(jdbc_type.toUpperCase())
-                    .dataType(column_type.toUpperCase())
+                    .length(character_maximum_length)
+                    .scale(numeric_scale)
+                    .precision(numeric_precision)
+                    .fullJdbcType(full_jdbc_type.toUpperCase())
                     .comment(column_comment);
 
             //如果是主键则添加到主键列表中

@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.sequence;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -9,6 +10,7 @@ import java.util.ServiceLoader;
  * Created by rnkrsoft.com on 2018/4/2.
  * 序号服务工厂类
  */
+@Slf4j
 public class SequenceServiceFactory {
     /**
      * 返回最先匹配的序号服务
@@ -43,9 +45,15 @@ public class SequenceServiceFactory {
             }
         }
         if (service == null) {
+            serviceIterator = serviceLoader.iterator();
+            while (serviceIterator.hasNext()) {
+                SequenceService service0 = serviceIterator.next();
+                log.info("implement '{}'", service0.getClass());
+            }
             throw ErrorContextFactory.instance()
                     .activity("scan SequenceService")
-                    .message("not found implement class")
+                    .message("not found implement class '{}'", className)
+                    .solution("please check configuration implement class jar package dependency or spelling error which implement class name!")
                     .runtimeException();
         }
         return service;

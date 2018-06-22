@@ -4,7 +4,7 @@ import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.jdbc.WordMode;
 import com.rnkrsoft.framework.orm.config.ItemConfig;
-import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
+import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.mybatis.spring.mapper.OrmMappedStatementRegister;
 import com.rnkrsoft.framework.orm.spring.OrmScannerConfigurer;
 import com.rnkrsoft.framework.orm.spring.OrmSessionFactoryBean;

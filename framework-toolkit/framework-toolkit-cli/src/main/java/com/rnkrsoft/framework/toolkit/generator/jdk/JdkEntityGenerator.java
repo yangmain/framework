@@ -77,16 +77,16 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType().equalsIgnoreCase("NUMERIC")) {
-               if (columnMetadata.getDataType().equalsIgnoreCase("BIGINT")){
+               if (columnMetadata.getFullJdbcType().equalsIgnoreCase("BIGINT")){
                    buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.LONG)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                    buf.put("UTF-8", indent(), MessageFormatter.format("Long {};", columnMetadata.getJavaName()));
-               }else if(columnMetadata.getDataType().equalsIgnoreCase("INTEGER")) {
+               }else if(columnMetadata.getFullJdbcType().equalsIgnoreCase("INTEGER")) {
                    buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                    buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
-               }else if(columnMetadata.getDataType().equalsIgnoreCase("SMALLINT")){
+               }else if(columnMetadata.getFullJdbcType().equalsIgnoreCase("SMALLINT")){
                    buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                    buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
-               }else if(columnMetadata.getDataType().equalsIgnoreCase("TINYINT")){
+               }else if(columnMetadata.getFullJdbcType().equalsIgnoreCase("TINYINT")){
                    buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                    buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
                }

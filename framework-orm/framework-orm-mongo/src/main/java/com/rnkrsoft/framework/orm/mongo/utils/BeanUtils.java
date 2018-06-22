@@ -2,8 +2,8 @@ package com.rnkrsoft.framework.orm.mongo.utils;
 
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.orm.mongo.sequence.MongoPrimaryKeyHelper;
-import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
+import com.rnkrsoft.framework.orm.mongo.MongoPrimaryKeyHelper;
+import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.MetaClass;

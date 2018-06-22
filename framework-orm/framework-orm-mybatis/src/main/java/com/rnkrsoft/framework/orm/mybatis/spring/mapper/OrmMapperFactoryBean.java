@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.mybatis.spring.mapper;
 
 import com.rnkrsoft.framework.orm.config.OrmConfig;
-import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
+import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionDaoSupport;
 import lombok.Setter;
 import org.apache.ibatis.executor.ErrorContext;

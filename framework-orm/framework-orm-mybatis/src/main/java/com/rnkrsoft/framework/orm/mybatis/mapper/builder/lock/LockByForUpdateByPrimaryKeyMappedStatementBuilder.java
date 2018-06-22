@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
-import com.rnkrsoft.framework.orm.jdbc.select.SelectMapper;
+import com.rnkrsoft.framework.orm.jdbc.select.JdbcSelectMapper;
 import com.rnkrsoft.framework.orm.untils.KeywordsUtils;
 import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 public class LockByForUpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBuilder {
     public LockByForUpdateByPrimaryKeyMappedStatementBuilder(Configuration config, OrmConfig ormConfig, Class mapperClass) {
-        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, SelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, SelectMapper.class));
+        super(config, ormConfig, mapperClass.getName(), mapperClass, GenericsExtractor.extractEntityClass(mapperClass, JdbcSelectMapper.class), GenericsExtractor.extractKeyClass(mapperClass, JdbcSelectMapper.class));
     }
 
     @Override

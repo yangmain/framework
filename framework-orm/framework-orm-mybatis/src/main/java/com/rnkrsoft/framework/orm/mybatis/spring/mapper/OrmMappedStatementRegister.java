@@ -1,19 +1,19 @@
 package com.rnkrsoft.framework.orm.mybatis.spring.mapper;
 
 import com.rnkrsoft.framework.orm.config.OrmConfig;
-import com.rnkrsoft.framework.orm.jdbc.count.CountAllMapper;
-import com.rnkrsoft.framework.orm.jdbc.count.CountAndMapper;
-import com.rnkrsoft.framework.orm.jdbc.count.CountOrMapper;
-import com.rnkrsoft.framework.orm.jdbc.delete.DeleteAndMapper;
-import com.rnkrsoft.framework.orm.jdbc.delete.DeleteByPrimaryKeyMapper;
-import com.rnkrsoft.framework.orm.jdbc.delete.DeleteOrMapper;
-import com.rnkrsoft.framework.orm.jdbc.delete.TruncateMapper;
-import com.rnkrsoft.framework.orm.jdbc.insert.InsertAllMapper;
-import com.rnkrsoft.framework.orm.jdbc.insert.InsertSelectiveMapper;
-import com.rnkrsoft.framework.orm.jdbc.lock.LockByForUpdateAndMapper;
-import com.rnkrsoft.framework.orm.jdbc.lock.LockByForUpdateByPrimaryKeyMapper;
-import com.rnkrsoft.framework.orm.jdbc.lock.LockByForUpdateOrMapper;
-import com.rnkrsoft.framework.orm.jdbc.lock.LockByUpdateSetPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.JdbcCountAllMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.JdbcCountAndMapper;
+import com.rnkrsoft.framework.orm.jdbc.count.JdbcCountOrMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.JdbcDeleteAndMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.JdbcDeleteByPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.JdbcDeleteOrMapper;
+import com.rnkrsoft.framework.orm.jdbc.delete.JdbcTruncateMapper;
+import com.rnkrsoft.framework.orm.jdbc.insert.JdbcInsertAllMapper;
+import com.rnkrsoft.framework.orm.jdbc.insert.JdbcInsertSelectiveMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.JdbcLockByForUpdateAndMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.JdbcLockByForUpdateByPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.JdbcLockByForUpdateOrMapper;
+import com.rnkrsoft.framework.orm.jdbc.lock.JdbcLockByUpdateSetPrimaryKeyMapper;
 import com.rnkrsoft.framework.orm.jdbc.select.*;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.MappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.count.CountAllMappedStatementBuilder;
@@ -32,9 +32,9 @@ import com.rnkrsoft.framework.orm.mybatis.mapper.builder.lock.LockByUpdateSetPri
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.select.*;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.update.UpdateByPrimaryKeyMappedStatementBuilder;
 import com.rnkrsoft.framework.orm.mybatis.mapper.builder.update.UpdateByPrimaryKeySelectiveMappedStatementBuilder;
-import com.rnkrsoft.framework.orm.spring.sequence.SequenceServiceConfigure;
-import com.rnkrsoft.framework.orm.jdbc.update.UpdateByPrimaryKeyMapper;
-import com.rnkrsoft.framework.orm.jdbc.update.UpdateByPrimaryKeySelectiveMapper;
+import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
+import com.rnkrsoft.framework.orm.jdbc.update.JdbcUpdateByPrimaryKeyMapper;
+import com.rnkrsoft.framework.orm.jdbc.update.JdbcUpdateByPrimaryKeySelectiveMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -131,72 +131,72 @@ public abstract class OrmMappedStatementRegister {
     ) {
         List<MappedStatementBuilder> builders = new ArrayList();
         //---------------------------新增-----------------------------------------
-        if (InsertSelectiveMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcInsertSelectiveMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new InsertSelectiveMappedStatementBuilder(configuration, ormConfig, daoInterface, ssc));
         }
-        if (InsertAllMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcInsertAllMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new InsertMappedStatementBuilder(configuration, ormConfig, daoInterface, ssc));
         }
         //---------------------------删除-----------------------------------------
-        if (DeleteAndMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcDeleteAndMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new DeleteAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (DeleteOrMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcDeleteOrMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new DeleteOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (DeleteByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcDeleteByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new DeleteByPrimaryKeyMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (TruncateMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcTruncateMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new TruncateMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
         //---------------------------修改-----------------------------------------
-        if (UpdateByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcUpdateByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new UpdateByPrimaryKeyMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (UpdateByPrimaryKeySelectiveMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcUpdateByPrimaryKeySelectiveMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new UpdateByPrimaryKeySelectiveMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
         //---------------------------查询-----------------------------------------
-        if (SelectAndMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcSelectAndMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (SelectOrMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcSelectOrMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (SelectByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcSelectByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectByPrimaryKeyMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (SelectAllMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcSelectAllMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectAllMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (SelectPageAndMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcSelectPageAndMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectPageAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (SelectPageOrMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcSelectPageOrMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new SelectPageOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
         //---------------------------统计-----------------------------------------
-        if (CountAllMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcCountAllMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new CountAllMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (CountAndMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcCountAndMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new CountAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (CountOrMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcCountOrMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new CountOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
         //---------------------------加锁-----------------------------------------
-        if (LockByForUpdateAndMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcLockByForUpdateAndMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new LockByForUpdateAndMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (LockByForUpdateOrMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcLockByForUpdateOrMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new LockByForUpdateOrMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (LockByForUpdateByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcLockByForUpdateByPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new LockByForUpdateByPrimaryKeyMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
-        if (LockByUpdateSetPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
+        if (JdbcLockByUpdateSetPrimaryKeyMapper.class.isAssignableFrom(daoInterface)) {
             builders.add(new LockByUpdateSetPrimaryKeyMappedStatementBuilder(configuration, ormConfig, daoInterface));
         }
 

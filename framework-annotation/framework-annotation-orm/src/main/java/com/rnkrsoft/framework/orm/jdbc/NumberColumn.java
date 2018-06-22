@@ -36,7 +36,7 @@ public @interface NumberColumn {
     String defaultValue() default "";
     /**
      * 整个数字,不算点号,例如Decimal(5,2)可最大存放999.99
-     * @return 整个数字,不算点号
+     * @return 整数部分,不算点号
      * @since 1.0.0
      */
     int precision() default 0;

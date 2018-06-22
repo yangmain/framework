@@ -11,6 +11,9 @@ import java.lang.reflect.Field;
 @NoArgsConstructor
 @Builder
 public class ColumnMetadata {
+    /**
+     * 是否为物理主键字段
+     */
     boolean primaryKey = false;
     /**
      * 所属表元信息
@@ -25,7 +28,7 @@ public class ColumnMetadata {
      */
     Field columnField;
     /**
-     * 字段名称
+     * Java字段名称
      */
     String javaName = "";
     /**
@@ -39,7 +42,19 @@ public class ColumnMetadata {
     /**
      * 数据库数据类型 包含有长度信息或者精确度信息
      */
-    String dataType;
+    String fullJdbcType;
+    /**
+     * 字符长度
+     */
+    Integer length;
+    /**
+     * 整数部分
+     */
+    Integer precision;
+    /**
+     * 小数部分
+     */
+    Integer scale;
     /**
      * 数据库字段类型 只是数据类型
      */
@@ -48,6 +63,10 @@ public class ColumnMetadata {
      * 是否允许为空
      */
     Boolean nullable = true;
+    /**
+     * 枚举类,如果无枚举字段类型为Object
+     */
+    Class enumClass = Object.class;
     /**
      * 字段注释
      */
@@ -73,7 +92,7 @@ public class ColumnMetadata {
      */
     ValueMode valueMode = ValueMode.EQUAL;
 
-    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String dataType, String jdbcType, Boolean nullable, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
+    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, String jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
         this.primaryKey = primaryKey;
         this.tableMetadata = tableMetadata;
         this.entityClass = entityClass;
@@ -81,9 +100,10 @@ public class ColumnMetadata {
         this.javaName = javaName;
         this.javaType = javaType;
         this.jdbcName = jdbcName;
-        this.dataType = dataType;
+        this.fullJdbcType = fullJdbcType;
         this.jdbcType = jdbcType;
         this.nullable = nullable;
+        this.enumClass = enumClass;
         this.comment = comment;
         this.primaryKeyStrategy = primaryKeyStrategy;
         this.primaryKeyFeature = primaryKeyFeature;
@@ -95,18 +115,23 @@ public class ColumnMetadata {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ColumnMetadata{");
+        sb.append("primaryKey=").append(primaryKey);
+        sb.append(", tableMetadata=").append(tableMetadata);
         sb.append(", entityClass=").append(entityClass);
         sb.append(", columnField=").append(columnField);
         sb.append(", javaName='").append(javaName).append('\'');
         sb.append(", javaType=").append(javaType);
         sb.append(", jdbcName='").append(jdbcName).append('\'');
-        sb.append(", dataType='").append(dataType).append('\'');
+        sb.append(", fullJdbcType='").append(fullJdbcType).append('\'');
         sb.append(", jdbcType='").append(jdbcType).append('\'');
         sb.append(", nullable=").append(nullable);
+        sb.append(", enumClass=").append(enumClass);
         sb.append(", comment='").append(comment).append('\'');
         sb.append(", primaryKeyStrategy=").append(primaryKeyStrategy);
+        sb.append(", primaryKeyFeature='").append(primaryKeyFeature).append('\'');
         sb.append(", defaultValue='").append(defaultValue).append('\'');
-        sb.append(", valueMode='").append(valueMode.getCode()).append('\'');
+        sb.append(", autoIncrement=").append(autoIncrement);
+        sb.append(", valueMode=").append(valueMode);
         sb.append('}');
         return sb.toString();
     }

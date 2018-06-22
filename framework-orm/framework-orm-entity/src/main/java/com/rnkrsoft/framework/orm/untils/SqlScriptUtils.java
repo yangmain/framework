@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -122,7 +121,7 @@ public abstract class SqlScriptUtils {
             sql.append(" ")
                     .append(convert(name, sqlMode))
                     .append(" ")
-                    .append(convert(columnMetadata.getDataType(), keywordMode));
+                    .append(convert(columnMetadata.getFullJdbcType(), keywordMode));
             sql.append(" ");
             if (columnMetadata.getNullable()) {
                 sql.append(convert("NULL", keywordMode));
@@ -146,7 +145,7 @@ public abstract class SqlScriptUtils {
                     }
                 }
                 //如果MySQL中Text是不支持默认值为空的
-            } else if (columnMetadata.getJdbcType().equals("VARCHAR") && columnMetadata.getJdbcType().equals("CHAR") && !columnMetadata.getDataType().equals("TEXT")) {
+            } else if (columnMetadata.getJdbcType().equals("VARCHAR") && columnMetadata.getJdbcType().equals("CHAR") && !columnMetadata.getFullJdbcType().equals("TEXT")) {
                 if (defval != null && !defval.isEmpty()) {
                     defval = "'" + defval + "'";
                 }

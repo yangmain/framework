@@ -52,7 +52,7 @@ public class JpaEntityExtractor implements EntityExtractor {
             columnMetadata.setJdbcType(jdbcType);
         }
         if (dataType != null) {
-            columnMetadata.setDataType(dataType);
+            columnMetadata.setFullJdbcType(dataType);
         }
         return this;
     }
@@ -120,7 +120,7 @@ public class JpaEntityExtractor implements EntityExtractor {
             columnMetadata.setJdbcType(jdbcType);
         }
         if (dataType != null) {
-            columnMetadata.setDataType(dataType);
+            columnMetadata.setFullJdbcType(dataType);
         }
         return this;
     }
@@ -166,7 +166,7 @@ public class JpaEntityExtractor implements EntityExtractor {
             columnMetadata.setJdbcType(jdbcType);
         }
         if (dataType != null) {
-            columnMetadata.setDataType(dataType);
+            columnMetadata.setFullJdbcType(dataType);
         }
         return this;
     }

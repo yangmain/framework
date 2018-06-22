@@ -92,7 +92,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             columnMetadata.setJdbcType(jdbcType);
         }
         if (dataType != null) {
-            columnMetadata.setDataType(dataType);
+            columnMetadata.setFullJdbcType(dataType);
         }
         return this;
     }
@@ -252,7 +252,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             columnMetadata.setJdbcType(jdbcType);
         }
         if (dataType != null) {
-            columnMetadata.setDataType(dataType);
+            columnMetadata.setFullJdbcType(dataType);
         }
 
         return this;
@@ -346,7 +346,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             columnMetadata.setJdbcType(jdbcType);
         }
         if (dataType != null) {
-            columnMetadata.setDataType(dataType);
+            columnMetadata.setFullJdbcType(dataType);
         }
         return this;
     }
