@@ -85,6 +85,8 @@ public class OrmEntityExtractor implements EntityExtractor {
                 }
             }
             columnMetadata.setDefaultValue(stringColumn.defaultValue());
+            Class enumClass = stringColumn.enumClass();
+            columnMetadata.setEnumClass(enumClass);
         }
         if (jdbcType != null) {
             columnMetadata.setJdbcType(jdbcType);
@@ -92,10 +94,6 @@ public class OrmEntityExtractor implements EntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
-//        Class enumClass = stringColumn.enumClass();
-//        if (new HashSet(Arrays.asList(enumClass.getInterfaces())).contains(EnumStringCode.class)){
-//
-//        }
         return this;
     }
 
@@ -247,6 +245,8 @@ public class OrmEntityExtractor implements EntityExtractor {
                 }
             }
             columnMetadata.setDefaultValue(numberColumn.defaultValue());
+            Class enumClass = numberColumn.enumClass();
+            columnMetadata.setEnumClass(enumClass);
         }
         if (jdbcType != null) {
             columnMetadata.setJdbcType(jdbcType);
@@ -254,6 +254,7 @@ public class OrmEntityExtractor implements EntityExtractor {
         if (dataType != null) {
             columnMetadata.setDataType(dataType);
         }
+
         return this;
     }
 

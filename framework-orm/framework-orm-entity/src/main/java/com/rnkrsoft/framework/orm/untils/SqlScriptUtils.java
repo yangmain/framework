@@ -1,6 +1,11 @@
 package com.rnkrsoft.framework.orm.untils;
 
+import com.rnkrsoft.interfaces.EnumBase;
+import com.rnkrsoft.interfaces.EnumIntegerCode;
+import com.rnkrsoft.interfaces.EnumStringCode;
 import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
+import com.rnkrsoft.reflection4j.MetaObject;
 import com.rnkrsoft.reflection4j.resource.ClassScanner;
 import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
@@ -15,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -148,14 +154,38 @@ public abstract class SqlScriptUtils {
 
             }
             if (defval != null && !defval.isEmpty()) {
-                sql.append(convert(" DEFAULT ", keywordMode) + defval + " ");
+                if (columnMetadata.getJdbcType().equals("VARCHAR") || columnMetadata.getJdbcType().equals("CHAR") ){
+                    sql.append(convert(" DEFAULT ", keywordMode) + "'" + defval + "' ");
+                }else{
+                    sql.append(convert(" DEFAULT ", keywordMode) + defval + " ");
+                }
             }
             if (columnMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.IDENTITY) {
                 sql.append(convert(" AUTO_INCREMENT ", keywordMode));
                 autoIncrementCnt++;
             }
             if (columnMetadata.getComment() != null && !columnMetadata.getComment().trim().isEmpty()) {
-                sql.append(convert(" COMMENT '", keywordMode)).append(columnMetadata.getComment()).append("'");
+                sql.append(convert(" COMMENT '", keywordMode)).append(columnMetadata.getComment());
+                if (columnMetadata.getEnumClass() != null && columnMetadata.getEnumClass() != Object.class){
+                    if (EnumBase.class.isAssignableFrom(columnMetadata.getEnumClass())){
+                        if (EnumStringCode.class.isAssignableFrom(columnMetadata.getEnumClass())) {
+                            sql.append(" ");
+                            for (Object val : columnMetadata.getEnumClass().getEnumConstants()){
+                                MetaObject metaObject = GlobalSystemMetadata.forObject(EnumStringCode.class, val);
+                                sql.append(metaObject.getValue("code")).append(":").append(metaObject.getValue("desc")).append("  ");
+                            }
+                        }else if (EnumIntegerCode.class.isAssignableFrom(columnMetadata.getEnumClass())){
+                            sql.append(" ");
+                            for (Object val : columnMetadata.getEnumClass().getEnumConstants()){
+                                MetaObject metaObject = GlobalSystemMetadata.forObject(EnumIntegerCode.class, val);
+                                sql.append(metaObject.getValue("code")).append(":").append(metaObject.getValue("desc")).append("  ");
+                            }
+                        }else{
+
+                        }
+                    }
+                }
+                sql.append("'");
             }
             sql.append(",").append(System.getProperty("line.separator"));
         }
