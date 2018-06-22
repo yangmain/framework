@@ -13,7 +13,6 @@ import java.util.Map;
  * 表元信息
  */
 @Data
-@ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor

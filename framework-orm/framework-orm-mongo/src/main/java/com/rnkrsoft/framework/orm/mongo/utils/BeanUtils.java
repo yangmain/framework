@@ -122,17 +122,18 @@ public class BeanUtils {
             if (!metaObject.hasSetter(javaName)) {
                 continue;
             }
-            if (value0 instanceof String) {
+            Class javaType =  metaObject.getSetterType(javaName);
+            if (javaType == String.class) {
+                metaObject.setValue(javaName, value0.toString());
+            } else if (javaType ==  Boolean.class) {
                 metaObject.setValue(javaName, value0);
-            } else if (value0 instanceof Boolean) {
+            } else if (javaType ==  Integer.class) {
                 metaObject.setValue(javaName, value0);
-            } else if (value0 instanceof Integer) {
+            } else if (javaType ==  Long.class) {
                 metaObject.setValue(javaName, value0);
-            } else if (value0 instanceof Long) {
+            } else if (javaType ==  Double.class) {
                 metaObject.setValue(javaName, value0);
-            } else if (value0 instanceof Double) {
-                metaObject.setValue(javaName, value0);
-            } else if (value0 instanceof Map) {
+            } else if (Map.class.isAssignableFrom(javaType)) {
                 Class setterClass = metaObject.getSetterType(javaName);
                 if (Serializable.class.isAssignableFrom(setterClass)) {
                     Map map1 = (Map) value0;

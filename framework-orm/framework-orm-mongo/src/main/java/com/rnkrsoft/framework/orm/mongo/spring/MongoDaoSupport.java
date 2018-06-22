@@ -10,11 +10,14 @@ import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mongo.utils.BeanUtils;
 import com.rnkrsoft.framework.orm.mongo.utils.BsonUtils;
 import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
+import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Invoker;
 import com.rnkrsoft.reflection4j.Reflector;
+import lombok.Setter;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.dao.support.DaoSupport;
 
 import java.util.ArrayList;
@@ -31,6 +34,8 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     Class<Entity> entityClass;
     Invoker primaryKeyInvoker;
     TableMetadata tableMetadata;
+    @Setter
+    SequenceServiceConfigure sequenceServiceConfigure;
 
     String getTableName() {
         return tableMetadata.getTableName();
@@ -75,7 +80,7 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     public void insert(boolean nullable, Entity... entities) {
         List<Map> list = new ArrayList();
         for (Entity entity : entities) {
-            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(nullable).build()));
+            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(nullable).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
         }
         insert(list.toArray(new Map[list.size()]));
     }
@@ -96,11 +101,17 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        getTable().deleteMany(Filters.eq("_id", id));
+        TableMetadata tableMetadata = MongoEntityUtils.extractTable(entityClass);
+        if (tableMetadata.getColumn(tableMetadata.getPrimaryKeys().get(0)).getJavaType() == ObjectId.class){
+            getTable().deleteMany(new Document("_id", new ObjectId(id)));
+        }else{
+            getTable().deleteMany(new Document("_id", id));
+        }
+
     }
 
     public void updateByPrimaryKey(Entity condition, Entity entity) {
-        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).build())));
+        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
     }
 
     public void updateByPrimaryKey(Map<String, Object> condition, Map<String, Object> parameter) {
@@ -108,7 +119,7 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     }
 
     public void updateByPrimaryKeySelective(Entity condition, Entity entity) {
-        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).build())));
+        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
     }
 
     public List<Entity> select(Entity entity) {
@@ -117,7 +128,7 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         Iterator<Document> it = fi.iterator();
         while (it.hasNext()) {
             Document document = it.next();
-            list.add(BeanUtils.populate(document, entityClass, BeanUtils.BeanSetting.builder().nullable(true).build()));
+            list.add(BeanUtils.populate(document, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
         }
         return list;
     }

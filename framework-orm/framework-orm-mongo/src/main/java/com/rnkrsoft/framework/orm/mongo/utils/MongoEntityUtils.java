@@ -8,6 +8,7 @@ import com.rnkrsoft.framework.orm.mongo.MongoColumn;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Reflector;
+import org.bson.types.ObjectId;
 
 import java.lang.reflect.Field;
 
@@ -58,12 +59,18 @@ public class MongoEntityUtils {
         columnMetadata.setJavaName(columnMetadata.getColumnField().getName());
         columnMetadata.setJavaType(field.getType());
         columnMetadata.setDefaultValue(mongoColumn.defaultValue());
+        columnMetadata.setNullable(mongoColumn.nullable());
         if (primaryKey != null){
             if (columnName.isEmpty()){
                 columnName = "_id";
             }
             if (!columnName.equals("_id")){
                 throw ErrorContextFactory.instance().message("物理主键不为'_id', 实际 '{}'", columnName).runtimeException();
+            }
+            if (mongoColumn.nullable()){
+                if (field.getType() != ObjectId.class){
+                    throw ErrorContextFactory.instance().message("物理主键允许为空，数据类型必须为 '{}'", ObjectId.class).runtimeException();
+                }
             }
             columnMetadata.setPrimaryKey(true);
             columnMetadata.setPrimaryKeyFeature(primaryKey.feature());

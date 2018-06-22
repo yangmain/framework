@@ -22,10 +22,10 @@ public @interface MongoColumn {
     String name() default "";
 
     /**
-     * 数据转换器
+     * 是否允许为空
      * @return
      */
-    Class converter() default Object.class;
+    boolean nullable() default true;
     /**
      * 字段默认值
      * @return

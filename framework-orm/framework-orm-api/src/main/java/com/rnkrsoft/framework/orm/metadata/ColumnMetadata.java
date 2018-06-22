@@ -92,7 +92,7 @@ public class ColumnMetadata {
      */
     ValueMode valueMode = ValueMode.EQUAL;
 
-    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, String jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
+    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, String jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
         this.primaryKey = primaryKey;
         this.tableMetadata = tableMetadata;
         this.entityClass = entityClass;
@@ -101,6 +101,9 @@ public class ColumnMetadata {
         this.javaType = javaType;
         this.jdbcName = jdbcName;
         this.fullJdbcType = fullJdbcType;
+        this.length = length;
+        this.precision = precision;
+        this.scale = scale;
         this.jdbcType = jdbcType;
         this.nullable = nullable;
         this.enumClass = enumClass;
@@ -116,7 +119,6 @@ public class ColumnMetadata {
     public String toString() {
         final StringBuffer sb = new StringBuffer("ColumnMetadata{");
         sb.append("primaryKey=").append(primaryKey);
-        sb.append(", tableMetadata=").append(tableMetadata);
         sb.append(", entityClass=").append(entityClass);
         sb.append(", columnField=").append(columnField);
         sb.append(", javaName='").append(javaName).append('\'');
