@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 基于JVM的序号服务
  */
 public class InjvmSequenceService implements SequenceService{
-    static Map<String, AtomicInteger> SEQUENCES = new ConcurrentHashMap<String, AtomicInteger>();
+    final static Map<String, AtomicInteger> SEQUENCES = new ConcurrentHashMap();
     @Override
     public int nextval(String schema, String prefix, String sequenceName, String feature) {
         String key = schema + "_" + prefix + "_" + sequenceName + "_" + feature;

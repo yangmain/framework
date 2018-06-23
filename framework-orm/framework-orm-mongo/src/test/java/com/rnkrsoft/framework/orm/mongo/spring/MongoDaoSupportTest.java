@@ -32,8 +32,10 @@ public class MongoDaoSupportTest extends SpringTest {
 //       mongoDaoSupport.insert(false, OperateLogEntity.builder().id("xxxxxxxxxxxxx").name("sss").age(12).data("xxxxxxxxxxxxxx").build());
 //        long count = mongoDaoSupport.count(OperateLogEntity.builder().age(12).build());
 //        System.out.println(count);
-        mongoDaoSupport.delete(OperateLogEntity.builder().age(12).build());
+//        mongoDaoSupport.delete(OperateLogEntity.builder().age(12).build());
         List<OperateLogEntity> list = mongoDaoSupport.select(OperateLogEntity.builder().age(12).build());
-        System.out.println(list);
+        for (OperateLogEntity entity : list) {
+            System.out.println(entity);
+        }
     }
 }

@@ -1,12 +1,13 @@
 package com.rnkrsoft.framework.orm.mongo;
 
 import com.rnkrsoft.framework.orm.ValueMode;
+import com.rnkrsoft.interfaces.EnumStringCode;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 
 /**
  * Created by rnkrsoft.com on 2018/6/5.
  */
-public enum MongoValueMode {
+public enum MongoValueMode implements EnumStringCode{
     LT("$lt", "小于", ValueMode.LT),
     LTE("$lte", "小于", ValueMode.LTE),
     GT("$gt", "大于", ValueMode.GT),
@@ -20,6 +21,16 @@ public enum MongoValueMode {
         this.code = code;
         this.desc = desc;
         this.valueMode = valueMode;
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
     }
 
     public static MongoValueMode valueOfCode(ValueMode valueMode){

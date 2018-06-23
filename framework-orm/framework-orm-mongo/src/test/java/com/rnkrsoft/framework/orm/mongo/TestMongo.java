@@ -95,6 +95,16 @@ public class TestMongo {
         MongoClient mongoClient = new MongoClient("192.168.0.111", 3017);
         MongoDatabase mongoDatabase = mongoClient.getDatabase("xxxx");
         MongoCollection table = mongoDatabase.getCollection("table1");
+        long i2 = table.count(new Document("age", new Document("$gte", 12)));
+        System.out.println(i2);
+    }
+
+
+    @Test
+    public void test8() {
+        MongoClient mongoClient = new MongoClient("192.168.0.111", 3017);
+        MongoDatabase mongoDatabase = mongoClient.getDatabase("xxxx");
+        MongoCollection table = mongoDatabase.getCollection("table1");
         table.updateMany(eq("age", 12), new Document("$set",new Document("age", 123).append("title", "xxxxxxxxxxxxxxxxx")));
     }
 }

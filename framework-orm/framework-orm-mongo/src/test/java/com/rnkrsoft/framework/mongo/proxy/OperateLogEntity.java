@@ -20,7 +20,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @MongoTable(name = "OPERATE_LOG", schema = "mongo_data")
 public class OperateLogEntity implements Serializable{
-    @PrimaryKey(strategy = PrimaryKeyStrategy.EXPRESSION, feature = "ABCD_${yyyyMMddHHmmssSSS}_${SEQ:5}_${SEQ:8}_${RANDOM:8}_EFGH")
+    @PrimaryKey(strategy = PrimaryKeyStrategy.EXPRESSION, feature = "ABCD_${yyyyMMddHHmmssSSS}_${SEQ:5}_${SEQ:8}${SEQ:8}_${RANDOM:8}_EFGH")
     @MongoColumn(valueMode = ValueMode.EQUAL, nullable = false)
     String id;
 
@@ -30,6 +30,6 @@ public class OperateLogEntity implements Serializable{
     @MongoColumn(name = "AGE", valueMode = ValueMode.GT)
     Integer age;
 
-    @MongoColumn(name = "DATA", valueMode = ValueMode.LTE)
+    @MongoColumn(name = "DATA", valueMode = ValueMode.LIKE)
     String data;
 }
