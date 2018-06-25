@@ -5,7 +5,7 @@ import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/6/21.
+ * Created by rnkrsoft.com on 2018/6/21.
  */
 public class EntityUtilsTest {
 

@@ -8,7 +8,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by woate on 2018/6/11.
+ * Created by rnkrsoft.com on 2018/6/11.
+ * 标注在MongoDB实体上的字段
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

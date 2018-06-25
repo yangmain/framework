@@ -31,7 +31,7 @@ import java.util.UUID;
         dropBeforeCreate = false
 )
 @ContextConfiguration("classpath*:testContext-orm.xml")
-@DataSource(DataSourceType.AUTO)
+@DataSource(DataSourceType.MySQL)
 public class DataSourceTestTest extends DataSourceTest {
     @Test
     public void test1() {

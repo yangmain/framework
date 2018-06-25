@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Created by woate on 2018/6/21.
+ * Created by rnkrsoft.com on 2018/6/21.
  */
 @Slf4j
 public class MongoPrimaryKeyHelper {

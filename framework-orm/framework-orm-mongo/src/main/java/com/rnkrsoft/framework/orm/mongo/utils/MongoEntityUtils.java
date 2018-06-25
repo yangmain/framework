@@ -13,7 +13,7 @@ import org.bson.types.ObjectId;
 import java.lang.reflect.Field;
 
 /**
- * Created by woate on 2018/6/21.
+ * Created by rnkrsoft.com on 2018/6/21.
  */
 public class MongoEntityUtils {
     public static TableMetadata extractTable(Class entityClass){

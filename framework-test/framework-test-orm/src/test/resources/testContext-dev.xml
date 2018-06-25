@@ -23,11 +23,11 @@
 
     <!--开发数据源-->
     <bean id="defaultDataSource" class="com.rnkrsoft.framework.test.datasource.DevDataSource">
-        <property name="host" value="122.114.65.131"/>
-        <property name="port" value="3306"/>
-        <property name="schema" value="dudule"/>
+        <property name="host" value="192.168.0.111"/>
+        <property name="port" value="3333"/>
+        <property name="schema" value="ccclubs_yun_sys"/>
         <property name="username" value="root"/>
-        <property name="password" value="duduledmm@2018"/>
+        <property name="password" value="root"/>
         <property name="initialSize" value="5"/>
         <property name="minIdle" value="5"/>
         <property name="maxActive" value="10"/>
