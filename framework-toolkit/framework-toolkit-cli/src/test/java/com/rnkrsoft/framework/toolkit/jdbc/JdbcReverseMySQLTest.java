@@ -19,11 +19,14 @@ public class JdbcReverseMySQLTest {
     @Test
     public void testReverses() throws Exception {
         JdbcReverse jdbcReverse = new JdbcReverseMySQL();
-        List<TableMetadata> metadatas = jdbcReverse.reverses("192.168.0.111:3333", "ccclubs_yun_sys", "root", "root", "com.zxevpop", null, null);
+        List<TableMetadata> metadatas = jdbcReverse.reverses("192.168.0.111:3333", "ccclubs_yun_sys", "root", "root", "com.zxevpop",new String[] {"TB", "SRV"}, null);
 //        List<TableMetadata> metadatas = jdbcReverse.reverses("192.168.0.111:3333", "ccclubs_yun_sys", "root", "root", "com.zxevpop", new String []{"srv"}, new String []{"LOG"});
 
         for (TableMetadata tableMetadata : metadatas){
-            Generator generator = new JdkDaoGenerator();
+            if (!tableMetadata.getTableName().equalsIgnoreCase("API")){
+                continue;
+            }
+            Generator generator = new JdkEntityGenerator();
             ByteBuf buf = generator.generate(GenerateContext.builder().tableMetadata(tableMetadata).packageName("com.zxevpop").build());
             System.out.println(buf.asString("UTF-8"));
         }

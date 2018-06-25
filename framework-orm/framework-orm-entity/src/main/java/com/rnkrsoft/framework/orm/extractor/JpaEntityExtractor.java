@@ -1,5 +1,7 @@
 package com.rnkrsoft.framework.orm.extractor;
 
+import com.rnkrsoft.framework.orm.EntityExtractor;
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.orm.jdbc.Ignore;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
@@ -49,7 +51,7 @@ public class JpaEntityExtractor implements EntityExtractor {
             }
         }
         if (jdbcType != null) {
-            columnMetadata.setJdbcType(jdbcType);
+            columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
         if (dataType != null) {
             columnMetadata.setFullJdbcType(dataType);
@@ -77,7 +79,7 @@ public class JpaEntityExtractor implements EntityExtractor {
                 jdbcType = "DECIMAL";
             } else if (fieldClass == Long.class) {
                 dataType = "BIGINT";
-                jdbcType = "NUMERIC";
+                jdbcType = "BIGINT";
                 if (column.nullable()) {
                     ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
@@ -87,10 +89,10 @@ public class JpaEntityExtractor implements EntityExtractor {
                 }
             } else if (fieldClass == Long.TYPE) {
                 dataType = "BIGINT";
-                jdbcType = "NUMERIC";
+                jdbcType = "BIGINT";
             } else if (fieldClass == Integer.class) {
                 dataType = "INTEGER";
-                jdbcType = "NUMERIC";
+                jdbcType = "INTEGER";
                 if (column.nullable()) {
                     ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
@@ -100,10 +102,10 @@ public class JpaEntityExtractor implements EntityExtractor {
                 }
             } else if (fieldClass == Integer.TYPE) {
                 dataType = "INTEGER";
-                jdbcType = "NUMERIC";
+                jdbcType = "INTEGER";
             } else if (fieldClass == Boolean.class) {
                 dataType = "TINYINT";
-                jdbcType = "NUMERIC";
+                jdbcType = "TINYINT";
                 if (column.nullable()) {
                     ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
@@ -112,12 +114,12 @@ public class JpaEntityExtractor implements EntityExtractor {
                 }
             } else if (fieldClass == Boolean.TYPE) {
                 dataType = "TINYINT";
-                jdbcType = "NUMERIC";
+                jdbcType = "TINYINT";
             } else {
             }
         }
         if (jdbcType != null) {
-            columnMetadata.setJdbcType(jdbcType);
+            columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
         if (dataType != null) {
             columnMetadata.setFullJdbcType(dataType);
@@ -136,7 +138,7 @@ public class JpaEntityExtractor implements EntityExtractor {
                 Temporal temporal = (Temporal) fieldClass.getAnnotation(Temporal.class);
                 //如果没有注解则直接使用TIMESTAMP,数据库用DATETIME
                 if (temporal == null) {
-                    dataType = "DATETIME";
+                    dataType = "TIMESTAMP";
                     jdbcType = "TIMESTAMP";
                 } else {
                     //如果有注解指定数据类型，则使用指定的数据类型
@@ -163,7 +165,7 @@ public class JpaEntityExtractor implements EntityExtractor {
             }
         }
         if (jdbcType != null) {
-            columnMetadata.setJdbcType(jdbcType);
+            columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
         if (dataType != null) {
             columnMetadata.setFullJdbcType(dataType);

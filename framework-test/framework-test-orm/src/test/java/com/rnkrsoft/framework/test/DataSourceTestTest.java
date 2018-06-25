@@ -41,6 +41,10 @@ public class DataSourceTestTest extends DataSourceTest {
         entity.setUserName(UUID.randomUUID().toString());
         entity.setCreateDate(new Date());
         entity.setLastUpdateDate(new Timestamp(new Date().getTime()));
+        entity.setStatus(Boolean.TRUE);
+        entity.setFlag(1233654L);
+        orderDAO.insertSelective(entity);
+
         entity.addOrderBy(OrderByColumn.builder("age").order(Order.ASC).build());
         entity.addOrderBy(OrderByColumn.builder("user_name").order(Order.DESC).build());
         orderDAO.selectAnd(entity);

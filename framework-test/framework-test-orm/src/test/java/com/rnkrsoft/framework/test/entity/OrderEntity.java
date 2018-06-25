@@ -28,7 +28,15 @@ public class OrderEntity extends Entity implements Serializable {
     @Comment("年龄")
     Integer age;
 
-    @DateColumn(name = "CREATE_DATE", nullable = false)
+    @NumberColumn(name = "FLAG", nullable = false)
+    @Comment("表示")
+    Long flag;
+
+    @NumberColumn(name = "STATUS", nullable = false)
+    @Comment("状态")
+    Boolean status;
+
+    @DateColumn(name = "CREATE_DATE", nullable = false, type = DateType.TIMESTAMP)
     @Comment("创建日期")
     Date createDate;
 

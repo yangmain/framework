@@ -46,7 +46,7 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
         for (String column : getTableMetadata().getOrderColumns()) {
             ColumnMetadata columnMetadata = fields.get(column);
             heads.add(new IfSqlNode(new TextSqlNode(convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + ","), columnMetadata.getJavaName() + " != null"));
-            String valueExp = "#{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " },";
+            String valueExp = "#{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType().getCode() + " },";
             values.add(new IfSqlNode(new TextSqlNode(valueExp), columnMetadata.getJavaName() + " != null"));
         }
         MixedSqlNode headsSqlNode = new MixedSqlNode(heads);
@@ -67,7 +67,7 @@ public class InsertSelectiveMappedStatementBuilder extends MappedStatementBuilde
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
             ParameterMapping.Builder builder = new ParameterMapping.Builder(config, columnMetadata.getJavaName(), columnMetadata.getJavaType());
-            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType()));
+            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType().getCode()));
             parameterMappings.add(builder.build());
         }
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "BaseParameterMap", entityClass, parameterMappings);

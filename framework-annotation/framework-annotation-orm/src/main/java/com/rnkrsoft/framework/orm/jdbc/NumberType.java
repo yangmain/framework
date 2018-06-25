@@ -18,6 +18,18 @@ public enum NumberType {
      */
     INTEGER,
     /**
+     * 短整型
+     */
+    SHORT,
+    /**
+     * 字节型
+     */
+    BYTE,
+    /**
+     * 布尔型
+     */
+    BOOLEAN,
+    /**
      * 长整型
      */
     LONG

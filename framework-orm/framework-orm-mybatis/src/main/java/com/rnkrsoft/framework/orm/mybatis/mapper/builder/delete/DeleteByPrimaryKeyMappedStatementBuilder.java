@@ -48,7 +48,7 @@ public class DeleteByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.DELETE_BY_PRIMARY_KEY, sqlSource, SqlCommandType.DELETE);
         //创建参数映射
-        List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+        List<ParameterMapping> parameterMappings = new ArrayList();
         parameterMappings.add(new ParameterMapping.Builder(config, primaryKeyName, registry.getTypeHandler(keyClass)).build());
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "defaultParameterMap", entityClass, parameterMappings);
         msBuilder.parameterMap(paramBuilder.build());

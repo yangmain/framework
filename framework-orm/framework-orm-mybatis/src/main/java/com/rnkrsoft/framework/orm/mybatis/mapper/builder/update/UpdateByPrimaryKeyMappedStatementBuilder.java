@@ -57,7 +57,7 @@ public class UpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
             }
             ColumnMetadata columnMetadata = fields.get(column);
             //生成Set
-            String valueSql = "#{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
+            String valueSql = "#{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType().getCode() + " }";
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.append(convert(column, getOrmConfig().getSqlMode()))
                     .append(" = ")
@@ -66,7 +66,7 @@ public class UpdateByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
             sets.add(new TextSqlNode(sqlBuilder.toString()));
             //创建参数映射
             ParameterMapping.Builder builder = new ParameterMapping.Builder(config, columnMetadata.getJavaName(), columnMetadata.getJavaType());
-            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType()));
+            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType().getCode()));
             parameterMappings.add(builder.build());
         }
         DynamicSqlSource sqlSource = new DynamicSqlSource(config

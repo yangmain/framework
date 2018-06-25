@@ -1,13 +1,15 @@
 package com.rnkrsoft.framework.orm.extractor;
 
+import com.rnkrsoft.framework.orm.EntityExtractor;
 import com.rnkrsoft.framework.orm.PrimaryKey;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
 import com.rnkrsoft.framework.orm.jdbc.*;
-import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
-import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngine;
 import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
+import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
+import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -62,13 +64,13 @@ public class OrmEntityExtractor implements EntityExtractor {
         if (stringColumn != null) {
             if (stringColumn.type() == StringType.CHAR) {
                 dataType = "CHAR(" + stringColumn.length() + ")";
-                jdbcType = "VARCHAR";
+                jdbcType = "CHAR";
             } else if (stringColumn.type() == StringType.VARCHAR) {
                 dataType = "VARCHAR(" + stringColumn.length() + ")";
                 jdbcType = "VARCHAR";
             } else if (stringColumn.type() == StringType.TEXT) {
                 dataType = "TEXT";
-                jdbcType = "VARCHAR";
+                jdbcType = "TEXT";
             } else if (stringColumn.type() == StringType.AUTO) {
                 if (stringColumn.length() <= 0) {
                     ErrorContextFactory.instance()
@@ -78,7 +80,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                 } else if (stringColumn.length() > 255) {
                     log.warn("实体[{}]字段[{}]的文本长度超过了256，自动使用TEXT数据类型", columnMetadata.getEntityClass().getName(), columnMetadata.getJdbcName());
                     dataType = "TEXT";
-                    jdbcType = "VARCHAR";
+                    jdbcType = "TEXT";
                 } else {
                     dataType = "VARCHAR(" + stringColumn.length() + ")";
                     jdbcType = "VARCHAR";
@@ -89,7 +91,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             columnMetadata.setEnumClass(enumClass);
         }
         if (jdbcType != null) {
-            columnMetadata.setJdbcType(jdbcType);
+            columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
         if (dataType != null) {
             columnMetadata.setFullJdbcType(dataType);
@@ -124,22 +126,22 @@ public class OrmEntityExtractor implements EntityExtractor {
                 if (numberColumn.type() == NumberType.AUTO) {
                     if (fieldClass == Long.TYPE) {
                         dataType = "BIGINT";
-                        jdbcType = "NUMERIC";
-                    }else if (fieldClass == Long.class) {
-                            dataType = "BIGINT";
-                            jdbcType = "NUMERIC";
-                    } else  if (fieldClass == Integer.TYPE) {
+                        jdbcType = "BIGINT";
+                    } else if (fieldClass == Long.class) {
+                        dataType = "BIGINT";
+                        jdbcType = "BIGINT";
+                    } else if (fieldClass == Integer.TYPE) {
                         dataType = "INTEGER";
-                        jdbcType = "NUMERIC";
+                        jdbcType = "INTEGER";
                     } else if (fieldClass == Integer.class) {
                         dataType = "INTEGER";
-                        jdbcType = "NUMERIC";
+                        jdbcType = "INTEGER";
                     } else if (fieldClass == Boolean.TYPE) {
                         dataType = "TINYINT";
-                        jdbcType = "NUMERIC";
+                        jdbcType = "TINYINT";
                     } else if (fieldClass == Boolean.class) {
                         dataType = "TINYINT";
-                        jdbcType = "NUMERIC";
+                        jdbcType = "TINYINT";
                     } else if (fieldClass == BigDecimal.class) {
                         if (numberColumn.scale() > 0 && numberColumn.precision() > 0 && numberColumn.precision() > numberColumn.scale()) {
                             dataType = "DECIMAL(" + numberColumn.precision() + "," + numberColumn.scale() + ")";
@@ -152,19 +154,38 @@ public class OrmEntityExtractor implements EntityExtractor {
                         }
                         jdbcType = "DECIMAL";
                     }
-                } else if (numberColumn.type() == NumberType.INTEGER) {
-                    if (fieldClass == Integer.TYPE) {
-                        dataType = "INTEGER";
-                        jdbcType = "NUMERIC";
-                    } else if (fieldClass == Integer.class) {
-                        dataType = "INTEGER";
-                        jdbcType = "NUMERIC";
-                    } else if (fieldClass == Boolean.TYPE) {
+                } else if (numberColumn.type() == NumberType.BOOLEAN) {
+                    if (fieldClass == Boolean.TYPE) {
                         dataType = "TINYINT";
-                        jdbcType = "NUMERIC";
+                        jdbcType = "TINYINT";
                     } else if (fieldClass == Boolean.class) {
                         dataType = "TINYINT";
-                        jdbcType = "NUMERIC";
+                        jdbcType = "TINYINT";
+                    } else {
+                        ErrorContextFactory.instance()
+                                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                                .message("字段{}为为非整数类型，标注注解为整数型", columnMetadata.getJavaName())
+                                .solution("将字段类型修改为[{},{}]任意一种或者修改注解", Boolean.class, Boolean.TYPE).throwError();
+                    }
+                } else if (numberColumn.type() == NumberType.BYTE || numberColumn.type() == NumberType.SHORT || numberColumn.type() == NumberType.INTEGER) {
+                    if (fieldClass == Byte.TYPE) {
+                        dataType = "INTEGER";
+                        jdbcType = "INTEGER";
+                    } else if (fieldClass == Byte.class) {
+                        dataType = "INTEGER";
+                        jdbcType = "INTEGER";
+                    }else if (fieldClass == Short.TYPE) {
+                        dataType = "INTEGER";
+                        jdbcType = "INTEGER";
+                    } else if (fieldClass == Short.class) {
+                        dataType = "INTEGER";
+                        jdbcType = "INTEGER";
+                    } else if (fieldClass == Integer.TYPE) {
+                        dataType = "INTEGER";
+                        jdbcType = "INTEGER";
+                    } else if (fieldClass == Integer.class) {
+                        dataType = "INTEGER";
+                        jdbcType = "INTEGER";
                     } else {
                         ErrorContextFactory.instance()
                                 .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
@@ -174,11 +195,11 @@ public class OrmEntityExtractor implements EntityExtractor {
                 } else if (numberColumn.type() == NumberType.LONG) {
                     if (fieldClass == Long.TYPE) {
                         dataType = "BIGINT";
-                        jdbcType = "NUMERIC";
-                    }else if (fieldClass == Long.class) {
+                        jdbcType = "BIGINT";
+                    } else if (fieldClass == Long.class) {
                         dataType = "BIGINT";
-                        jdbcType = "NUMERIC";
-                    }else{
+                        jdbcType = "BIGINT";
+                    } else {
                         ErrorContextFactory.instance()
                                 .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                                 .message("字段{}为为非长整数类型，标注注解为长整数型", columnMetadata.getJavaName())
@@ -221,22 +242,34 @@ public class OrmEntityExtractor implements EntityExtractor {
                     jdbcType = "DECIMAL";
                 } else if (fieldClass == Long.TYPE) {
                     dataType = "BIGINT";
-                    jdbcType = "NUMERIC";
+                    jdbcType = "BIGINT";
                 } else if (fieldClass == Long.class) {
                     dataType = "BIGINT";
-                    jdbcType = "NUMERIC";
+                    jdbcType = "BIGINT";
                 } else if (fieldClass == Integer.TYPE) {
                     dataType = "INTEGER";
-                    jdbcType = "NUMERIC";
+                    jdbcType = "INTEGER";
                 } else if (fieldClass == Integer.class) {
                     dataType = "INTEGER";
-                    jdbcType = "NUMERIC";
+                    jdbcType = "INTEGER";
+                } else if (fieldClass == Short.TYPE) {
+                    dataType = "INTEGER";
+                    jdbcType = "INTEGER";
+                } else if (fieldClass == Short.class) {
+                    dataType = "INTEGER";
+                    jdbcType = "INTEGER";
+                } else if (fieldClass == Byte.TYPE) {
+                    dataType = "INTEGER";
+                    jdbcType = "INTEGER";
+                } else if (fieldClass == Byte.class) {
+                    dataType = "INTEGER";
+                    jdbcType = "INTEGER";
                 } else if (fieldClass == Boolean.TYPE) {
                     dataType = "TINYINT";
-                    jdbcType = "NUMERIC";
+                    jdbcType = "TINYINT";
                 } else if (fieldClass == Boolean.class) {
                     dataType = "TINYINT";
-                    jdbcType = "NUMERIC";
+                    jdbcType = "TINYINT";
                 } else {
                     ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
@@ -249,7 +282,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             columnMetadata.setEnumClass(enumClass);
         }
         if (jdbcType != null) {
-            columnMetadata.setJdbcType(jdbcType);
+            columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
         if (dataType != null) {
             columnMetadata.setFullJdbcType(dataType);
@@ -317,11 +350,11 @@ public class OrmEntityExtractor implements EntityExtractor {
                             .solution("将字段{}的类型从{}修改为[{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Timestamp.class).throwError();
 
                 }
-                dataType = "DATETIME";
+                dataType = "TIMESTAMP";
                 jdbcType = "TIMESTAMP";
             } else if (dateColumn.type() == DateType.AUTO) {
                 if (fieldClass == java.sql.Date.class) {
-                    dataType = "DATETIME";
+                    dataType = "TIMESTAMP";
                     jdbcType = "TIMESTAMP";
                 } else if (fieldClass == java.util.Date.class) {
                     dataType = "DATE";
@@ -343,7 +376,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             columnMetadata.setDefaultValue(dateColumn.defaultValue());
         }
         if (jdbcType != null) {
-            columnMetadata.setJdbcType(jdbcType);
+            columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
         if (dataType != null) {
             columnMetadata.setFullJdbcType(dataType);
@@ -408,7 +441,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                         .solution("将字段{}的类型从{}修改为{}", field.getName(), columnMetadata.getJavaType(), String.class)
                         .runtimeException();
             }
-        }else{
+        } else {
             ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                     .message("字段{}使用了不支持的物理主键", field.getName())
@@ -444,7 +477,7 @@ public class OrmEntityExtractor implements EntityExtractor {
         DateColumn dateColumn = field.getAnnotation(DateColumn.class);
         Comment comment = field.getAnnotation(Comment.class);
         Ignore ignore = field.getAnnotation(Ignore.class);
-        if (ignore != null){
+        if (ignore != null) {
             return false;
         }
         if ("schema".equals(columnMetadata.getJavaName())) {

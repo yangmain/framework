@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.untils;
 
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
 import com.rnkrsoft.interfaces.EnumBase;
 import com.rnkrsoft.interfaces.EnumIntegerCode;
 import com.rnkrsoft.interfaces.EnumStringCode;
@@ -134,18 +135,26 @@ public abstract class SqlScriptUtils {
                 if (defval == null || defval.isEmpty()) {
                     defval = "'1971-01-01 00:00:00'";
                 }
-            } else if (columnMetadata.getJdbcType().startsWith("DECIMAL")) {
+            } else if (columnMetadata.getJdbcType() == SupportedJdbcType.DECIMAL) {
                 if (defval == null || defval.isEmpty()) {
                     defval = "0";
                 }
-            } else if (columnMetadata.getJdbcType().startsWith("NUMERIC")) {
+            } else if (columnMetadata.getJdbcType() == SupportedJdbcType.TINYINT
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.SMALLINT
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.INT
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.INTEGER
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.BIGINT
+                    ) {
                 if (columnMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.IDENTITY) {
                     if (defval == null || defval.isEmpty()) {
                         defval = "0";
                     }
                 }
                 //如果MySQL中Text是不支持默认值为空的
-            } else if (columnMetadata.getJdbcType().equals("VARCHAR") && columnMetadata.getJdbcType().equals("CHAR") && !columnMetadata.getFullJdbcType().equals("TEXT")) {
+            } else if (columnMetadata.getJdbcType() == SupportedJdbcType.VARCHAR
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.TEXT
+                    ) {
                 if (defval != null && !defval.isEmpty()) {
                     defval = "'" + defval + "'";
                 }
@@ -153,7 +162,8 @@ public abstract class SqlScriptUtils {
 
             }
             if (defval != null && !defval.isEmpty()) {
-                if (columnMetadata.getJdbcType().equals("VARCHAR") || columnMetadata.getJdbcType().equals("CHAR") ){
+                if (columnMetadata.getJdbcType() == SupportedJdbcType.VARCHAR
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR){
                     sql.append(convert(" DEFAULT ", keywordMode) + "'" + defval + "' ");
                 }else{
                     sql.append(convert(" DEFAULT ", keywordMode) + defval + " ");

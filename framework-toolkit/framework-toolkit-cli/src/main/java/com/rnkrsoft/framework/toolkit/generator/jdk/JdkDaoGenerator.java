@@ -24,7 +24,6 @@ public class JdkDaoGenerator extends JdkGenerator implements DaoGenerator {
             throw ErrorContextFactory.instance().message("table {} has not primary key", metadata.getTableName()).runtimeException();
         }
         String pkName = metadata.getPrimaryKeys().get(0);
-        System.out.println("--------------" + pkName);
         ColumnMetadata columnMetadata = metadata.getColumnMetadataSet().get(pkName);
         if (columnMetadata == null){
             throw ErrorContextFactory.instance().message("table {} has not primary key", metadata.getTableName()).runtimeException();

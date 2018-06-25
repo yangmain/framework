@@ -1,16 +1,20 @@
 package com.rnkrsoft.framework.toolkit.jdbc;
 
+import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
+import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
+import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.message.MessageFormatter;
 import com.rnkrsoft.utils.StringUtils;
-import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
-import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
-import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by rnkrsoft.com on 2018/4/26.
@@ -134,43 +138,42 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String column_name = resultSet.getString("column_name").toUpperCase();
             String column_default = resultSet.getString("column_default");
             String nullable = resultSet.getString("nullable").toUpperCase();
-            String data_type = resultSet.getString("data_type").toUpperCase();
-            String full_jdbc_type = resultSet.getString("full_jdbc_type").toUpperCase();
-            int character_maximum_length = (int)resultSet.getLong("character_maximum_length");
+            SupportedJdbcType data_type = SupportedJdbcType.valueOfCode(resultSet.getString("data_type").toUpperCase());
+            String full_jdbc_type = "VARCHAR(255)";
+            int character_maximum_length = (int) resultSet.getLong("character_maximum_length");
             int numeric_precision = resultSet.getInt("numeric_precision");
             int numeric_scale = resultSet.getInt("numeric_scale");
             String extra = resultSet.getString("extra");
             String column_key = resultSet.getString("column_key");
             String column_comment = resultSet.getString("column_comment");
-            String jdbc_type = null;
             Class java_type = String.class;
-            if (data_type.equalsIgnoreCase("bigint")) {
-                jdbc_type = "NUMERIC";
+            if (data_type == SupportedJdbcType.BIGINT) {
                 java_type = Long.class;
-            } else if (data_type.equalsIgnoreCase("int") || data_type.equalsIgnoreCase("integer") ) {
-                jdbc_type = "NUMERIC";
+                full_jdbc_type = data_type.getCode();
+            } else if (data_type == SupportedJdbcType.INT || data_type == SupportedJdbcType.INTEGER) {
                 java_type = Integer.class;
-            } else if (data_type.equalsIgnoreCase("smallint")) {
-                jdbc_type = "NUMERIC";
+                full_jdbc_type = SupportedJdbcType.INTEGER.getCode();
+            } else if (data_type == SupportedJdbcType.SMALLINT) {
                 java_type = Integer.class;
-            } else if (data_type.equalsIgnoreCase("tinyint")) {
-                jdbc_type = "NUMERIC";
+                full_jdbc_type = SupportedJdbcType.INTEGER.getCode();
+            } else if (data_type == SupportedJdbcType.TINYINT) {
                 java_type = Integer.class;
-            } else if (data_type.equalsIgnoreCase("decimal")) {
-                jdbc_type = "DECIMAL";
+                full_jdbc_type = SupportedJdbcType.INTEGER.getCode();
+            } else if (data_type == SupportedJdbcType.DECIMAL) {
                 java_type = BigDecimal.class;
-            } else if (data_type.equalsIgnoreCase("datetime")) {
-                jdbc_type = "TIMESTAMP";
+                full_jdbc_type = SupportedJdbcType.DECIMAL.getCode() + "(" + (numeric_precision == 0 ? 18 : numeric_precision) + "," + (numeric_scale == 0 ? 2 : numeric_scale) + ")";
+            } else if (data_type == SupportedJdbcType.TIMESTAMP) {
                 java_type = java.sql.Timestamp.class;
-            } else if (data_type.equalsIgnoreCase("varchar")) {
-                jdbc_type = "VARCHAR";
+                full_jdbc_type = SupportedJdbcType.TIMESTAMP.getCode();
+            } else if (data_type == SupportedJdbcType.VARCHAR) {
                 java_type = String.class;
-            } else if (data_type.equalsIgnoreCase("char")) {
-                jdbc_type = "CHAR";
+                full_jdbc_type = SupportedJdbcType.VARCHAR.getCode() + "(" + (character_maximum_length == 0 ? 255 : character_maximum_length) + ")";
+            } else if (data_type == SupportedJdbcType.CHAR) {
                 java_type = String.class;
+                full_jdbc_type = SupportedJdbcType.CHAR.getCode() + "(" + (character_maximum_length == 0 ? 255 : character_maximum_length) + ")";
             } else {
-                jdbc_type = "VARCHAR";
                 java_type = String.class;
+                full_jdbc_type = SupportedJdbcType.CHAR.getCode() + "(" + (character_maximum_length == 0 ? 255 : character_maximum_length) + ")";
             }
 
             ColumnMetadata.ColumnMetadataBuilder builder = ColumnMetadata.builder()
@@ -178,21 +181,21 @@ public class JdbcReverseMySQL implements JdbcReverse {
                     .tableMetadata(tableMetadata)
                     .jdbcName(column_name.toUpperCase())
                     .javaType(java_type)
+                    .jdbcType(data_type)
+                    .fullJdbcType(full_jdbc_type.toUpperCase())
                     .defaultValue(column_default)
                     .nullable("YES".equalsIgnoreCase(nullable))
-                    .jdbcType(jdbc_type.toUpperCase())
                     .length(character_maximum_length)
                     .scale(numeric_scale)
                     .precision(numeric_precision)
-                    .fullJdbcType(full_jdbc_type.toUpperCase())
                     .comment(column_comment);
 
             //如果是主键则添加到主键列表中
             if ("PRI".equalsIgnoreCase(column_key)) {
                 tableMetadata.getPrimaryKeys().add(column_name);
-                if (data_type.equals("BIGINT") || data_type.equals("INT")  || data_type.equals("INTEGER") || data_type.equals("SMALLINT") || data_type.equals("TINYINT")) {
+                if (data_type == SupportedJdbcType.BIGINT || data_type == SupportedJdbcType.INT || data_type == SupportedJdbcType.INTEGER || data_type == SupportedJdbcType.SMALLINT || data_type == SupportedJdbcType.TINYINT) {
                     builder.primaryKeyStrategy(PrimaryKeyStrategy.IDENTITY);
-                } else if (data_type.equals("VARCHAR") || data_type.equals("CHAR")) {
+                } else if (data_type == SupportedJdbcType.VARCHAR || data_type == SupportedJdbcType.CHAR) {
                     builder.primaryKeyStrategy(PrimaryKeyStrategy.UUID);
                 } else {
                     throw ErrorContextFactory.instance().message("字段'{}.{}' 无效主键类型 '{}'", tableMetadata.getTableName(), column_name, data_type).runtimeException();

@@ -44,7 +44,7 @@ public class UpdateByPrimaryKeySelectiveMappedStatementBuilder extends MappedSta
         headBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
 
         //footBuilder是后半段
-        String primaryKeySql = "#{" + primaryKeyColumn.getJavaName() + ":" + primaryKeyColumn.getJdbcType() + " }";
+        String primaryKeySql = "#{" + primaryKeyColumn.getJavaName() + ":" + primaryKeyColumn.getJdbcType().getCode() + " }";
         StringBuilder footBuilder = new StringBuilder();
         footBuilder.append(where).append(" ");
         footBuilder.append(convert(primaryKeyName,  getOrmConfig().getSqlMode())).append(" = ").append(primaryKeySql);
@@ -68,7 +68,7 @@ public class UpdateByPrimaryKeySelectiveMappedStatementBuilder extends MappedSta
             sets.add(new IfSqlNode(new TextSqlNode(sqlBuilder.toString()), MessageFormat.format("{0} != null", columnMetadata.getJavaName())));
             //创建参数映射
             ParameterMapping.Builder builder = new ParameterMapping.Builder(config, columnMetadata.getJavaName(), columnMetadata.getJavaType());
-            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType()));
+            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType().getCode()));
             parameterMappings.add(builder.build());
         }
         DynamicSqlSource sqlSource = new DynamicSqlSource(config

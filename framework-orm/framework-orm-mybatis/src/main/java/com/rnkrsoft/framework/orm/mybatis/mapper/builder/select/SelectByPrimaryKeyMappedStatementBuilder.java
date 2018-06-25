@@ -47,19 +47,19 @@ public class SelectByPrimaryKeyMappedStatementBuilder extends MappedStatementBui
         //创建一个MappedStatement建造器
         MappedStatement.Builder msBuilder = new MappedStatement.Builder(config, namespace + "." + Constants.SELECT_BY_PRIMARY_KEY, sqlSource, SqlCommandType.SELECT);
         //创建参数映射
-        List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+        List<ParameterMapping> parameterMappings = new ArrayList();
         parameterMappings.add(new ParameterMapping.Builder(config, primaryKeyName, registry.getTypeHandler(keyClass)).build());
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "defaultParameterMap", entityClass, parameterMappings);
         msBuilder.parameterMap(paramBuilder.build());
         //创建结果映射
-        List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+        List<ResultMapping> resultMappings = new ArrayList();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
             ResultMapping.Builder builder = new ResultMapping.Builder(config, columnMetadata.getJavaName(), columnMetadata.getJdbcName(), columnMetadata.getJavaType());
             resultMappings.add(builder.build());
         }
         final ResultMap resultMap = new ResultMap.Builder(config, "BaseResultMap", entityClass, resultMappings).build();
-        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+        List<ResultMap> resultMaps = new ArrayList();
         resultMaps.add(resultMap);
         msBuilder.resultMaps(resultMaps);
         //建造出MappedStatement

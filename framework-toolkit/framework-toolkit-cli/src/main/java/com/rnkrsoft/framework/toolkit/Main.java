@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,8 +49,8 @@ public class Main {
             define.addOption("schema", "s", true, 1, "数据库模式", "字符串数据库名", "");
             define.addOption("package", "f", false, 1, "保存包名", "java格式的包名",  "com.rnkrsoft");
             define.addOption("output", "o", false, 1, "输出路径", ".", ".");
-            define.addOption("prefixes", "pres", false, 1, "前缀", "表名前缀", "tb");
-            define.addOption("suffixes", "sufs", false, 1, "后缀", "表名后缀", "");
+            define.addOption("prefixes", "pres", false, -1, "前缀", "表名前缀", "tb");
+            define.addOption("suffixes", "sufs", false, -1, "后缀", "表名后缀", "");
             define.setName("逆向工程");
             define.setCmd("reverse");
             define.setExample("reverse -h mysql.rnkrsoft.com:3306 -u root -p root -schema demo -package com.rnkrsoft.framework");
@@ -123,6 +124,7 @@ public class Main {
             String p = command.valueString("password");
             String output = command.valueString("output");
             String[] prefixes = command.valueArray("prefixes");
+            System.out.println("----prefixes " + Arrays.toString(prefixes));
             String[] suffixes = command.valueArray("suffixes");
             System.out.println("output " + output);
             if (packageName == null) {

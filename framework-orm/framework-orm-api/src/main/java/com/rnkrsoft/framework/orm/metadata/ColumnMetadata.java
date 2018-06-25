@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.metadata;
 
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
 import com.rnkrsoft.framework.orm.ValueMode;
 import lombok.*;
 
@@ -58,7 +59,7 @@ public class ColumnMetadata {
     /**
      * 数据库字段类型 只是数据类型
      */
-    String jdbcType;
+    SupportedJdbcType jdbcType;
     /**
      * 是否允许为空
      */
@@ -92,7 +93,7 @@ public class ColumnMetadata {
      */
     ValueMode valueMode = ValueMode.EQUAL;
 
-    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, String jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
+    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, SupportedJdbcType jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
         this.primaryKey = primaryKey;
         this.tableMetadata = tableMetadata;
         this.entityClass = entityClass;
@@ -100,11 +101,11 @@ public class ColumnMetadata {
         this.javaName = javaName;
         this.javaType = javaType;
         this.jdbcName = jdbcName;
-        this.fullJdbcType = fullJdbcType;
+        this.fullJdbcType = fullJdbcType == null ? "VARCHAR(255)": fullJdbcType;
         this.length = length;
         this.precision = precision;
         this.scale = scale;
-        this.jdbcType = jdbcType;
+        this.jdbcType = jdbcType == null ? SupportedJdbcType.VARCHAR : jdbcType;
         this.nullable = nullable;
         this.enumClass = enumClass;
         this.comment = comment;

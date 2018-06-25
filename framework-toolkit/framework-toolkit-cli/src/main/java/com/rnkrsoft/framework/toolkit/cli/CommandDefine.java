@@ -72,7 +72,7 @@ public class CommandDefine {
      * @param longName  长命名
      * @param shortName 短命名
      * @param require   是否必须
-     * @param argNum    参数数目
+     * @param argNum    参数数目 如果为不确定，输入-1
      * @return 对象
      */
     public CommandDefine addOption(String longName, String shortName, boolean require, int argNum, String desc, String example, String ... defaultValue) {
@@ -133,6 +133,15 @@ public class CommandDefine {
                         throw new IllegalArgumentException("无效参数");
                     }
                     tempArgs.put(option.getLongName(), Arrays.asList(arg));
+                }else if(argNum == -1){
+                    List<String> args = new ArrayList();
+                    int count = 0;
+                    String param = null;
+                    while (it.hasNext() && !(param = it.next()).startsWith("-")) {
+                        count++;
+                        args.add(param);
+                    }
+                    tempArgs.put(option.getLongName(), args);
                 } else {
                     List<String> args = new ArrayList();
                     int count = 0;

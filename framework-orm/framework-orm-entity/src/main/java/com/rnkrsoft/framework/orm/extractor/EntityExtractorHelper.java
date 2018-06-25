@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.extractor;
 
+import com.rnkrsoft.framework.orm.EntityExtractor;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Reflector;

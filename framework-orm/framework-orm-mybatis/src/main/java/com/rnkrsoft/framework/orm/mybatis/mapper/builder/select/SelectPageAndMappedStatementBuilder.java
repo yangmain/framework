@@ -45,7 +45,7 @@ public class SelectPageAndMappedStatementBuilder extends MappedStatementBuilder 
         Map<String, ColumnMetadata> fields = getTableMetadata().getColumnMetadataSet();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
-            String whereSql = convert(" AND ", getOrmConfig().getKeywordMode()) + convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{entity." + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";
+            String whereSql = convert(" AND ", getOrmConfig().getKeywordMode()) + convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{entity." + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType().getCode() + " }";
             SqlNode node = new IfSqlNode(new TextSqlNode(whereSql), MessageFormat.format("entity.{0} != null", columnMetadata.getJavaName()));
             wheres.add(node);
             parameterMappings.add(new ParameterMapping.Builder(config, columnMetadata.getJavaName(), registry.getTypeHandler(keyClass)).build());
@@ -59,20 +59,20 @@ public class SelectPageAndMappedStatementBuilder extends MappedStatementBuilder 
         for (String column: fields.keySet()){
             ColumnMetadata columnMetadata = fields.get(column);
             ParameterMapping.Builder builder = new ParameterMapping.Builder(config, "entity."+ columnMetadata.getJavaName(), columnMetadata.getJavaType());
-            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType()));
+            builder.jdbcType(JdbcType.valueOf(columnMetadata.getJdbcType().getCode()));
             parameterMappings.add(builder.build());
         }
         ParameterMap.Builder paramBuilder = new ParameterMap.Builder(config, "PageParameterMap", entityClass, parameterMappings);
         msBuilder.parameterMap(paramBuilder.build());
         //创建结果映射
-        List<ResultMapping> resultMappings = new ArrayList<ResultMapping>();
+        List<ResultMapping> resultMappings = new ArrayList();
         for (String column: fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
             ResultMapping.Builder builder = new ResultMapping.Builder(config, columnMetadata.getJavaName(), convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()), columnMetadata.getJavaType());
             resultMappings.add(builder.build());
         }
         final ResultMap resultMap = new ResultMap.Builder(config, "PageBaseResultMap", entityClass, resultMappings).build();
-        List<ResultMap> resultMaps = new ArrayList<ResultMap>();
+        List<ResultMap> resultMaps = new ArrayList();
         resultMaps.add(resultMap);
         msBuilder.resultMaps(resultMaps);
         //建造出MappedStatement

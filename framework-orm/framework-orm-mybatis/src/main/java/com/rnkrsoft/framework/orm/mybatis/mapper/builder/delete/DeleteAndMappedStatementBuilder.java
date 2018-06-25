@@ -43,8 +43,8 @@ public class DeleteAndMappedStatementBuilder extends MappedStatementBuilder {
         headBuilder.append(delete).append(" ");
         headBuilder.append(convert(getTableMetadata().getFullTableName(), getOrmConfig().getSqlMode())).append(" ");
         //创建结果映射
-        List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
-        List<SqlNode> wheres = new ArrayList<SqlNode>();
+        List<ParameterMapping> parameterMappings = new ArrayList();
+        List<SqlNode> wheres = new ArrayList();
         for (String column : fields.keySet()) {
             ColumnMetadata columnMetadata = fields.get(column);
             String whereSql = convert(" AND ", getOrmConfig().getKeywordMode()) + convert(columnMetadata.getJdbcName(), getOrmConfig().getSqlMode()) + " = #{" + columnMetadata.getJavaName() + ":" + columnMetadata.getJdbcType() + " }";

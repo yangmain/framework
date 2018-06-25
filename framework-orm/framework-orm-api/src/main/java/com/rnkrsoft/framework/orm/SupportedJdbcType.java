@@ -6,7 +6,7 @@ import com.rnkrsoft.interfaces.EnumStringCode;
  * Created by liucheng on 2018/6/22.
  * 支持的数据类型
  */
-public enum SupportedDataType implements EnumStringCode {
+public enum SupportedJdbcType implements EnumStringCode {
     CHAR("CHAR", "固定字符串"),
     BIGINT("BIGINT", "长整"),
     VARCHAR("VARCHAR", "可变字符串"),
@@ -15,6 +15,7 @@ public enum SupportedDataType implements EnumStringCode {
     TEXT("TEXT", "长字符串文本"),
     DOUBLE("DOUBLE", "浮点数"),
     INT("INT", "整型"),
+    INTEGER("INTEGER", "整型"),
     TINYINT("TINYINT", "字节"),
     TIMESTAMP("TIMESTAMP", "时间戳"),
     DECIMAL("DECIMAL", "浮点数"),
@@ -23,7 +24,7 @@ public enum SupportedDataType implements EnumStringCode {
     String code;
     String desc;
 
-    SupportedDataType(String code, String desc) {
+    SupportedJdbcType(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
@@ -39,9 +40,9 @@ public enum SupportedDataType implements EnumStringCode {
         return desc;
     }
 
-    public static SupportedDataType valueOfCode(String code){
-        for (SupportedDataType value : values()){
-            if (value.code.equals(code)){
+    public static SupportedJdbcType valueOfCode(String code){
+        for (SupportedJdbcType value : values()){
+            if (value.code.equalsIgnoreCase(code)){
                 return value;
             }
         }

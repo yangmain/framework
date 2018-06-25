@@ -45,7 +45,7 @@ public class LockByUpdateSetPrimaryKeyMappedStatementBuilder extends MappedState
 
         //footBuilder是后半段
         String where = convert("WHERE", getOrmConfig().getKeywordMode());
-        String primaryKeySql = "#{" + primaryKeyColumn.getJavaName() + ":" + primaryKeyColumn.getJdbcType() + " }";
+        String primaryKeySql = "#{" + primaryKeyColumn.getJavaName() + ":" + primaryKeyColumn.getJdbcType().getCode() + " }";
         StringBuilder footBuilder = new StringBuilder();
         footBuilder.append(where).append(" ");
         footBuilder.append(convert(primaryKeyName, getOrmConfig().getSqlMode())).append(" = ").append(primaryKeySql);
