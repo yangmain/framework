@@ -136,7 +136,6 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     public Pagination<Entity> selectPage(Pagination<Entity> pagination) {
         Entity entity = pagination.getEntity();
         Document document = BsonUtils.and(entity, false);
-//        getTable().
         return null;
     }
 

@@ -12,7 +12,7 @@ import javax.jms.*;
  */
 public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
     String userName;
-    String passwsord;
+    String password;
     String brokeUrl;
     ConnectionFactory connectionFactory; // 连接工厂
     Connection connection = null; // 连接
@@ -21,7 +21,7 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
     @Override
     public int startup(ConsumerType type) {
         // 实例化连接工厂
-        this.connectionFactory = new ActiveMQConnectionFactory(userName, passwsord, brokeUrl);
+        this.connectionFactory = new ActiveMQConnectionFactory(userName, password, brokeUrl);
         try {
             this.connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             this.connection.start(); // 启动连接
