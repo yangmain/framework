@@ -12,7 +12,7 @@ public enum SupportedJdbcType implements EnumStringCode {
     VARCHAR("VARCHAR", "可变字符串"),
     SMALLINT("SMALLINT", "短整型"),
     DATETIME("DATETIME", "日期时间"),
-    TEXT("TEXT", "长字符串文本"),
+    LONGVARCHAR("LONGVARCHAR", "长字符串文本"),
     DOUBLE("DOUBLE", "浮点数"),
     INT("INT", "整型"),
     INTEGER("INTEGER", "整型"),

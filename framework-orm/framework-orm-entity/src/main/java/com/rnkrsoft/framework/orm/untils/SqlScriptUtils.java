@@ -153,7 +153,7 @@ public abstract class SqlScriptUtils {
                 //如果MySQL中Text是不支持默认值为空的
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.VARCHAR
                     || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR
-                    || columnMetadata.getJdbcType() == SupportedJdbcType.TEXT
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.LONGVARCHAR
                     ) {
                 if (defval != null && !defval.isEmpty()) {
                     defval = "'" + defval + "'";

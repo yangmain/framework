@@ -81,7 +81,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.CHAR) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.CHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
-            } else if (columnMetadata.getJdbcType() == SupportedJdbcType.TEXT) {
+            } else if (columnMetadata.getJdbcType() == SupportedJdbcType.LONGVARCHAR) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.TEXT)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("String {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.BIGINT) {

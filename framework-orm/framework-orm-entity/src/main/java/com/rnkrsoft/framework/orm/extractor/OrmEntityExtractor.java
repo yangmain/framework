@@ -70,7 +70,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                 jdbcType = "VARCHAR";
             } else if (stringColumn.type() == StringType.TEXT) {
                 dataType = "TEXT";
-                jdbcType = "TEXT";
+                jdbcType = "LONGVARCHAR";
             } else if (stringColumn.type() == StringType.AUTO) {
                 if (stringColumn.length() <= 0) {
                     ErrorContextFactory.instance()
@@ -80,7 +80,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                 } else if (stringColumn.length() > 255) {
                     log.warn("实体[{}]字段[{}]的文本长度超过了256，自动使用TEXT数据类型", columnMetadata.getEntityClass().getName(), columnMetadata.getJdbcName());
                     dataType = "TEXT";
-                    jdbcType = "TEXT";
+                    jdbcType = "LONGVARCHAR";
                 } else {
                     dataType = "VARCHAR(" + stringColumn.length() + ")";
                     jdbcType = "VARCHAR";
@@ -394,6 +394,13 @@ public class OrmEntityExtractor implements EntityExtractor {
             strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.IDENTITY) {
             strategy = PrimaryKeyStrategy.IDENTITY;
+            if (columnMetadata.getDefaultValue() != null && !columnMetadata.getDefaultValue().isEmpty()){
+                throw ErrorContextFactory.instance()
+                        .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
+                        .message("字段{}使用了自增主键同时使用了默认值'{}'", field.getName(), columnMetadata.getDefaultValue())
+                        .solution("将字段{}的只使用自增主键", field.getName())
+                        .runtimeException();
+            }
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.UUID) {
             strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.SEQUENCE_SERVICE) {

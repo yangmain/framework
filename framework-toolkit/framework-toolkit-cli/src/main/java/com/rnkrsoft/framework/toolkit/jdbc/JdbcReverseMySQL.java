@@ -173,7 +173,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 full_jdbc_type = SupportedJdbcType.CHAR.getCode() + "(" + (character_maximum_length == 0 ? 255 : character_maximum_length) + ")";
             } else {
                 java_type = String.class;
-                full_jdbc_type = SupportedJdbcType.CHAR.getCode() + "(" + (character_maximum_length == 0 ? 255 : character_maximum_length) + ")";
+                full_jdbc_type = SupportedJdbcType.VARCHAR.getCode() + "(" + (character_maximum_length == 0 ? 255 : character_maximum_length) + ")";
             }
 
             ColumnMetadata.ColumnMetadataBuilder builder = ColumnMetadata.builder()
