@@ -155,15 +155,14 @@ public abstract class SqlScriptUtils {
                     || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR
                     || columnMetadata.getJdbcType() == SupportedJdbcType.LONGVARCHAR
                     ) {
-                if (defval != null && !defval.isEmpty()) {
-                    defval = "'" + defval + "'";
-                }
+                //NOTHING
             } else {
 
             }
             if (defval != null && !defval.isEmpty()) {
                 if (columnMetadata.getJdbcType() == SupportedJdbcType.VARCHAR
-                        || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR){
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.LONGVARCHAR){
                     sql.append(convert(" DEFAULT ", keywordMode) + "'" + defval + "' ");
                 }else{
                     sql.append(convert(" DEFAULT ", keywordMode) + defval + " ");
