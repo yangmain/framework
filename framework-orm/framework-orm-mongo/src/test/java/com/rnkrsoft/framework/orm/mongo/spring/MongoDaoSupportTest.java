@@ -18,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.List;
 
 /**
- * Created by liucheng on 2018/6/5.
+ * Created by rnkrsoft.com on 2018/6/5.
  */
 @ContextConfiguration("classpath*:testContext-mongo.xml")
 public class MongoDaoSupportTest extends SpringTest {

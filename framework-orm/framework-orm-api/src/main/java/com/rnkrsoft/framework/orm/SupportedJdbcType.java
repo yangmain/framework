@@ -3,7 +3,7 @@ package com.rnkrsoft.framework.orm;
 import com.rnkrsoft.interfaces.EnumStringCode;
 
 /**
- * Created by liucheng on 2018/6/22.
+ * Created by rnkrsoft.com on 2018/6/22.
  * 支持的数据类型
  */
 public enum SupportedJdbcType implements EnumStringCode {

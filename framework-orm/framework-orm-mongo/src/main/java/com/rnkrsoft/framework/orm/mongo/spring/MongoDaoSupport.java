@@ -3,7 +3,6 @@ package com.rnkrsoft.framework.orm.mongo.spring;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 import com.rnkrsoft.framework.orm.Pagination;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -28,6 +27,17 @@ import java.util.Map;
 /**
  * Created by rnkrsoft.com on 2018/6/3.
  * MongoDB数据库支持类
+ * 1.新增
+ * 2.选择性新增
+ * 3.按照主键删除
+ * 4.按照条件删除
+ * 5.按照主键更新
+ * 6.按照条件选择性更新
+ * 7.按照条件全部进行更新
+ * 8.按照主键查找
+ * 9.按照条件查找
+ * 10.按照条件分页查找
+ * 11.按照条件统计条数
  */
 public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     MongoDatabase database;
@@ -77,12 +87,37 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         }
     }
 
-    public void insert(boolean nullable, Entity... entities) {
+    public void insertSelective(Entity... entities) {
         List<Map> list = new ArrayList();
         for (Entity entity : entities) {
-            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(nullable).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
         }
         insert(list.toArray(new Map[list.size()]));
+    }
+
+    public void insert(Entity... entities) {
+        List<Map> list = new ArrayList();
+        for (Entity entity : entities) {
+            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+        }
+        insert(list.toArray(new Map[list.size()]));
+    }
+
+
+    public void deleteByPrimaryKey(Entity entity) {
+        String id = null;
+        try {
+            id = this.primaryKeyInvoker.invoke(entity, new Object[0]);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        TableMetadata tableMetadata = MongoEntityUtils.extractTable(entityClass);
+        if (tableMetadata.getColumn(tableMetadata.getPrimaryKeys().get(0)).getJavaType() == ObjectId.class) {
+            getTable().deleteMany(new Document("_id", new ObjectId(id)));
+        } else {
+            getTable().deleteMany(new Document("_id", id));
+        }
+
     }
 
     /**
@@ -94,32 +129,56 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         getTable().deleteMany(BsonUtils.and(entity, false));
     }
 
-    public void deleteByPrimaryKey(Entity entity) {
-        String id = null;
-        try {
-            id = this.primaryKeyInvoker.invoke(entity, new Object[0]);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        TableMetadata tableMetadata = MongoEntityUtils.extractTable(entityClass);
-        if (tableMetadata.getColumn(tableMetadata.getPrimaryKeys().get(0)).getJavaType() == ObjectId.class){
-            getTable().deleteMany(new Document("_id", new ObjectId(id)));
-        }else{
-            getTable().deleteMany(new Document("_id", id));
-        }
 
+    public void updateSelectiveByPrimaryKey(Object id, Entity entity) {
+        Document document = null;
+        if (id instanceof ObjectId){
+            document = new Document("_id", id);
+        }else if (id instanceof String){
+            document = new Document("_id", id);
+        }else{
+            throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
+        }
+        getTable().updateOne(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
     }
 
-    public void updateByPrimaryKey(Entity condition, Entity entity) {
+    public void updateByPrimaryKey(Object id, Entity entity) {
+        Document document = null;
+        if (id instanceof ObjectId){
+            document = new Document("_id", id);
+        }else if (id instanceof String){
+            document = new Document("_id", id);
+        }else{
+            throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
+        }
+        getTable().updateOne(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+    }
+
+    public void update(Entity condition, Entity entity) {
         getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
     }
 
-    public void updateByPrimaryKey(Map<String, Object> condition, Map<String, Object> parameter) {
-        getTable().updateMany(new Document(condition), new Document(parameter));
+    public void updateSelective(Entity condition, Entity entity) {
+        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
     }
 
-    public void updateByPrimaryKeySelective(Entity condition, Entity entity) {
-        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+    public Entity selectByPrimaryKey(Object id) {
+        Document document = null;
+        if (id instanceof ObjectId){
+            document = new Document("_id", id);
+        }else if (id instanceof String){
+            document = new Document("_id", id);
+        }else{
+            throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
+        }
+        FindIterable fi = getTable().find(document);
+        Iterator<Document> it = fi.iterator();
+        if (it.hasNext()) {
+            Document result = it.next();
+            return BeanUtils.populate(result, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build());
+        }else{
+            return null;
+        }
     }
 
     public List<Entity> select(Entity entity) {
@@ -127,13 +186,14 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         FindIterable fi = getTable().find(BsonUtils.and(entity, false));
         Iterator<Document> it = fi.iterator();
         while (it.hasNext()) {
-            Document document = it.next();
-            list.add(BeanUtils.populate(document, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            Document result = it.next();
+            list.add(BeanUtils.populate(result, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
         }
         return list;
     }
 
     public Pagination<Entity> selectPage(Pagination<Entity> pagination) {
+        //TODO
         Entity entity = pagination.getEntity();
         Document document = BsonUtils.and(entity, false);
         return null;
