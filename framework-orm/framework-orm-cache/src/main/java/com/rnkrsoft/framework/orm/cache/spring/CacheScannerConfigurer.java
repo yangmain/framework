@@ -31,6 +31,8 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
     @Setter
     String host = "127.0.0.1:6479";
     @Setter
+    String password;
+    @Setter
     int index = 0;
 
     @Override
@@ -38,7 +40,7 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
         CacheClassPathScanner scanner = new CacheClassPathScanner(registry);
         scanner.setCacheInterface(this.cacheInterface);
         this.cacheClient = new CacheClient();
-        this.cacheClient.init(CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.AUTO).build());
+        this.cacheClient.init(CacheClientSetting.builder().host(host).password(password).databaseIndex(index).redisType(RedisType.AUTO).build());
         scanner.setCacheClient(this.cacheClient);
         scanner.setCacheMapperFactoryBean(this.cacheMapperFactoryBean);
         scanner.registerFilters();
