@@ -8,8 +8,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sohu.tv.jedis.stat.data.UsefulDataCollector;
-import com.sohu.tv.jedis.stat.model.UsefulDataModel;
+import com.rnkrsoft.framework.cache.jedis.stat.data.UsefulDataCollector;
+import com.rnkrsoft.framework.cache.jedis.stat.model.UsefulDataModel;
 
 import redis.clients.jedis.commands.ProtocolCommand;
 import redis.clients.jedis.exceptions.JedisConnectionException;

@@ -1,7 +1,7 @@
 package redis.clients.jedis;
 
-import com.sohu.tv.jedis.stat.data.UsefulDataCollector;
-import com.sohu.tv.jedis.stat.enums.ClientExceptionType;
+import com.rnkrsoft.framework.cache.jedis.stat.data.UsefulDataCollector;
+import com.rnkrsoft.framework.cache.jedis.stat.enums.ClientExceptionType;
 
 import redis.clients.jedis.exceptions.JedisAskDataException;
 import redis.clients.jedis.exceptions.JedisClusterException;

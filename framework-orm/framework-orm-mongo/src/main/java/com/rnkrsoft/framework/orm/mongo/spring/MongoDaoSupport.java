@@ -3,7 +3,9 @@ package com.rnkrsoft.framework.orm.mongo.spring;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.Pagination;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
@@ -28,6 +30,17 @@ import java.util.Map;
 /**
  * Created by rnkrsoft.com on 2018/6/3.
  * MongoDB数据库支持类
+ * 1.新增
+ * 2.选择性新增
+ * 3.按照主键删除
+ * 4.按照条件删除
+ * 5.按照主键更新
+ * 6.按照条件选择性更新
+ * 7.按照条件全部进行更新
+ * 8.按照主键查找
+ * 9.按照条件查找
+ * 10.按照条件分页查找
+ * 11.按照条件统计条数
  */
 public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     MongoDatabase database;
@@ -77,24 +90,24 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         }
     }
 
-    public void insert(boolean nullable, Entity... entities) {
+    public void insertSelective(Entity... entities) {
         List<Map> list = new ArrayList();
         for (Entity entity : entities) {
-            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(nullable).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
         }
         insert(list.toArray(new Map[list.size()]));
     }
 
-    /**
-     * 删除符合条件的数据
-     *
-     * @param entity
-     */
-    public void delete(Object entity) {
-        getTable().deleteMany(BsonUtils.and(entity, false));
+    public void insert(Entity... entities) {
+        List<Map> list = new ArrayList();
+        for (Entity entity : entities) {
+            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+        }
+        insert(list.toArray(new Map[list.size()]));
     }
 
-    public void deleteByPrimaryKey(Entity entity) {
+
+    public long deleteByPrimaryKey(Entity entity) {
         String id = null;
         try {
             id = this.primaryKeyInvoker.invoke(entity, new Object[0]);
@@ -102,40 +115,113 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
             throw new RuntimeException(e);
         }
         TableMetadata tableMetadata = MongoEntityUtils.extractTable(entityClass);
-        if (tableMetadata.getColumn(tableMetadata.getPrimaryKeys().get(0)).getJavaType() == ObjectId.class){
-            getTable().deleteMany(new Document("_id", new ObjectId(id)));
-        }else{
-            getTable().deleteMany(new Document("_id", id));
+        DeleteResult result = null;
+        if (tableMetadata.getColumn(tableMetadata.getPrimaryKeys().get(0)).getJavaType() == ObjectId.class) {
+            result = getTable().deleteMany(new Document("_id", new ObjectId(id)));
+        } else {
+            result = getTable().deleteMany(new Document("_id", id));
         }
-
+        return result.getDeletedCount();
     }
 
-    public void updateByPrimaryKey(Entity condition, Entity entity) {
-        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+    /**
+     * 删除符合条件的数据
+     *
+     * @param entity
+     */
+    public long delete(Object entity) {
+        DeleteResult result = getTable().deleteMany(BsonUtils.and(entity, false));
+        return result.getDeletedCount();
     }
 
-    public void updateByPrimaryKey(Map<String, Object> condition, Map<String, Object> parameter) {
-        getTable().updateMany(new Document(condition), new Document(parameter));
+
+    public long updateByPrimaryKeySelective(Object id, Entity entity) {
+        Document document = null;
+        if (id instanceof ObjectId) {
+            document = new Document("_id", id);
+        } else if (id instanceof String) {
+            document = new Document("_id", id);
+        } else {
+            throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
+        }
+        UpdateResult result = getTable().updateOne(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        return result.getModifiedCount();
     }
 
-    public void updateByPrimaryKeySelective(Entity condition, Entity entity) {
-        getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+    public long updateByPrimaryKey(Object id, Entity entity) {
+        Document document = null;
+        if (id instanceof ObjectId) {
+            document = new Document("_id", id);
+        } else if (id instanceof String) {
+            document = new Document("_id", id);
+        } else {
+            throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
+        }
+        UpdateResult result = getTable().updateOne(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        return result.getModifiedCount();
     }
 
-    public List<Entity> select(Entity entity) {
+    public long update(Entity condition, LogicMode logicMode, Entity entity) {
+        Document document = null;
+        if (logicMode == LogicMode.AND) {
+            document = BsonUtils.and(condition, false);
+        } else if (logicMode == LogicMode.OR) {
+            document = BsonUtils.or(condition, false);
+        }
+        UpdateResult result = getTable().updateMany(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        return result.getModifiedCount();
+    }
+
+    public long updateSelective(Entity condition, Entity entity) {
+        UpdateResult result = getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        return result.getModifiedCount();
+    }
+
+    public Entity selectByPrimaryKey(Object id) {
+        Document document = null;
+        if (id instanceof ObjectId) {
+            document = new Document("_id", id);
+        } else if (id instanceof String) {
+            document = new Document("_id", id);
+        } else {
+            throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
+        }
+        FindIterable fi = getTable().find(document);
+        Iterator<Document> it = fi.iterator();
+        if (it.hasNext()) {
+            Document result = it.next();
+            return BeanUtils.populate(result, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build());
+        } else {
+            return null;
+        }
+    }
+
+    public List<Entity> select(Entity entity, LogicMode logicMode) {
         List<Entity> list = new ArrayList();
-        FindIterable fi = getTable().find(BsonUtils.and(entity, false));
+        Document document = BsonUtils.and(entity, false);
+        if (logicMode == LogicMode.AND) {
+            document = BsonUtils.and(entity, false);
+        } else if (logicMode == LogicMode.OR) {
+            document = BsonUtils.or(entity, false);
+        }
+        FindIterable fi = getTable().find(document);
         Iterator<Document> it = fi.iterator();
         while (it.hasNext()) {
-            Document document = it.next();
-            list.add(BeanUtils.populate(document, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            Document result = it.next();
+            list.add(BeanUtils.populate(result, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
         }
         return list;
     }
 
-    public Pagination<Entity> selectPage(Pagination<Entity> pagination) {
+    public Pagination<Entity> selectPage(Pagination<Entity> pagination, LogicMode logicMode) {
+        //TODO
         Entity entity = pagination.getEntity();
         Document document = BsonUtils.and(entity, false);
+        if (logicMode == LogicMode.AND) {
+            document = BsonUtils.and(entity, false);
+        } else if (logicMode == LogicMode.OR) {
+            document = BsonUtils.or(entity, false);
+        }
         return null;
     }
 

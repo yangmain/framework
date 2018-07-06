@@ -32,6 +32,26 @@ public class BsonUtils {
         return document;
     }
 
+    public static Document or(Object entity, boolean nullable) {
+        Document document = new Document();
+        MetaObject metaObject = GlobalSystemMetadata.forObject(entity.getClass(), entity);
+        TableMetadata tableMetadata = MongoEntityUtils.extractTable(entity.getClass());
+        for (String getterName : metaObject.getGetterNames()) {
+            Object value = metaObject.getValue(getterName);
+            ColumnMetadata columnMetadata = tableMetadata.getColumnByJavaName(getterName);
+            String columnName = columnMetadata.getJdbcName();
+            if (value == null) {
+                if (nullable) {
+                    document.append(columnName, value);
+                }
+            } else {
+                document.append(columnName, value);
+            }
+
+        }
+        return document;
+    }
+
     public static Document valueOf(Object entity , boolean nullable){
         Document document = new Document();
         MetaObject metaObject = GlobalSystemMetadata.forObject(entity.getClass(), entity);
