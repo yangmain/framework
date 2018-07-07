@@ -21,43 +21,43 @@ public class CacheProxy<CacheDAO> implements InvocationHandler {
     public Object invoke(Object instance, Method method, Object[] args) throws Throwable {
         Metadata metadata = metadata(method);
         if (metadata.commandType == CommandType.DECR){
-            String key = args[0].toString();
+            String key = args[0] ==null ? null : args[0].toString();
             return cachedMap.decr(key);
         }else if (metadata.commandType == CommandType.EXPIRE){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             int second = Integer.parseInt(args[1].toString());
             cachedMap.expire(key, second);
             return null;
         }else if (metadata.commandType == CommandType.GET){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             return cachedMap.get(key);
         }else if(metadata.commandType == CommandType.GETSET){
-            String key = args[0].toString();
-            Object value = args[1];
+            String key =  args[0] ==null ? null : args[0].toString();
+            Object value =  args[1];
             return cachedMap.put(key, value, metadata.expire);
         }else if(metadata.commandType == CommandType.INCR){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             return cachedMap.incr(key);
         }else if(metadata.commandType == CommandType.KEYS){
-            String pattern = args[0].toString();
+            String pattern =  args[0] ==null ? null : args[0].toString();
             return cachedMap.keys(pattern);
         }else if(metadata.commandType == CommandType.PRESIST){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             cachedMap.presist(key);
             return null;
         }else if(metadata.commandType == CommandType.SET){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             Object value = args[1];
             cachedMap.put(key, value, metadata.seconds);
             return null;
         }else if(metadata.commandType == CommandType.TTL){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             return cachedMap.ttl(key);
         }else if(metadata.commandType == CommandType.TYPE){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             return cachedMap.getNativeClass(key);
         }else if(metadata.commandType == CommandType.REMOVE){
-            String key = args[0].toString();
+            String key =  args[0] ==null ? null : args[0].toString();
             return cachedMap.remove(key);
         }else if(metadata.commandType == CommandType.CACHED_MAP){
             return cachedMap;
