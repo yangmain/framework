@@ -40,7 +40,11 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
         CacheClassPathScanner scanner = new CacheClassPathScanner(registry);
         scanner.setCacheInterface(this.cacheInterface);
         this.cacheClient = new CacheClient();
-        this.cacheClient.init(CacheClientSetting.builder().host(host).password(password).databaseIndex(index).redisType(RedisType.AUTO).build());
+        CacheClientSetting.CacheClientSettingBuilder cacheClientSettingBuilder =  CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.AUTO);
+        if (password != null){
+            cacheClientSettingBuilder.password(password);
+        }
+        this.cacheClient.init(cacheClientSettingBuilder.build());
         scanner.setCacheClient(this.cacheClient);
         scanner.setCacheMapperFactoryBean(this.cacheMapperFactoryBean);
         scanner.registerFilters();
