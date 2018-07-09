@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import com.rnkrsoft.framework.mongo.proxy.OperateLogEntity;
+import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.PrimaryKey;
 import com.rnkrsoft.framework.orm.mongo.MongoTable;
@@ -33,7 +34,7 @@ public class MongoDaoSupportTest extends SpringTest {
 //        long count = mongoDaoSupport.count(OperateLogEntity.builder().age(12).build());
 //        System.out.println(count);
 //        mongoDaoSupport.delete(OperateLogEntity.builder().age(12).build());
-        List<OperateLogEntity> list = mongoDaoSupport.select(OperateLogEntity.builder().age(12).build());
+        List<OperateLogEntity> list = mongoDaoSupport.select(OperateLogEntity.builder().age(12).build(), LogicMode.AND);
         for (OperateLogEntity entity : list) {
             System.out.println(entity);
         }

@@ -97,7 +97,6 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
             if (args.length != 1) {
 
             }
-            mongoDaoSupport.select();
         } else if (methodName.equals(Constants.SELECT_RUNTIME)) {
             if (args.length != 1) {
 

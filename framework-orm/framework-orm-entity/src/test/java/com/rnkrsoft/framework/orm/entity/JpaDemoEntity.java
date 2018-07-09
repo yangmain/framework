@@ -15,7 +15,7 @@ public class JpaDemoEntity implements Serializable{
     @Id
     String serialNo;
     @Column(name = "AGE", nullable = false)
-    Integer age;
+    int age;
     @Column(name = "CREATE_DATE")
     Date createDate;
 }

@@ -22,6 +22,12 @@ public interface CachedMap<K,V> extends Map<K,V>{
      */
     Class getNativeClass(K key);
 
+    /**
+     * 获取缓存值
+     * @param key
+     * @param <T>
+     * @return
+     */
     <T> T get(String key);
     /**
      * 放入带过期事件的键值

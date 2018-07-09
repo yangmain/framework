@@ -29,6 +29,17 @@ public @interface DateColumn {
     boolean nullable() default true;
 
     /**
+     * 默认值使用当前时间戳
+     * @return false
+     */
+    boolean currentTimestamp() default false;
+
+    /**
+     * 是否在更新记录的时候自动更新日期
+     * @return false
+     */
+    boolean onUpdate() default false;
+    /**
      * 默认值
      * @return 默认值
      * @since 1.0.0

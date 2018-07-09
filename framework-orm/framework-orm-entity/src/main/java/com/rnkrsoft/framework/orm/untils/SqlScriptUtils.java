@@ -1,6 +1,14 @@
 package com.rnkrsoft.framework.orm.untils;
 
+import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.SupportedJdbcType;
+import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
+import com.rnkrsoft.framework.orm.jdbc.NameMode;
+import com.rnkrsoft.framework.orm.jdbc.Table;
+import com.rnkrsoft.framework.orm.jdbc.WordMode;
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
+import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
+import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.interfaces.EnumBase;
 import com.rnkrsoft.interfaces.EnumIntegerCode;
 import com.rnkrsoft.interfaces.EnumStringCode;
@@ -9,18 +17,13 @@ import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.MetaObject;
 import com.rnkrsoft.reflection4j.resource.ClassScanner;
 import com.rnkrsoft.utils.StringUtils;
-import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
-import com.rnkrsoft.framework.orm.jdbc.Table;
-import com.rnkrsoft.framework.orm.jdbc.WordMode;
-import com.rnkrsoft.framework.orm.extractor.EntityExtractorHelper;
-import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
-import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.orm.jdbc.NameMode;
-import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -131,9 +134,11 @@ public abstract class SqlScriptUtils {
             }
             sql.append(" ");
             String defval = columnMetadata.getDefaultValue();
-            if (columnMetadata.getJdbcType().equals("TIMESTAMP")) {
+            if (columnMetadata.getJdbcType() == SupportedJdbcType.DATE
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.DATETIME
+                    || columnMetadata.getJdbcType() == SupportedJdbcType.TIMESTAMP) {
                 if (defval == null || defval.isEmpty()) {
-                    defval = "'1971-01-01 00:00:00'";
+                    defval = "1971-01-01 00:00:00";
                 }
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.DECIMAL) {
                 if (defval == null || defval.isEmpty()) {
@@ -162,33 +167,52 @@ public abstract class SqlScriptUtils {
             if (defval != null && !defval.isEmpty()) {
                 if (columnMetadata.getJdbcType() == SupportedJdbcType.VARCHAR
                         || columnMetadata.getJdbcType() == SupportedJdbcType.CHAR
-                        || columnMetadata.getJdbcType() == SupportedJdbcType.LONGVARCHAR){
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.LONGVARCHAR) {
                     sql.append(convert(" DEFAULT ", keywordMode) + "'" + defval + "' ");
-                }else{
-                    sql.append(convert(" DEFAULT ", keywordMode) + defval + " ");
+                } else if (columnMetadata.getJdbcType() == SupportedJdbcType.DATE
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.DATETIME
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.TIMESTAMP) {
+                    if (defval.equalsIgnoreCase("CURRENT_TIMESTAMP")) {
+                        sql.append(convert(" DEFAULT CURRENT_TIMESTAMP", keywordMode));
+                    } else {
+                        sql.append(convert(" DEFAULT ", keywordMode) + "'" + defval + "'");
+                    }
+                }else if(columnMetadata.getJdbcType() == SupportedJdbcType.TINYINT
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.SMALLINT
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.INT
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.INTEGER
+                        || columnMetadata.getJdbcType() == SupportedJdbcType.BIGINT){
+                    if (columnMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.IDENTITY) {
+                        sql.append(convert(" AUTO_INCREMENT", keywordMode));
+                        autoIncrementCnt++;
+                    }else{
+                        sql.append(convert(" DEFAULT ", keywordMode) + defval + "");
+                    }
+                } else {
+                    sql.append(convert(" DEFAULT ", keywordMode) + defval + "");
                 }
             }
-            if (columnMetadata.getPrimaryKeyStrategy() == PrimaryKeyStrategy.IDENTITY) {
-                sql.append(convert(" AUTO_INCREMENT ", keywordMode));
-                autoIncrementCnt++;
+
+            if (columnMetadata.getOnUpdateCurrentTimestamp()){
+                sql.append(convert(" ON UPDATE CURRENT_TIMESTAMP", keywordMode));
             }
             if (columnMetadata.getComment() != null && !columnMetadata.getComment().trim().isEmpty()) {
                 sql.append(convert(" COMMENT '", keywordMode)).append(columnMetadata.getComment());
-                if (columnMetadata.getEnumClass() != null && columnMetadata.getEnumClass() != Object.class){
-                    if (EnumBase.class.isAssignableFrom(columnMetadata.getEnumClass())){
+                if (columnMetadata.getEnumClass() != null && columnMetadata.getEnumClass() != Object.class) {
+                    if (EnumBase.class.isAssignableFrom(columnMetadata.getEnumClass())) {
                         if (EnumStringCode.class.isAssignableFrom(columnMetadata.getEnumClass())) {
                             sql.append(" ");
-                            for (Object val : columnMetadata.getEnumClass().getEnumConstants()){
+                            for (Object val : columnMetadata.getEnumClass().getEnumConstants()) {
                                 MetaObject metaObject = GlobalSystemMetadata.forObject(EnumStringCode.class, val);
                                 sql.append(metaObject.getValue("code")).append(":").append(metaObject.getValue("desc")).append("  ");
                             }
-                        }else if (EnumIntegerCode.class.isAssignableFrom(columnMetadata.getEnumClass())){
+                        } else if (EnumIntegerCode.class.isAssignableFrom(columnMetadata.getEnumClass())) {
                             sql.append(" ");
-                            for (Object val : columnMetadata.getEnumClass().getEnumConstants()){
+                            for (Object val : columnMetadata.getEnumClass().getEnumConstants()) {
                                 MetaObject metaObject = GlobalSystemMetadata.forObject(EnumIntegerCode.class, val);
                                 sql.append(metaObject.getValue("code")).append(":").append(metaObject.getValue("desc")).append("  ");
                             }
-                        }else{
+                        } else {
 
                         }
                     }
@@ -443,7 +467,7 @@ public abstract class SqlScriptUtils {
             classScanner.scan(packageName, new ClassScanner.AnnotatedWithFilter(javax.persistence.Table.class));
         }
         for (Class entityClass : classScanner.getClasses()) {
-            byteBuf.put("UTF-8","-- ", "TABLE ");
+            byteBuf.put("UTF-8", "-- ", "TABLE ");
             byteBuf.put("UTF-8", System.getProperty("line.separator"));
             String dropTableSql = generateDropTable(entityClass, schemaMode, schema, prefixMode, prefix, suffixMode, suffix, sqlMode, keywordMode, true);
             byteBuf.put("UTF-8", dropTableSql, ";", System.getProperty("line.separator"));

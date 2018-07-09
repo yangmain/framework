@@ -174,7 +174,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                     } else if (fieldClass == Byte.class) {
                         dataType = "INTEGER";
                         jdbcType = "INTEGER";
-                    }else if (fieldClass == Short.TYPE) {
+                    } else if (fieldClass == Short.TYPE) {
                         dataType = "INTEGER";
                         jdbcType = "INTEGER";
                     } else if (fieldClass == Short.class) {
@@ -298,6 +298,8 @@ public class OrmEntityExtractor implements EntityExtractor {
      * @param columnMetadata 元信息
      */
     public EntityExtractor extractFieldDate(ColumnMetadata columnMetadata) {
+        ErrorContextFactory.instance()
+                .activity("提取实体类{}的元信息", columnMetadata.getEntityClass());
         DateColumn dateColumn = columnMetadata.getColumnField().getAnnotation(DateColumn.class);
         if (dateColumn == null) {
             return this;
@@ -305,69 +307,63 @@ public class OrmEntityExtractor implements EntityExtractor {
         Class fieldClass = columnMetadata.getJavaType();
         if (fieldClass != java.util.Date.class && fieldClass != java.sql.Date.class && fieldClass != java.sql.Time.class && fieldClass != java.sql.Timestamp.class) {
             ErrorContextFactory.instance()
-                    .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                     .message("字段{}数据类型和注解类型支持的映射数据不一致", columnMetadata.getJavaName())
                     .solution("将字段{}的类型从{}修改为[{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Date.class, java.sql.Time.class, java.sql.Timestamp.class).throwError();
         }
-        String dataType = null;
+        String fullJdbcType = null;
         String jdbcType = null;
         if (dateColumn != null) {
             if (dateColumn.type() == DateType.DATE) {
                 if (fieldClass == java.sql.Time.class) {
                     ErrorContextFactory.instance()
-                            .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}为时间戳数据类型，要求Java数据结构能够提供年月日的精度", columnMetadata.getJavaName())
                             .solution("将字段{}的类型从{}修改为[{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Date.class, java.sql.Timestamp.class).throwError();
 
                 }
-                dataType = "DATE";
+                fullJdbcType = "DATE";
                 jdbcType = "DATE";
             } else if (dateColumn.type() == DateType.TIME) {
                 if (fieldClass == java.sql.Date.class) {
                     ErrorContextFactory.instance()
-                            .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}为时间戳数据类型，要求Java数据结构能够提供时分秒的精度", columnMetadata.getJavaName())
                             .solution("将字段{}的类型从{}修改为[{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Time.class, java.sql.Timestamp.class).throwError();
 
                 }
-                dataType = "TIME";
+                fullJdbcType = "TIME";
                 jdbcType = "TIME";
             } else if (dateColumn.type() == DateType.TIMESTAMP) {
                 if (fieldClass == java.sql.Date.class || fieldClass == java.sql.Time.class) {
                     ErrorContextFactory.instance()
-                            .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}为时间戳数据类型，要求Java数据结构能够提供年月日时分秒的精度", columnMetadata.getJavaName())
                             .solution("将字段{}的类型从{}修改为[{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Timestamp.class).throwError();
 
                 }
-                dataType = "TIMESTAMP";
+                fullJdbcType = "TIMESTAMP";
                 jdbcType = "TIMESTAMP";
             } else if (dateColumn.type() == DateType.DATETIME) {
                 if (fieldClass == java.sql.Date.class || fieldClass == java.sql.Time.class) {
                     ErrorContextFactory.instance()
-                            .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}为时间戳数据类型，要求Java数据结构能够提供年月日时分秒的精度", columnMetadata.getJavaName())
                             .solution("将字段{}的类型从{}修改为[{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Timestamp.class).throwError();
 
                 }
-                dataType = "TIMESTAMP";
+                fullJdbcType = "TIMESTAMP";
                 jdbcType = "TIMESTAMP";
             } else if (dateColumn.type() == DateType.AUTO) {
                 if (fieldClass == java.sql.Date.class) {
-                    dataType = "TIMESTAMP";
+                    fullJdbcType = "TIMESTAMP";
                     jdbcType = "TIMESTAMP";
                 } else if (fieldClass == java.util.Date.class) {
-                    dataType = "DATE";
+                    fullJdbcType = "DATE";
                     jdbcType = "DATE";
                 } else if (fieldClass == java.sql.Time.class) {
-                    dataType = "TIME";
+                    fullJdbcType = "TIME";
                     jdbcType = "TIME";
                 } else if (fieldClass == java.sql.Timestamp.class) {
-                    dataType = "TIMESTAMP";
+                    fullJdbcType = "TIMESTAMP";
                     jdbcType = "TIMESTAMP";
                 } else {
                     throw ErrorContextFactory.instance()
-                            .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}数据类型和注解类型支持的映射数据不一致", columnMetadata.getJavaName())
                             .solution("将字段{}的类型从{}修改为[{},{},{},{}]任意一种", columnMetadata.getJavaName(), fieldClass, java.util.Date.class, java.sql.Date.class, java.sql.Time.class, java.sql.Timestamp.class)
                             .runtimeException();
@@ -378,8 +374,25 @@ public class OrmEntityExtractor implements EntityExtractor {
         if (jdbcType != null) {
             columnMetadata.setJdbcType(SupportedJdbcType.valueOfCode(jdbcType));
         }
-        if (dataType != null) {
-            columnMetadata.setFullJdbcType(dataType);
+        if (fullJdbcType != null) {
+            columnMetadata.setFullJdbcType(fullJdbcType);
+        }
+        if (dateColumn.nullable()){
+            throw ErrorContextFactory.instance().message("字段'{}'为时间类型'{}'不允许为空", columnMetadata.getJavaName(), columnMetadata.getJdbcType()).runtimeException();
+        }
+        if (dateColumn.currentTimestamp()) {
+            if (columnMetadata.getJdbcType() == SupportedJdbcType.TIMESTAMP) {
+                columnMetadata.setDefaultValue("CURRENT_TIMESTAMP");
+            } else {
+                throw ErrorContextFactory.instance().message("字段'{}' 不能设置currentTimestamp,必须在数据库类型为TimeStamp类型上设置", columnMetadata.getJavaName()).runtimeException();
+            }
+        }
+        if (dateColumn.onUpdate()) {
+            if (columnMetadata.getJdbcType() == SupportedJdbcType.TIMESTAMP) {
+                columnMetadata.setOnUpdateCurrentTimestamp(dateColumn.onUpdate());
+            } else {
+                throw ErrorContextFactory.instance().message("字段'{}' 不能设置onUpdate,必须在数据库类型为TimeStamp类型上设置", columnMetadata.getJavaName()).runtimeException();
+            }
         }
         return this;
     }
@@ -394,7 +407,7 @@ public class OrmEntityExtractor implements EntityExtractor {
             strategy = PrimaryKeyStrategy.UUID;
         } else if (primaryKey.strategy() == PrimaryKeyStrategy.IDENTITY) {
             strategy = PrimaryKeyStrategy.IDENTITY;
-            if (columnMetadata.getDefaultValue() != null && !columnMetadata.getDefaultValue().isEmpty()){
+            if (columnMetadata.getDefaultValue() != null && !columnMetadata.getDefaultValue().isEmpty()) {
                 throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                         .message("字段{}使用了自增主键同时使用了默认值'{}'", field.getName(), columnMetadata.getDefaultValue())

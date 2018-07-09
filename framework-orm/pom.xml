@@ -12,6 +12,7 @@
     <description>framework orm</description>
     <modules>
         <module>framework-orm-api</module>
+        <module>framework-orm-log4jdbc</module>
         <module>framework-orm-entity</module>
         <module>framework-orm-mybatis</module>
         <module>framework-orm-markdown</module>

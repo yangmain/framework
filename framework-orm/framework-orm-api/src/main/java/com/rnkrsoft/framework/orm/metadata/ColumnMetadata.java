@@ -89,11 +89,15 @@ public class ColumnMetadata {
      */
     Boolean autoIncrement = false;
     /**
+     * 字段是否自动更新日期值
+     */
+    Boolean onUpdateCurrentTimestamp = false;
+    /**
      * 作为条件时的值模式
      */
     ValueMode valueMode = ValueMode.EQUAL;
 
-    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, SupportedJdbcType jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, ValueMode valueMode) {
+    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, SupportedJdbcType jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, Boolean onUpdateCurrentTimestamp, ValueMode valueMode) {
         this.primaryKey = primaryKey;
         this.tableMetadata = tableMetadata;
         this.entityClass = entityClass;
@@ -113,6 +117,7 @@ public class ColumnMetadata {
         this.primaryKeyFeature = primaryKeyFeature;
         this.defaultValue = defaultValue;
         this.autoIncrement = autoIncrement == null ? false : autoIncrement;
+        this.onUpdateCurrentTimestamp = onUpdateCurrentTimestamp == null ? false : autoIncrement;
         this.valueMode = valueMode == null ? ValueMode.EQUAL : valueMode;
     }
 
@@ -134,6 +139,7 @@ public class ColumnMetadata {
         sb.append(", primaryKeyFeature='").append(primaryKeyFeature).append('\'');
         sb.append(", defaultValue='").append(defaultValue).append('\'');
         sb.append(", autoIncrement=").append(autoIncrement);
+        sb.append(", onUpdateCurrentTimestamp=").append(onUpdateCurrentTimestamp);
         sb.append(", valueMode=").append(valueMode);
         sb.append('}');
         return sb.toString();
