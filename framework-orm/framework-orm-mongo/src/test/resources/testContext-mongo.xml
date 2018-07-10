@@ -15,5 +15,13 @@
 		http://www.springframework.org/schema/util
 		http://www.springframework.org/schema/util/spring-util.xsd
 		">
+		<bean class="com.rnkrsoft.framework.orm.mongo.spring.MongoScannerConfigurer">
+			<property name="basePackages">
+				<array>
+					<value>com.rnkrsoft.framework.orm.mongo.dao</value>
+				</array>
+			</property>
+			<property name="host" value="127.0.0.1"/>
+		</bean>
 
 </beans>

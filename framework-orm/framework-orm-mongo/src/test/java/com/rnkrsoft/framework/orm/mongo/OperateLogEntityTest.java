@@ -1,10 +1,9 @@
-package com.rnkrsoft.framework.mongo.proxy;
+package com.rnkrsoft.framework.orm.mongo;
 
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import com.rnkrsoft.framework.orm.mongo.dao.OperateLogEntity;
 import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by rnkrsoft.com on 2018/6/22.

@@ -1,10 +1,8 @@
 package com.rnkrsoft.framework.orm.mongo.proxy;
 
 import com.rnkrsoft.framework.orm.Constants;
-import com.rnkrsoft.framework.orm.mongo.spring.MongoDaoSupport;
+import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
-import org.bson.Document;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,9 +16,9 @@ import java.lang.reflect.Type;
 public class MongoProxy<MongodbDAO> implements InvocationHandler {
     Class<MongodbDAO> daoClass;
     Class entityClass;
-    MongoDaoSupport mongoDaoSupport;
+    MongoDaoClient mongoDaoSupport;
 
-    public MongoProxy(MongoDaoSupport mongoDaoSupport) {
+    public MongoProxy(MongoDaoClient mongoDaoSupport) {
         this.mongoDaoSupport = mongoDaoSupport;
         this.entityClass = extractEntityClass(daoClass);
     }

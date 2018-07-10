@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm.mongo.spring;
+package com.rnkrsoft.framework.orm.mongo.client;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -42,7 +42,7 @@ import java.util.Map;
  * 10.按照条件分页查找
  * 11.按照条件统计条数
  */
-public abstract class MongoDaoSupport<Entity> extends DaoSupport {
+public class MongoDaoClient<Entity>{
     MongoDatabase database;
     Class<Entity> entityClass;
     Invoker primaryKeyInvoker;
@@ -54,7 +54,7 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
         return tableMetadata.getTableName();
     }
 
-    public MongoDaoSupport(MongoDatabase database, Class<Entity> entityClass) {
+    public MongoDaoClient(MongoDatabase database, Class<Entity> entityClass) {
         this.database = database;
         this.entityClass = entityClass;
         this.tableMetadata = MongoEntityUtils.extractTable(entityClass);
@@ -228,12 +228,5 @@ public abstract class MongoDaoSupport<Entity> extends DaoSupport {
     public long count(Entity entity) {
         Document document = BsonUtils.and(entity, false);
         return getTable().count(document);
-    }
-
-    @Override
-    protected void checkDaoConfig() throws IllegalArgumentException {
-        if (database == null) {
-            throw ErrorContextFactory.instance().message("MongoDB 数据源未配置").runtimeException();
-        }
     }
 }

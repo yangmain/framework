@@ -1,11 +1,13 @@
 package com.rnkrsoft.framework.orm.mongo.update;
 
+import com.rnkrsoft.framework.orm.mongo.MongoInterface;
+
 import java.util.Map;
 
 /**
  * Created by rnkrsoft.com on 2018/6/3.
  */
-public interface MongoUpdateMapper<Entity> {
+public interface MongoUpdateMapper<Entity> extends MongoInterface {
     /**
      * 按照物理主键进行全字段更新
      * @param entity

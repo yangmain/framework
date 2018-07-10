@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.utils;
 
-import com.rnkrsoft.framework.mongo.proxy.OperateLogEntity;
+import com.rnkrsoft.framework.orm.mongo.dao.OperateLogEntity;
 import com.rnkrsoft.framework.sequence.spring.ClasspathSequenceServiceConfigure;
 import lombok.ToString;
 import org.junit.Test;

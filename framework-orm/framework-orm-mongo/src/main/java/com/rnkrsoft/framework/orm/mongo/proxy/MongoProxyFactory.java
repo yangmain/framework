@@ -1,12 +1,10 @@
 package com.rnkrsoft.framework.orm.mongo.proxy;
 
+import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.mongodb.MongoClient;
 import com.rnkrsoft.framework.orm.mongo.MongoMapper;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
@@ -14,10 +12,10 @@ import java.util.Arrays;
  */
 public class MongoProxyFactory<MongodbDAO>{
         final Class<MongodbDAO> mongoInterface;
-        final MongoClient mongoClient;
+        final MongoDaoClient mongoDaoSupport;
 
-        public MongoProxyFactory(Class<MongodbDAO> mongoInterface, MongoClient mongoClient) {
-            this.mongoClient = mongoClient;
+        public MongoProxyFactory(Class<MongodbDAO> mongoInterface, MongoDaoClient mongoDaoSupport) {
+            this.mongoDaoSupport = mongoDaoSupport;
             this.mongoInterface = mongoInterface;
             if (!Arrays.asList(mongoInterface.getInterfaces()).contains(MongoMapper.class)){
                 throw ErrorContextFactory.instance().message("接口 '{}'不能作为Mongodb 数据访问对象", mongoInterface).runtimeException();
@@ -25,8 +23,7 @@ public class MongoProxyFactory<MongodbDAO>{
         }
 
     public MongodbDAO newInstance() {
-
-        MongoProxy<MongodbDAO> mongoProxy = null;
+        MongoProxy<MongodbDAO> mongoProxy = new MongoProxy<MongodbDAO>(mongoDaoSupport);
         return (MongodbDAO) Proxy.newProxyInstance(mongoInterface.getClassLoader(), new Class[]{mongoInterface}, mongoProxy);
     }
 

@@ -1,6 +1,7 @@
-package com.rnkrsoft.framework.mongo.proxy;
+package com.rnkrsoft.framework.orm.mongo.dao;
 
 import com.rnkrsoft.framework.orm.mongo.MongoMapper;
+import com.rnkrsoft.framework.orm.mongo.dao.OperateLogEntity;
 
 
 /**
