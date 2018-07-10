@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import static org.junit.Assert.*;
 
 /**
- * Created by woate on 2018/7/9.
+ * Created by rnkrsoft.com on 2018/7/9.
  */
 @ContextConfiguration("classpath*:testContext-mongo.xml")
 public class MongoScannerConfigurerTest extends SpringTest{

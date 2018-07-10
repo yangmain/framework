@@ -2,6 +2,7 @@ package com.rnkrsoft.framework.orm.mongo.spring;
 
 import com.rnkrsoft.framework.orm.mongo.MongoInterface;
 import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Setter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Arrays;
+
 /**
- * Created by woate on 2018/6/27.
+ * Created by rnkrsoft.com on 2018/6/27.
  */
 public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcessor, InitializingBean, ApplicationContextAware, BeanNameAware {
     @Setter
@@ -23,17 +26,20 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
     @Setter
     String[] basePackages;
     @Setter
-    Class<?> mongoInterface;
+    Class<?> mongoMarkInterface;
     @Setter
-    String host = "127.0.0.1:47190";
+    String[] hosts;
+    @Setter
+    String schema;
     @Setter
     MongoMapperFactoryBean mongoMapperFactoryBean;
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         MongoClassPathScanner scanner = new MongoClassPathScanner(registry);
-        scanner.setMongoInterface(this.mongoInterface == null ? MongoInterface.class : this.mongoInterface);
-        scanner.setHost(this.host);
+        scanner.setMongoMarkInterface(this.mongoMarkInterface == null ? MongoInterface.class : this.mongoMarkInterface);
+        scanner.hosts.addAll(Arrays.asList(hosts));
+        scanner.setSchema(schema);
         scanner.setMongoMapperFactoryBean(this.mongoMapperFactoryBean);
         scanner.registerFilters();
         scanner.doScan(this.basePackages);
@@ -47,6 +53,11 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        if (hosts == null || hosts.length == 0){
+            throw ErrorContextFactory.instance().message("MongoDB 数据库地址未配置").runtimeException();
+        }
+        if (basePackages == null || basePackages.length == 0){
+            throw ErrorContextFactory.instance().message("MongoDB DAO所在包未配置").runtimeException();
+        }
     }
 }

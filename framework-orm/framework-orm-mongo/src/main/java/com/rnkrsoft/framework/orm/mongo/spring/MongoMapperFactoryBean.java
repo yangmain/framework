@@ -7,7 +7,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
- * Created by woate on 2018/6/27.
+ * Created by rnkrsoft.com on 2018/6/27.
  */
 public class MongoMapperFactoryBean<T> implements InitializingBean, FactoryBean<T> {
     @Setter

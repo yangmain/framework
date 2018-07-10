@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.client;
 
+import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -20,7 +21,6 @@ import com.rnkrsoft.reflection4j.Reflector;
 import lombok.Setter;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.springframework.dao.support.DaoSupport;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,7 +42,8 @@ import java.util.Map;
  * 10.按照条件分页查找
  * 11.按照条件统计条数
  */
-public class MongoDaoClient<Entity>{
+public class MongoDaoClient<Entity> {
+    MongoClient mongoClient;
     MongoDatabase database;
     Class<Entity> entityClass;
     Invoker primaryKeyInvoker;
@@ -54,9 +55,9 @@ public class MongoDaoClient<Entity>{
         return tableMetadata.getTableName();
     }
 
-    public MongoDaoClient(MongoDatabase database, Class<Entity> entityClass) {
+    public MongoDaoClient(MongoClient mongoClient, MongoDatabase database, Class daoInterface) {
+        this.mongoClient = mongoClient;
         this.database = database;
-        this.entityClass = entityClass;
         this.tableMetadata = MongoEntityUtils.extractTable(entityClass);
         Reflector reflector = GlobalSystemMetadata.reflector(entityClass);
         String primaryKey = tableMetadata.getPrimaryKeys().get(0);
@@ -65,8 +66,18 @@ public class MongoDaoClient<Entity>{
     }
 
     MongoCollection<Document> getTable() {
-        MongoCollection<Document> table = this.database.getCollection(getTableName());
-        return table;
+        if (this.database != null) {
+            MongoCollection<Document> table = this.database.getCollection(getTableName());
+            return table;
+        } else {
+            String schema = this.tableMetadata.getSchema();
+            if (schema == null || schema.isEmpty()) {
+                throw ErrorContextFactory.instance().message("MongoDB数据库未配置数据库名").runtimeException();
+            }
+            MongoDatabase mongoDatabase = this.mongoClient.getDatabase(schema);
+            MongoCollection<Document> table = mongoDatabase.getCollection(getTableName());
+            return table;
+        }
     }
 
     /**
