@@ -15,6 +15,9 @@ import java.util.List;
  * Created by rnkrsoft.com on 2018/5/21.
  */
 public abstract class AbstractMessageQueueConsumer implements MessageQueueConsumer {
+    /**
+     * 子类遍历该列表
+     */
     protected final List<MessageQueueListenerWrapper> listeners = new ArrayList();
 
     @Override
@@ -28,8 +31,11 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
         Class clazz = listener.getClass();
         ListenerDefinition listenerDefinition = (ListenerDefinition) clazz.getAnnotation(ListenerDefinition.class);
         List<MessageQueueSelector> messageQueueSelectors = new ArrayList();
+        //消费时发生错误是否重新放入队列
         boolean whenErrorRequeue = false;
+        //最大处理年龄，操作则丢弃
         int maxTryProcessAge = 3;
+        //是否启用ACK事务锁
         boolean ack = true;
         if (listenerDefinition == null) {
             //do nothing

@@ -25,4 +25,10 @@ public interface MessageQueueConsumer {
      * @return 执行结果
      */
     int startup();
+
+    /**
+     * 关闭监听
+     * @return 执行结果
+     */
+    int shutdown();
 }

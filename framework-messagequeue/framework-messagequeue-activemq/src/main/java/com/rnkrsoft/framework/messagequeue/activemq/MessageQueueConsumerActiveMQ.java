@@ -1,8 +1,9 @@
 package com.rnkrsoft.framework.messagequeue.activemq;
 
 import com.rnkrsoft.framework.messagequeue.consumer.AbstractMessageQueueConsumer;
-import com.rnkrsoft.framework.messagequeue.protocol.*;
+import com.rnkrsoft.framework.messagequeue.protocol.ConsumerType;
 import com.rnkrsoft.framework.messagequeue.protocol.Message;
+import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -29,7 +30,7 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
             this.session.setMessageListener(new MessageListener() {
                 @Override
                 public void onMessage(javax.jms.Message msg) {
-                    BytesMessage bytesMessage = (BytesMessage)msg;
+                    BytesMessage bytesMessage = (BytesMessage) msg;
                     long length = 0;
                     try {
                         length = bytesMessage.getBodyLength();
@@ -38,7 +39,7 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
                     }
                     byte[] bytes = new byte[(int) length];
                     Message message = Message.message(bytes);
-                    for (MessageQueueListener listener : listeners){
+                    for (MessageQueueListener listener : listeners) {
                         listener.execute(message);
                     }
                 }
@@ -53,5 +54,17 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
     @Override
     public int startup() {
         return startup(ConsumerType.HEAD);
+    }
+
+    @Override
+    public int shutdown() {
+        try {
+            this.session.close();
+            this.session = null;
+            return SUCCESS;
+        } catch (JMSException e) {
+            e.printStackTrace();
+            return FAILURE;
+        }
     }
 }

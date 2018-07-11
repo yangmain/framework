@@ -16,4 +16,9 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
     public int startup() {
         return startup(ConsumerType.HEAD);
     }
+
+    @Override
+    public int shutdown() {
+        return 0;
+    }
 }

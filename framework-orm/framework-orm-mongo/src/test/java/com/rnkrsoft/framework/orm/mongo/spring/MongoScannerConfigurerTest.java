@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
- * Created by woate on 2018/7/9.
+ * Created by rnkrsoft.com on 2018/7/9.
  */
 @ContextConfiguration("classpath*:MongoScannerConfigurerTest.xml")
 public class MongoScannerConfigurerTest extends SpringTest{
