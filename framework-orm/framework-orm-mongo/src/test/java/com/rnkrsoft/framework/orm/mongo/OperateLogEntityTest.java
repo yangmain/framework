@@ -1,7 +1,7 @@
 package com.rnkrsoft.framework.orm.mongo;
 
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
-import com.rnkrsoft.framework.orm.mongo.dao.OperateLogEntity;
+import com.rnkrsoft.framework.orm.mongo.entity.OperateLogEntity;
 import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
 import org.junit.Test;
 

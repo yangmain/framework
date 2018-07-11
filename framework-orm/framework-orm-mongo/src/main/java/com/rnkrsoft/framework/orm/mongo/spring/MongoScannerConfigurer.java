@@ -1,7 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
 import com.rnkrsoft.framework.orm.mongo.MongoInterface;
-import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
 import lombok.Setter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -32,7 +31,7 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         MongoClassPathScanner scanner = new MongoClassPathScanner(registry);
-        scanner.setMongoInterface(this.mongoInterface == null ? MongoInterface.class : this.mongoInterface);
+        scanner.setMongoInterface(this.mongoInterface);
         scanner.setHost(this.host);
         scanner.setMongoMapperFactoryBean(this.mongoMapperFactoryBean);
         scanner.registerFilters();

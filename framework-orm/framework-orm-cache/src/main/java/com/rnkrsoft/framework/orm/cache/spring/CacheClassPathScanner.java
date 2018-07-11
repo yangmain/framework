@@ -341,9 +341,9 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                 e.printStackTrace();
             }
             // the mapper interface is the original class of the bean
-            // but, the actual class of the bean is OrmMapperFactoryBean
-            definition.getPropertyValues().add("cacheInterface", mapperClassName);
+            // but, the actual class of the bean is CacheMapperFactoryBean
             definition.setBeanClass(this.cacheMapperFactoryBean.getClass());
+            definition.getPropertyValues().add("cacheInterface", mapperClassName);
             definition.getPropertyValues().add("cacheClient", this.cacheClient);
             if (logger.isDebugEnabled()) {
                 logger.debug("Enabling autowire by type for CacheMapperFactoryBean with name '" + holder.getBeanName() + "'.");

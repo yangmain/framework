@@ -1,14 +1,15 @@
 package com.rnkrsoft.framework.orm.mongo.client;
 
+import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.Pagination;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import com.rnkrsoft.framework.orm.mongo.MongoTable;
 import com.rnkrsoft.framework.orm.mongo.utils.BeanUtils;
 import com.rnkrsoft.framework.orm.mongo.utils.BsonUtils;
 import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
@@ -20,7 +21,6 @@ import com.rnkrsoft.reflection4j.Reflector;
 import lombok.Setter;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.springframework.dao.support.DaoSupport;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,30 +42,41 @@ import java.util.Map;
  * 10.按照条件分页查找
  * 11.按照条件统计条数
  */
-public class MongoDaoClient<Entity>{
-    MongoDatabase database;
+public class MongoDaoClient<Entity> {
+    MongoClient mongoClient;
     Class<Entity> entityClass;
     Invoker primaryKeyInvoker;
     TableMetadata tableMetadata;
+    String schema;
+    String tableName;
     @Setter
     SequenceServiceConfigure sequenceServiceConfigure;
 
-    String getTableName() {
-        return tableMetadata.getTableName();
-    }
-
-    public MongoDaoClient(MongoDatabase database, Class<Entity> entityClass) {
-        this.database = database;
+    public MongoDaoClient(MongoClient mongoClient, String schema, String tableName, Class<Entity> entityClass) {
+        this.mongoClient = mongoClient;
+        this.schema = schema;
+        this.tableName = tableName;
         this.entityClass = entityClass;
         this.tableMetadata = MongoEntityUtils.extractTable(entityClass);
         Reflector reflector = GlobalSystemMetadata.reflector(entityClass);
         String primaryKey = tableMetadata.getPrimaryKeys().get(0);
         ColumnMetadata columnMetadata = tableMetadata.getColumnMetadataSet().get(primaryKey);
         this.primaryKeyInvoker = reflector.getGetter(columnMetadata.getJavaName());
+        MongoTable mongoTable = this.entityClass.getAnnotation(MongoTable.class);
+        if (mongoTable != null) {
+            if (this.schema == null) {
+                this.schema = mongoTable.schema();
+            }
+            if (this.tableName == null) {
+                this.tableName = mongoTable.name();
+            }
+        } else {
+            //TODO抛出异常
+        }
     }
 
     MongoCollection<Document> getTable() {
-        MongoCollection<Document> table = this.database.getCollection(getTableName());
+        MongoCollection<Document> table = this.mongoClient.getDatabase(this.schema).getCollection(this.tableName);
         return table;
     }
 

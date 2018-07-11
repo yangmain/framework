@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm.mongo.dao;
+package com.rnkrsoft.framework.orm.mongo.entity;
 
 import com.rnkrsoft.framework.orm.Entity;
 import com.rnkrsoft.framework.orm.PrimaryKey;

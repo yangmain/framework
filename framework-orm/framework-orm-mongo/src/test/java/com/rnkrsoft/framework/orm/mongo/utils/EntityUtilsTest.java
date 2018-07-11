@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.utils;
 
-import com.rnkrsoft.framework.orm.mongo.dao.OperateLogEntity;
+import com.rnkrsoft.framework.orm.mongo.entity.OperateLogEntity;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import org.junit.Test;
 

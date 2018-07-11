@@ -1,5 +1,8 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
 import lombok.Setter;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -81,7 +84,8 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
         return beanDefinitions;
     }
 
-    void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions){
+    void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
+        MongoClient mongoClient = new MongoClient(new ServerAddress(host, 3017), MongoClientOptions.builder().build());
         for (BeanDefinitionHolder holder : beanDefinitions) {
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
 
@@ -89,6 +93,10 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
                 logger.debug("Creating MongoMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
             String mapperClassName = definition.getBeanClassName();
+            definition.setBeanClass(this.mongoMapperFactoryBean.getClass());
+            definition.getPropertyValues().add("mongoInterface", mapperClassName);
+            MongoDaoClient mongoDaoClient = new MongoDaoClient(mongoClient, null, null, );
+            definition.getPropertyValues().add("mongoDaoClient", mongoDaoClient);
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             registerBeanDefinition(holder, getRegistry());
         }
