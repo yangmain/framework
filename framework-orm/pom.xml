@@ -19,6 +19,7 @@
         <module>framework-orm-spring</module>
         <module>framework-orm-mongo</module>
         <module>framework-orm-cache</module>
+        <module>framework-orm-messagequeue</module>
         <module>framework-orm-boot-starter</module>
     </modules>
 </project>
