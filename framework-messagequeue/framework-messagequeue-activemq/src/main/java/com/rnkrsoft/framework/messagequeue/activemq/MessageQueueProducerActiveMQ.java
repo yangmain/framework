@@ -26,7 +26,7 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
         try {
             this.connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             this.connection.start(); // 启动连接
-            this.session = this.connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE); // 创建Session
+            this.session = this.connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE); // 创建Session
         } catch (JMSException e) {
             e.printStackTrace();
         }
