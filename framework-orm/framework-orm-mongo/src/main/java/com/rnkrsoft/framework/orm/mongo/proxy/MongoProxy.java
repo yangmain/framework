@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.orm.mongo.proxy;
 
 import com.rnkrsoft.framework.orm.Constants;
+import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,13 +15,12 @@ import java.lang.reflect.Type;
  */
 @Slf4j
 public class MongoProxy<MongodbDAO> implements InvocationHandler {
-    Class<MongodbDAO> daoClass;
     Class entityClass;
     MongoDaoClient mongoDaoSupport;
 
-    public MongoProxy(MongoDaoClient mongoDaoSupport) {
+    public MongoProxy(MongoDaoClient mongoDaoSupport, Class entityClass) {
         this.mongoDaoSupport = mongoDaoSupport;
-        this.entityClass = extractEntityClass(daoClass);
+        this.entityClass = entityClass;
     }
 
 
@@ -86,20 +86,12 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
 
             }
             return mongoDaoSupport.updateByPrimaryKeySelective(null, null);
-        } else if (methodName.equals(Constants.SELECT_AND)) {
+        } else if (methodName.equals(Constants.SELECT)) {
             if (args.length != 1) {
 
             }
-            return mongoDaoSupport.updateByPrimaryKeySelective(null, null);
-        } else if (methodName.equals(Constants.SELECT_OR)) {
-            if (args.length != 1) {
-
-            }
-        } else if (methodName.equals(Constants.SELECT_RUNTIME)) {
-            if (args.length != 1) {
-
-            }
-            log.debug("selectRuntime");
+            LogicMode logicMode = (LogicMode)args[1];
+            return mongoDaoSupport.select(args[0], logicMode);
         } else if (methodName.equals(Constants.SELECT_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
 

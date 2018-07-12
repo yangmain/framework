@@ -13,17 +13,19 @@ import java.util.Arrays;
 public class MongoProxyFactory<MongodbDAO>{
         final Class<MongodbDAO> mongoInterface;
         final MongoDaoClient mongoDaoSupport;
+        final  Class entityClass;
 
-        public MongoProxyFactory(Class<MongodbDAO> mongoInterface, MongoDaoClient mongoDaoSupport) {
+        public MongoProxyFactory(Class<MongodbDAO> mongoInterface, Class entityClass,  MongoDaoClient mongoDaoSupport) {
             this.mongoDaoSupport = mongoDaoSupport;
             this.mongoInterface = mongoInterface;
+            this.entityClass = entityClass;
             if (!Arrays.asList(mongoInterface.getInterfaces()).contains(MongoMapper.class)){
                 throw ErrorContextFactory.instance().message("接口 '{}'不能作为Mongodb 数据访问对象", mongoInterface).runtimeException();
             }
         }
 
     public MongodbDAO newInstance() {
-        MongoProxy<MongodbDAO> mongoProxy = new MongoProxy<MongodbDAO>(mongoDaoSupport);
+        MongoProxy<MongodbDAO> mongoProxy = new MongoProxy<MongodbDAO>(this.mongoDaoSupport, this.entityClass);
         return (MongodbDAO) Proxy.newProxyInstance(mongoInterface.getClassLoader(), new Class[]{mongoInterface}, mongoProxy);
     }
 

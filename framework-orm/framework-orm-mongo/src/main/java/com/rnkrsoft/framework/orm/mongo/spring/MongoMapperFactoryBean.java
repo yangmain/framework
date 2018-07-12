@@ -11,20 +11,23 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class MongoMapperFactoryBean<T> implements InitializingBean, FactoryBean<T> {
     @Setter
-    Class<T> mongoInterface;
+    Class<T> mongoMapper;
+
+    @Setter
+    Class entityClass;
 
     @Setter
     MongoDaoClient mongoDaoClient;
 
     @Override
     public T getObject() throws Exception {
-        MongoProxyFactory<T> mongoProxyFactory = new MongoProxyFactory(mongoInterface, mongoDaoClient);
+        MongoProxyFactory<T> mongoProxyFactory = new MongoProxyFactory(mongoMapper, entityClass, mongoDaoClient);
         return mongoProxyFactory.newInstance();
     }
 
     @Override
     public Class<?> getObjectType() {
-        return mongoInterface;
+        return mongoMapper;
     }
 
     @Override

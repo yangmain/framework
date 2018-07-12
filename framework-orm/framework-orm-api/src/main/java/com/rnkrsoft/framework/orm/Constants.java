@@ -58,6 +58,7 @@ public interface Constants {
      * 按照物理主键进行查询
      */
     String SELECT_BY_PRIMARY_KEY = "selectByPrimaryKey";
+    String SELECT = "select";
     /**
      * 按照AND条件查询
      */

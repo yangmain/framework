@@ -11,6 +11,8 @@ import com.rnkrsoft.framework.orm.mongo.insert.MongoInsertMapper;
 import com.rnkrsoft.framework.orm.mongo.select.MongoSelectMapper;
 import com.rnkrsoft.framework.orm.mongo.update.MongoUpdateMapper;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -29,7 +31,6 @@ import java.util.Set;
  * Created by woate on 2018/6/27.
  */
 public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
-    @Setter
     MongoMapperFactoryBean mongoMapperFactoryBean;
     @Setter
     Class mongoInterface;
@@ -39,8 +40,9 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
 
 
     public void setMongoMapperFactoryBean(MongoMapperFactoryBean mongoMapperFactoryBean) {
-        this.mongoMapperFactoryBean = mongoMapperFactoryBean;
+        this.mongoMapperFactoryBean = mongoMapperFactoryBean == null ? new MongoMapperFactoryBean() : mongoMapperFactoryBean;
     }
+
 
     public MongoClassPathScanner(BeanDefinitionRegistry registry) {
         super(registry, false);
@@ -100,14 +102,40 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
                 logger.debug("Creating MongoMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
             String mapperClassName = definition.getBeanClassName();
-           Class mongoMapper =  definition.getBeanClass();
+
+            Class mongoMapper = null;
+            try {
+                mongoMapper = Class.forName(mapperClassName);
+            }catch (ClassNotFoundException e){
+
+            }
             Class entityClass = GenericsExtractor.extractEntityClass(mongoMapper, MongoMapper.class, MongoInsertMapper.class, MongoUpdateMapper.class, MongoSelectMapper.class, MongoCountMapper.class);
+
             definition.setBeanClass(this.mongoMapperFactoryBean.getClass());
-            definition.getPropertyValues().add("mongoInterface", mapperClassName);
-            MongoDaoClient mongoDaoClient = new MongoDaoClient(mongoClient, schema, entityClass);
-            definition.getPropertyValues().add("mongoDaoClient", mongoDaoClient);
+            definition.getPropertyValues().add("mongoMapper", mapperClassName);
+            definition.getPropertyValues().add("entityClass", entityClass);
+            definition.getPropertyValues().add("mongoDaoClient", new MongoDaoClient(mongoClient, schema, entityClass));
+            if (logger.isDebugEnabled()) {
+                logger.debug("Enabling autowire by type for MongoMapperFactoryBean with name '" + holder.getBeanName() + "'.");
+            }
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             registerBeanDefinition(holder, getRegistry());
+        }
+    }
+
+    @Override
+    protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+        return beanDefinition.getMetadata().isInterface() && beanDefinition.getMetadata().isIndependent();
+    }
+
+    @Override
+    protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) {
+        if (super.checkCandidate(beanName, beanDefinition)) {
+            return true;
+        } else {
+            logger.warn("Skipping MongoMapperFactoryBean with name '" + beanName + "' and '" + beanDefinition.getBeanClassName() + "' mongoInterface"
+                    + ". Bean already defined with the same name!");
+            return false;
         }
     }
 }
