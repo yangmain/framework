@@ -30,7 +30,7 @@ import java.util.Set;
 public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
     CacheMapperFactoryBean cacheMapperFactoryBean;
     @Setter
-    Class cacheInterface = CacheMapper.class;
+    Class cacheInterface = CacheInterface.class;
     @Setter
     CacheClient cacheClient;
 
@@ -341,7 +341,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                 e.printStackTrace();
             }
             // the mapper interface is the original class of the bean
-            // but, the actual class of the bean is CacheMapperFactoryBean
+            // but, the actual class of the bean is acheMapperFactoryBean
             definition.setBeanClass(this.cacheMapperFactoryBean.getClass());
             definition.getPropertyValues().add("cacheInterface", mapperClassName);
             definition.getPropertyValues().add("cacheClient", this.cacheClient);

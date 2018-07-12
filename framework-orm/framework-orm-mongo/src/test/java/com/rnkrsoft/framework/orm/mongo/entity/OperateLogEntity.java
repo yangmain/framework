@@ -18,7 +18,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@MongoTable(name = "OPERATE_LOG", schema = "mongo_data")
+@MongoTable(name = "OPERATE_LOG", schema = "xxxx")
 public class OperateLogEntity implements Serializable{
     @PrimaryKey(strategy = PrimaryKeyStrategy.EXPRESSION, feature = "ABCD_${yyyyMMddHHmmssSSS}_${SEQ:5}_${SEQ:8}${SEQ:8}_${RANDOM:8}_EFGH")
     @MongoColumn(valueMode = ValueMode.EQUAL, nullable = false)

@@ -1,4 +1,4 @@
-package com.rnkrsoft.framework.orm.cache.mapper;
+package com.rnkrsoft.framework.orm.cache.entity;
 
 import lombok.ToString;
 

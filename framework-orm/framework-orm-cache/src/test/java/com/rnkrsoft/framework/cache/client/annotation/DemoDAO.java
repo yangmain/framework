@@ -6,7 +6,7 @@ import com.rnkrsoft.framework.orm.cache.*;
  * Created by rnkrsoft.com on 2018/6/2.
  */
 @Cache(expire = 6000, index = 1)
-public interface DemoDAO extends CacheMapper {
+public interface DemoDAO extends CacheInterface {
     @Set
     void set(String key, DemoEntity user);
 

@@ -11,10 +11,10 @@ public abstract class GenericsExtractor {
     /**
      * 提取接口声明的实体类对象
      * @param mapperClass 映射类
-     * @param targetMapper 目标映射接口
+     * @param targetMappers 目标映射接口
      * @return
      */
-    public static Class extractEntityClass(Class mapperClass, Class targetMapper) {
+    public static Class extractEntityClass(Class mapperClass, Class ...targetMappers) {
         //获取当前Mapper实现的接口
         Type[] types = mapperClass.getGenericInterfaces();
         for (Type type : types) {
@@ -23,7 +23,14 @@ public abstract class GenericsExtractor {
                 //获取泛型
                 Class rawType = (Class)((ParameterizedType) type).getRawType();
                 //mapper类
-                if(targetMapper.isAssignableFrom(rawType)){
+                boolean found = false;
+                for (Class targetMapper : targetMappers){
+                    if (targetMapper.isAssignableFrom(rawType)){
+                        found = true;
+                        break;
+                    }
+                }
+                if(found){
                     ParameterizedType target = (ParameterizedType) type;
                     Type[] parameters = target.getActualTypeArguments();
                     Class<?> modelClass = (Class<?>) parameters[0];

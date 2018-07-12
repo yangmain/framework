@@ -18,7 +18,7 @@ public class MongoDaoSupportTest{
     @Test
     public void testInsert() throws Exception {
         MongoClient mongoClient = new MongoClient(new ServerAddress("192.168.0.111", 3017), MongoClientOptions.builder().build());
-        MongoDaoClient mongoDaoSupport = new MongoDaoClient(mongoClient.getDatabase("xxxx"), OperateLogEntity.class) {};
+        MongoDaoClient mongoDaoSupport = new MongoDaoClient(mongoClient, "xxxx",  OperateLogEntity.class) {};
         mongoDaoSupport.setSequenceServiceConfigure(new ClasspathSequenceServiceConfigure());
        mongoDaoSupport.insert(OperateLogEntity.builder().name("sss").age(12).data("xxxxxxxxxxxxxx").build());
 //       mongoDaoSupport.insert(false, OperateLogEntity.builder().id("xxxxxxxxxxxxx").name("sss").age(12).data("xxxxxxxxxxxxxx").build());

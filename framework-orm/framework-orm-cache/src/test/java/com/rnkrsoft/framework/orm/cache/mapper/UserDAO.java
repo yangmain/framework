@@ -2,12 +2,13 @@ package com.rnkrsoft.framework.orm.cache.mapper;
 
 import com.rnkrsoft.framework.cache.client.CachedMap;
 import com.rnkrsoft.framework.orm.cache.*;
+import com.rnkrsoft.framework.orm.cache.entity.User;
 
 /**
  * Created by rnkrsoft.com on 2018/6/2.
  */
 @Cache(expire = 6000, index = 1, prefix = "")
-public interface UserDAO extends CacheMapper{
+public interface UserDAO extends CacheInterface {
     @Set
     void set(String key, User user);
 

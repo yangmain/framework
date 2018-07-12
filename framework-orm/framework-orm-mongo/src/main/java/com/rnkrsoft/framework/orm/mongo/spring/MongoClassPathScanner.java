@@ -3,7 +3,13 @@ package com.rnkrsoft.framework.orm.mongo.spring;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
+import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
+import com.rnkrsoft.framework.orm.mongo.MongoMapper;
 import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
+import com.rnkrsoft.framework.orm.mongo.count.MongoCountMapper;
+import com.rnkrsoft.framework.orm.mongo.insert.MongoInsertMapper;
+import com.rnkrsoft.framework.orm.mongo.select.MongoSelectMapper;
+import com.rnkrsoft.framework.orm.mongo.update.MongoUpdateMapper;
 import lombok.Setter;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -27,6 +33,7 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     MongoMapperFactoryBean mongoMapperFactoryBean;
     @Setter
     Class mongoInterface;
+    String schema;
     @Setter
     String host;
 
@@ -93,9 +100,11 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
                 logger.debug("Creating MongoMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
             String mapperClassName = definition.getBeanClassName();
+           Class mongoMapper =  definition.getBeanClass();
+            Class entityClass = GenericsExtractor.extractEntityClass(mongoMapper, MongoMapper.class, MongoInsertMapper.class, MongoUpdateMapper.class, MongoSelectMapper.class, MongoCountMapper.class);
             definition.setBeanClass(this.mongoMapperFactoryBean.getClass());
             definition.getPropertyValues().add("mongoInterface", mapperClassName);
-            MongoDaoClient mongoDaoClient = new MongoDaoClient(mongoClient, null, null, );
+            MongoDaoClient mongoDaoClient = new MongoDaoClient(mongoClient, schema, entityClass);
             definition.getPropertyValues().add("mongoDaoClient", mongoDaoClient);
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             registerBeanDefinition(holder, getRegistry());

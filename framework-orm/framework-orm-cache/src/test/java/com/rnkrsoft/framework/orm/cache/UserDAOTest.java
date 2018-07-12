@@ -1,6 +1,7 @@
-package com.rnkrsoft.framework.orm.cache.mapper;
+package com.rnkrsoft.framework.orm.cache;
 
-import com.rnkrsoft.framework.cache.client.CachedMap;
+import com.rnkrsoft.framework.orm.cache.entity.User;
+import com.rnkrsoft.framework.orm.cache.mapper.UserDAO;
 import com.rnkrsoft.framework.test.SpringTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

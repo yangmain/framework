@@ -52,10 +52,9 @@ public class MongoDaoClient<Entity> {
     @Setter
     SequenceServiceConfigure sequenceServiceConfigure;
 
-    public MongoDaoClient(MongoClient mongoClient, String schema, String tableName, Class<Entity> entityClass) {
+    public MongoDaoClient(MongoClient mongoClient, String schema, Class<Entity> entityClass) {
         this.mongoClient = mongoClient;
         this.schema = schema;
-        this.tableName = tableName;
         this.entityClass = entityClass;
         this.tableMetadata = MongoEntityUtils.extractTable(entityClass);
         Reflector reflector = GlobalSystemMetadata.reflector(entityClass);

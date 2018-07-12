@@ -3,7 +3,7 @@ package com.rnkrsoft.framework.orm.cache.proxy;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.cache.client.CacheClient;
 import com.rnkrsoft.framework.orm.cache.Cache;
-import com.rnkrsoft.framework.orm.cache.CacheMapper;
+import com.rnkrsoft.framework.orm.cache.CacheInterface;
 
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ public class CacheProxyFactory<CacheDAO>{
     public CacheProxyFactory(Class<CacheDAO> cacheInterface, CacheClient cacheClient) {
         this.cacheInterface = cacheInterface;
         this.cacheClient = cacheClient;
-        if (!Arrays.asList(cacheInterface.getInterfaces()).contains(CacheMapper.class)){
+        if (!Arrays.asList(cacheInterface.getInterfaces()).contains(CacheInterface.class)){
             throw ErrorContextFactory.instance().message("接口 '{}'不能作为Cache 数据访问对象", cacheInterface).runtimeException();
         }
     }
