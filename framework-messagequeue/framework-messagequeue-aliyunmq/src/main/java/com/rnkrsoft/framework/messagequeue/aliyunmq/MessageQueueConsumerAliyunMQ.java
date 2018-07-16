@@ -7,6 +7,7 @@ import com.rnkrsoft.framework.messagequeue.protocol.ConsumerType;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Properties;
 
 /**
  * Created by rnkrsoft.com on 2018/5/22.
+ * 基于阿里云MQ的消息队列消费者实现
  */
 @Slf4j
 public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
@@ -53,7 +55,7 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
                 tag.append("||").append(routingKey.substring(lastDotIdx + 1));
             }
         }
-        if (tag.length() > 0){
+        if (tag.length() > 0) {
             tag.delete(0, 2);
         }
         return tag.toString();
@@ -67,30 +69,39 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
         properties.put(PropertyKeyConst.ONSAddr, url);//此处以公共云生产环境为例
         properties.put(PropertyKeyConst.ConsumerId, consumerId);// 您在控制台创建的 Consumer ID
         properties.put(PropertyKeyConst.ConsumeThreadNums, consumeThreadNum);
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("consumer '{}' init...", consumerId);
         }
         this.consumer = ONSFactory.createConsumer(properties);
         this.consumer.subscribe(topic, getTag(), new MessageListener() {
             @Override
             public Action consume(Message message, ConsumeContext context) {
+                String sessionId = message.getKey();
+                int age = message.getReconsumeTimes();
+                MDC.put("sessionId", sessionId);
+                String json = null;
+                try {
+                    json = new String(message.getBody(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    log.error("receive message happen error!", e);
+                }
+                String routingKey = message.getTag();
+
                 if (log.isDebugEnabled()) {
-                    log.debug("receive message: '{}' routingKey:'{}'", message, message.getTopic() + "." + message.getTag());
+                    log.debug("receive message: '{}' routingKey:'{}' age:'{}'", json, routingKey, age);
                 }
                 //topic + tag构成路由关键字
-                MessageQueueListener listener = lookupListener(message.getTopic() + "." + message.getTag());
-                if(listener == null){
+                MessageQueueListener listener = lookupListener(message.getTag());
+                if (listener == null) {
                     return Action.ReconsumeLater;
                 }
-                try {
-                    com.rnkrsoft.framework.messagequeue.protocol.Message msg = com.rnkrsoft.framework.messagequeue.protocol.Message.message(new String(message.getBody(), "UTF-8"));
-                    if (log.isDebugEnabled()){
-                        log.debug("call listener '{}'", msg);
-                    }
-                    listener.execute(msg);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                com.rnkrsoft.framework.messagequeue.protocol.Message msg = com.rnkrsoft.framework.messagequeue.protocol.Message.message(json);
+                msg.setAge(age);
+                msg.setCreateDate(message.getBornTimestamp());
+                if (log.isDebugEnabled()) {
+                    log.debug("call listener '{}'", msg);
                 }
+                listener.execute(msg);
                 return Action.CommitMessage;
             }
         });

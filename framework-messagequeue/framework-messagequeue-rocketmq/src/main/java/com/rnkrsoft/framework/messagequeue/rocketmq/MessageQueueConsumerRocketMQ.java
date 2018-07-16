@@ -2,6 +2,7 @@ package com.rnkrsoft.framework.messagequeue.rocketmq;
 
 import com.rnkrsoft.framework.messagequeue.consumer.AbstractMessageQueueConsumer;
 import com.rnkrsoft.framework.messagequeue.protocol.ConsumerType;
+import lombok.Setter;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,10 +17,14 @@ import java.util.List;
  * Created by rnkrsoft.com on 2018/5/22.
  */
 public class MessageQueueConsumerRocketMQ extends AbstractMessageQueueConsumer {
+    @Setter
+    String url;
+    @Setter
+    String topic;
     @Override
     public int startup(ConsumerType type) {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("PushConsumer");
-        consumer.setNamesrvAddr("");
+        consumer.setNamesrvAddr(url);
         try {
             //订阅PushTopic下Tag为push的消息
             consumer.subscribe("PushTopic", "push");

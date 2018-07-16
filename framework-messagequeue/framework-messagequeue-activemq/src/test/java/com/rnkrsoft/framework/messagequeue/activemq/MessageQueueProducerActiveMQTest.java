@@ -21,7 +21,7 @@ public class MessageQueueProducerActiveMQTest {
         producer.setPassword("admin");
         producer.init();
         Message message = new Message(new Bean("test1", 2));
-        message.setRouteKey("FirstQueue1");
+        message.setRoutingKey("FirstQueue1");
         producer.produce(message);
     }
 

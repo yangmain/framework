@@ -22,28 +22,32 @@ public class Message<T> {
      * 类名
      */
     @Getter
+    @Setter
     String className;
     /**
      * 消息年龄
      */
     @Getter
+    @Setter
     int age = 0;
     /**
      * 创建日期
      */
     @Getter
+    @Setter
     long createDate;
     /**
      * 上次更新日期
      */
     @Getter
+    @Setter
     long lastUpdateDate;
     static Gson GSON = new GsonBuilder().serializeNulls().create();
 
 
     public Message(T value) {
         this.value = value;
-        if (this.value != null){
+        if (this.value != null) {
             this.className = this.value.getClass().getName();
         }
         this.age = 0;

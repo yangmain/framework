@@ -37,7 +37,16 @@ public class MessageQueueConsumerAliyunMQTest {
                 log.info("routingKey: '{}'", message.getRoutingKey());
             }
         });
+        consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "register"))) {
+            @Override
+            public void execute(Message message) {
+                log.info("register user");
+                log.info(message.asJson());
+                log.info("age : '{}'",message.getAge());
+                log.info("routingKey: '{}'", message.getRoutingKey());
+            }
+        });
         consumer.startup();
-        Thread.sleep(60 * 1000);
+        Thread.sleep(600 * 1000);
     }
 }

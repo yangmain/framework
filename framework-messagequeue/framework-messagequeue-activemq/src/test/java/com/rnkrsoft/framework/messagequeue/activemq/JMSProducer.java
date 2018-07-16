@@ -66,7 +66,7 @@ public class JMSProducer {
     public static void sendMessage(Session session, MessageProducer messageProducer) throws Exception {
         for (int i = 0; i < JMSProducer.SENDNUM; i++) {
             com.rnkrsoft.framework.messagequeue.protocol.Message msg = new Message(new Bean("this is a test"));
-            msg.setRouteKey("FirstQueue1");
+            msg.setRoutingKey("FirstQueue1");
             TextMessage message = session.createTextMessage(GSON.toJson(msg));
             System.out.println("发送消息：" + "ActiveMQ 发送的消息" + i);
             messageProducer.send(message);

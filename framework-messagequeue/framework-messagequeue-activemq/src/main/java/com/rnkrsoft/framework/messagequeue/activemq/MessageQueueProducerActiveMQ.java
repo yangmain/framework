@@ -37,7 +37,7 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
         Destination destination; // 消息的目的地
         MessageProducer messageProducer; // 消息生产者
         try {
-            destination = this.session.createTopic(message.getRouteKey()); // 创建消息队列
+            destination = this.session.createTopic(message.getRoutingKey()); // 创建消息队列
             messageProducer = this.session.createProducer(destination); // 创建消息生产者
             TextMessage textMessage = this.session.createTextMessage();
             textMessage.setText(message.asJson());

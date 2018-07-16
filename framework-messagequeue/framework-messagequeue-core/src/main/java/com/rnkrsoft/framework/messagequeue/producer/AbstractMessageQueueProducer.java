@@ -12,7 +12,7 @@ public abstract class AbstractMessageQueueProducer implements MessageQueueProduc
         com.rnkrsoft.framework.messagequeue.annotation.Message messageAnn = bean.getClass().getAnnotation(com.rnkrsoft.framework.messagequeue.annotation.Message.class);
         String routingKey = messageAnn.routingKey();
         Message message = new Message(bean);
-        message.setRouteKey(routingKey);
+        message.setRoutingKey(routingKey);
         return produce(message);
     }
 }
