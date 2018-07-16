@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1-beta1</version>
     </parent>
     <artifactId>framework-orm-spring</artifactId>
     <name>framework-orm-spring</name>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-mybatis</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -83,8 +83,20 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-sequence-h2</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.reflection4j</groupId>
+            <artifactId>reflection4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.groundwork</groupId>
+            <artifactId>groundwork</artifactId>
         </dependency>
     </dependencies>
 </project>

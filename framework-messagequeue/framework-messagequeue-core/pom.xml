@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-messagequeue</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1-beta1</version>
     </parent>
     <artifactId>framework-messagequeue-core</artifactId>
     <name>framework-messagequeue-core</name>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-messagequeue-protocol</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
     </dependencies>
 </project>

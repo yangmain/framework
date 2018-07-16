@@ -1,8 +1,7 @@
 package com.rnkrsoft.framework.cache.spring;
 
-import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.framework.cache.client.CachedMap;
-import org.springframework.cache.Cache;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import org.springframework.cache.support.AbstractValueAdaptingCache;
 
 import java.util.concurrent.Callable;

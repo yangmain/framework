@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1-beta1</version>
     </parent>
     <artifactId>framework-orm-mybatis</artifactId>
     <description>This is the framework-orm-mybatis</description>
@@ -14,18 +14,18 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-test</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-entity</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-sequence-api</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -86,6 +86,14 @@
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.reflection4j</groupId>
+            <artifactId>reflection4j</artifactId>
         </dependency>
     </dependencies>
 </project>

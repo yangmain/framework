@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-test</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1-beta1</version>
     </parent>
     <artifactId>framework-test-orm</artifactId>
     <name>framework-test-orm</name>
@@ -28,27 +28,27 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-orm</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-test</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-test-core</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-api</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-spring</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -88,6 +88,18 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.groundwork</groupId>
+            <artifactId>groundwork</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logtrace4j</groupId>
+            <artifactId>logtrace4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.reflection4j</groupId>
+            <artifactId>reflection4j</artifactId>
         </dependency>
     </dependencies>
 </project>
