@@ -32,8 +32,9 @@ public class MessageQueueConsumerAliyunMQTest {
         consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "test_1"))) {
             @Override
             public void execute(Message message) {
-                System.out.println(message.asJson());
                 log.info(message.asJson());
+                log.info("age : '{}'",message.getAge());
+                log.info("routingKey: '{}'", message.getRoutingKey());
             }
         });
         consumer.startup();

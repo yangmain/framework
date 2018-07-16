@@ -13,7 +13,7 @@ import lombok.Setter;
 public class Message<T> {
     @Getter
     @Setter
-    String routeKey;
+    String routingKey;
     /**
      * 值对象
      */

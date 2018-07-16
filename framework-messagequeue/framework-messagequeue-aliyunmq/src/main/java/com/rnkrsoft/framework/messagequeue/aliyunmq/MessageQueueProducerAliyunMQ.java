@@ -49,7 +49,7 @@ public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
     @Override
     public int produce(Message message) {
         try {
-            com.aliyun.openservices.ons.api.Message msg = new com.aliyun.openservices.ons.api.Message(topic, message.getRouteKey(), message.asJson().getBytes("UTF-8"));
+            com.aliyun.openservices.ons.api.Message msg = new com.aliyun.openservices.ons.api.Message(topic, message.getRoutingKey(), message.asJson().getBytes("UTF-8"));
             msg.setKey(UUID.randomUUID().toString());
             msg.setMsgID(UUID.randomUUID().toString());
             if (log.isDebugEnabled()){
