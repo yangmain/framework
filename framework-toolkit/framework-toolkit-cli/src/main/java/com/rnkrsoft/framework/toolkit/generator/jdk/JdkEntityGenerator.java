@@ -91,10 +91,10 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.INTEGER)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.SMALLINT) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.SMALLINT)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.SHORT)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.TINYINT) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.SMALLINT)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.BYTE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("Integer {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.DECIMAL) {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.DECIMAL )", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
