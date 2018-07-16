@@ -10,9 +10,15 @@ import java.util.Map;
 public interface MongoCountMapper<Entity> extends MongoInterface {
     /**
      * 根据实体中的非null字段作为条件进行统计
-     * @param entity
-     * @return
+     * @param entity 实体
+     * @return 总条数
      */
     int count(Entity entity);
-    int delete(Map<String, Object> parameter);
+
+    /**
+     * 根据实体中的键值作为条件进行统计
+     * @param parameter 键值对
+     * @return 总条数
+     */
+    int count(Map<String, Object> parameter);
 }

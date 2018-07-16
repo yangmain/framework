@@ -139,8 +139,14 @@ public class MongoDaoClient<Entity> {
      *
      * @param entity
      */
-    public long delete(Object entity) {
-        DeleteResult result = getTable().deleteMany(BsonUtils.and(entity, false));
+    public long delete(Object entity, LogicMode logicMode) {
+        Document document = null;
+        if (logicMode == LogicMode.AND) {
+            document = BsonUtils.and(entity, false);
+        } else if (logicMode == LogicMode.OR) {
+            document = BsonUtils.or(entity, false);
+        }
+        DeleteResult result = getTable().deleteMany(document);
         return result.getDeletedCount();
     }
 
@@ -171,7 +177,7 @@ public class MongoDaoClient<Entity> {
         return result.getModifiedCount();
     }
 
-    public long update(Entity condition, LogicMode logicMode, Entity entity) {
+    public long update(Object condition, Object logicMode, Object entity) {
         Document document = null;
         if (logicMode == LogicMode.AND) {
             document = BsonUtils.and(condition, false);
@@ -232,6 +238,7 @@ public class MongoDaoClient<Entity> {
         } else if (logicMode == LogicMode.OR) {
             document = BsonUtils.or(entity, false);
         }
+//        getTable().find(document).sort(document).limit()
         return null;
     }
 
@@ -239,4 +246,6 @@ public class MongoDaoClient<Entity> {
         Document document = BsonUtils.and(entity, false);
         return getTable().count(document);
     }
+
+
 }

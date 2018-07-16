@@ -24,6 +24,10 @@ public interface Constants {
     /**
      * 按照And条件进行删除
      */
+    String DELETE = "delete";
+    /**
+     * 按照And条件进行删除
+     */
     String DELETE_AND = "deleteAnd";
     /**
      * 按照Or条件进行删除
@@ -77,6 +81,7 @@ public interface Constants {
      */
     String SELECT_PAGE_AND = "selectPageAnd";
     String SELECT_PAGE_OR = "selectPageOr";
+    String UPDATE = "update";
     /**
      * 按照物理主键进行更新
      */
