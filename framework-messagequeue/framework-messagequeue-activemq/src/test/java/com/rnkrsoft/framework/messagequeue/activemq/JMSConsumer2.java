@@ -30,7 +30,7 @@ public class JMSConsumer2 {
             connection = connectionFactory.createConnection();  // 通过连接工厂获取连接
             connection.start(); // 启动连接
             session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE); // 创建Session
-            destination = session.createQueue("FirstQueue1");  // 创建连接的消息队列
+            destination = session.createTopic("FirstQueue1");  // 创建连接的消息队列
             messageConsumer = session.createConsumer(destination); // 创建消息消费者
             messageConsumer.setMessageListener(new Listener()); // 注册消息监听
         } catch (JMSException e) {

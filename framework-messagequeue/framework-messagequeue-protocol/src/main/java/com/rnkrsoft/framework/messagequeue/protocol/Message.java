@@ -1,11 +1,10 @@
 package com.rnkrsoft.framework.messagequeue.protocol;
 
-import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Getter;
-
-import java.io.UnsupportedEncodingException;
+import lombok.Setter;
 
 /**
  * Created by rnkrsoft.com on 2018/5/21.
@@ -13,6 +12,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class Message<T> {
     @Getter
+    @Setter
     String routeKey;
     /**
      * 值对象
@@ -43,19 +43,17 @@ public class Message<T> {
 
     public Message(T value) {
         this.value = value;
+        if (this.value != null){
+            this.className = this.value.getClass().getName();
+        }
         this.age = 0;
         this.createDate = System.currentTimeMillis();
         this.lastUpdateDate = System.currentTimeMillis();
     }
 
-    public static Message message(byte[] data) {
-        try {
-            Message message = GSON.fromJson(new String(data, "UTF-8"), Message.class);
-            return message;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static Message message(String json) {
+        Message message = GSON.fromJson(json, Message.class);
+        return message;
     }
 
     public String asJson() {

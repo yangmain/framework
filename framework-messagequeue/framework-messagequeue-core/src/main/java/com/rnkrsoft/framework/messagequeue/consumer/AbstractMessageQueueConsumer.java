@@ -30,7 +30,7 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
     MessageQueueListenerWrapper createListener(MessageQueueListener listener) {
         Class clazz = listener.getClass();
         ListenerDefinition listenerDefinition = (ListenerDefinition) clazz.getAnnotation(ListenerDefinition.class);
-        List<MessageQueueSelector> messageQueueSelectors = new ArrayList();
+        List<MessageQueueSelector> messageQueueSelectors = new ArrayList(listener.getSelectors());
         //消费时发生错误是否重新放入队列
         boolean whenErrorRequeue = false;
         //最大处理年龄，操作则丢弃
@@ -52,6 +52,8 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
             maxTryProcessAge = listenerDefinition.maxTryProcessAge();
             ack = listenerDefinition.ack();
         }
+        listener.getSelectors().clear();
+        listener.getSelectors().addAll(messageQueueSelectors);
         MessageQueueListenerWrapper enhance = new MessageQueueListenerWrapper(listener, whenErrorRequeue, maxTryProcessAge, ack, messageQueueSelectors);
         return enhance;
     }

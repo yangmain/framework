@@ -39,9 +39,9 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
         try {
             destination = this.session.createTopic(message.getRouteKey()); // 创建消息队列
             messageProducer = this.session.createProducer(destination); // 创建消息生产者
-            BytesMessage bytesMessage = this.session.createBytesMessage();
-            bytesMessage.writeUTF(message.asJson());
-            messageProducer.send(bytesMessage);
+            TextMessage textMessage = this.session.createTextMessage();
+            textMessage.setText(message.asJson());
+            messageProducer.send(textMessage);
         } catch (JMSException e) {
             e.printStackTrace();
         }

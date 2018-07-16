@@ -43,5 +43,10 @@
             <version>1.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-messagequeue-protocol</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

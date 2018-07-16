@@ -1,6 +1,7 @@
 package com.rnkrsoft.framework.messagequeue.activemq;
 
 import com.rnkrsoft.framework.messagequeue.MessageQueueProducerFactory;
+import com.rnkrsoft.framework.messagequeue.protocol.Message;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueProducer;
 import lombok.Data;
 import org.junit.Test;
@@ -14,16 +15,18 @@ public class MessageQueueProducerActiveMQTest {
 
     @Test
     public void testProduce() throws Exception {
-        MessageQueueProducer producer = MessageQueueProducerFactory.getInstance();
-        producer.setUrl("xxxxx");
-        producer.setUsername("demo");
-        producer.setPassword("sdada");
+        MessageQueueProducer producer = new MessageQueueProducerActiveMQ();
+        producer.setUrl("tcp://127.0.0.1:61616");
+        producer.setUsername("admin");
+        producer.setPassword("admin");
         producer.init();
-        producer.produce(new Bean("test1", 2));
+        Message message = new Message(new Bean("test1", 2));
+        message.setRouteKey("FirstQueue1");
+        producer.produce(message);
     }
 
 
-   static class Bean{
+  public static class Bean{
         String name;
         int age;
 

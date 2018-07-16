@@ -14,5 +14,5 @@ public @interface Selector {
      * 路由关键字
      * @return
      */
-    String routingKey();
+    String routingKey() default "*";
 }

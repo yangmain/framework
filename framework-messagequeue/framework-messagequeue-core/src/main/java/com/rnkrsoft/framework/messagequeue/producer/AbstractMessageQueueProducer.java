@@ -6,9 +6,13 @@ import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueProducer;
 /**
  * Created by rnkrsoft.com on 2018/5/21.
  */
-public abstract class AbstractMessageQueueProducer implements MessageQueueProducer{
+public abstract class AbstractMessageQueueProducer implements MessageQueueProducer {
     @Override
     public int produce(Object bean) {
-        return produce(new Message(bean));
+        com.rnkrsoft.framework.messagequeue.annotation.Message messageAnn = bean.getClass().getAnnotation(com.rnkrsoft.framework.messagequeue.annotation.Message.class);
+        String routingKey = messageAnn.routingKey();
+        Message message = new Message(bean);
+        message.setRouteKey(routingKey);
+        return produce(message);
     }
 }

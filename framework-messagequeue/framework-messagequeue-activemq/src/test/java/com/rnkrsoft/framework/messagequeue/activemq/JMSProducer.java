@@ -1,5 +1,9 @@
 package com.rnkrsoft.framework.messagequeue.activemq;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.rnkrsoft.framework.messagequeue.protocol.*;
+import com.rnkrsoft.framework.messagequeue.protocol.Message;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -16,6 +20,7 @@ public class JMSProducer {
     private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD; // 默认的连接密码
     private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL; // 默认的连接地址
     private static final int SENDNUM = 10; // 发送的消息数量
+    static Gson GSON = new GsonBuilder().serializeNulls().create();
 
     public static void main(String[] args) {
 
@@ -32,7 +37,7 @@ public class JMSProducer {
             connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             connection.start(); // 启动连接
             session = connection.createSession(Boolean.TRUE, Session.AUTO_ACKNOWLEDGE); // 创建Session
-            destination = session.createQueue("FirstQueue1"); // 创建消息队列
+            destination = session.createTopic("FirstQueue1"); // 创建消息队列
             messageProducer = session.createProducer(destination); // 创建消息生产者
             sendMessage(session, messageProducer); // 发送消息
             session.commit();
@@ -60,9 +65,27 @@ public class JMSProducer {
      */
     public static void sendMessage(Session session, MessageProducer messageProducer) throws Exception {
         for (int i = 0; i < JMSProducer.SENDNUM; i++) {
-            TextMessage message = session.createTextMessage("ActiveMQ 发送的消息" + i);
+            com.rnkrsoft.framework.messagequeue.protocol.Message msg = new Message(new Bean("this is a test"));
+            msg.setRouteKey("FirstQueue1");
+            TextMessage message = session.createTextMessage(GSON.toJson(msg));
             System.out.println("发送消息：" + "ActiveMQ 发送的消息" + i);
             messageProducer.send(message);
+        }
+    }
+
+    public static class Bean{
+        String name;
+
+        public Bean(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
     }
 }

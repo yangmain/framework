@@ -34,4 +34,9 @@ public class DemoConsumer implements MessageQueueConsumer{
     public int startup() {
         return startup(ConsumerType.HEAD);
     }
+
+    @Override
+    public int shutdown() {
+        return 0;
+    }
 }
