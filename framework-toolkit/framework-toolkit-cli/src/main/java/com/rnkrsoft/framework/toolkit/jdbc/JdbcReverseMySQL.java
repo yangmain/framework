@@ -151,6 +151,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 java_type = Long.class;
                 full_jdbc_type = data_type.getCode();
             } else if (data_type == SupportedJdbcType.INT || data_type == SupportedJdbcType.INTEGER) {
+                data_type= SupportedJdbcType.INTEGER;
                 java_type = Integer.class;
                 full_jdbc_type = SupportedJdbcType.INTEGER.getCode();
             } else if (data_type == SupportedJdbcType.SMALLINT) {
