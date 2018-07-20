@@ -41,7 +41,7 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
         scanner.setCacheInterface(this.cacheInterface);
         CacheClient cacheClient = new CacheClient();
         CacheClientSetting.CacheClientSettingBuilder cacheClientSettingBuilder =  CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.AUTO);
-        if (password != null){
+        if (password != null && !password.isEmpty()){
             cacheClientSettingBuilder.password(password);
         }
         cacheClient.init(cacheClientSettingBuilder.build());
