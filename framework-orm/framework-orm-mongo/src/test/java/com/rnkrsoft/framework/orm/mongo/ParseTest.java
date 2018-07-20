@@ -7,7 +7,7 @@ import com.rnkrsoft.framework.orm.mongo.insert.MongoInsertMapper;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/7/11.
+ * Created by rnkrsoft.com on 2018/7/11.
  */
 public class ParseTest {
     @Test

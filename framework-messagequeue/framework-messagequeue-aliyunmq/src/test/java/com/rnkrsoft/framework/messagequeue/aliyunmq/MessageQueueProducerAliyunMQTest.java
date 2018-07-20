@@ -4,7 +4,7 @@ import com.rnkrsoft.framework.messagequeue.protocol.Message;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/7/13.
+ * Created by rnkrsoft.com on 2018/7/13.
  */
 public class MessageQueueProducerAliyunMQTest {
 
