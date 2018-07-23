@@ -15,10 +15,10 @@ import java.util.Date;
 @Table(name = "ORDER", prefix = "TB", suffix = "INF")
 @Comment("演示信息表")
 public class OrderEntity extends Entity implements Serializable {
-    @PrimaryKey(strategy = PrimaryKeyStrategy.UUID, feature = "${yyyyMMddHHmmssSSS}_${SEQ:9}_${RANDOM:5}")
-    @StringColumn(name = "SERIAL_NO", nullable = false)
+    @PrimaryKey(strategy = PrimaryKeyStrategy.IDENTITY)
+    @NumberColumn(name = "SERIAL_NO", nullable = false)
     @Comment("序列号")
-    String serialNo;
+    Integer serialNo;
 
     @StringColumn(name = "USER_NAME", nullable = false)
     @Comment("姓名")
