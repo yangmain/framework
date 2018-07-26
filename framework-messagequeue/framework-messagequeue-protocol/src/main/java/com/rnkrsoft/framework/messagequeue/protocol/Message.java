@@ -17,7 +17,9 @@ public class Message<T> {
     /**
      * 值对象
      */
-    T value;
+    transient T value;
+    @Setter
+    String json;
     /**
      * 类名
      */
@@ -53,6 +55,7 @@ public class Message<T> {
         this.age = 0;
         this.createDate = System.currentTimeMillis();
         this.lastUpdateDate = System.currentTimeMillis();
+        this.json = GSON.toJson(value);
     }
 
     public static Message message(String json) {
@@ -61,16 +64,13 @@ public class Message<T> {
     }
 
     public String asJson() {
-        String json = null;
-        json = GSON.toJson(this);
-        return json;
+        return GSON.toJson(this);
     }
 
     public T get() {
         if (this.value != null) {
             return value;
         } else {
-            String json = asJson();
             Class clazz = null;
             try {
                 clazz = Class.forName(className);
@@ -78,6 +78,7 @@ public class Message<T> {
                 throw ErrorContextFactory.instance().cause(e).runtimeException();
             }
             Object object = GSON.fromJson(json, clazz);
+            this.value = (T) object;
             return (T) object;
         }
     }
