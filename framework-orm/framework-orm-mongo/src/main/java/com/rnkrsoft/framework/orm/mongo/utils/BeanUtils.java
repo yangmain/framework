@@ -14,6 +14,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +85,8 @@ public class BeanUtils {
                 map.put(columnName, val);
             } else if (val instanceof Double) {
                 map.put(columnName, val);
+            } else if (val instanceof BigDecimal) {
+                map.put(columnName, val.toString());
             } else if (val instanceof java.util.Date) {
                 map.put(columnName, ((java.util.Date) val).getTime());
             } else if (val instanceof java.sql.Timestamp) {

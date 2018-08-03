@@ -7,6 +7,8 @@ import com.rnkrsoft.framework.sequence.SequenceService;
 import com.rnkrsoft.framework.sequence.SpringContextHelper;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,13 +23,15 @@ import java.sql.SQLException;
  * Created by rnkrsoft.com on 2018/4/23.
  */
 @Slf4j
-public class MyISAMSequenceService implements SequenceService, DataSourceAware{
+public class MyISAMSequenceService implements SequenceService, DataSourceAware , InitializingBean{
     @Setter
+    @Autowired(required = false)
     DataSource dataSource;
     JdbcTemplate jdbcTemplate;
+
     @Override
     public int nextval(String schema, String prefix, final String sequenceName, final String feature) {
-        if (jdbcTemplate == null){
+        if (jdbcTemplate == null) {
             this.jdbcTemplate = new JdbcTemplate(dataSource);
         }
         String tableName = "sequence_inf";
@@ -35,7 +39,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
         if (schema != null && !schema.isEmpty()) {
             sql = sql + schema + ".";
         }
-        if (!StringUtils.isBlank(prefix) && !prefix.isEmpty()){
+        if (!StringUtils.isBlank(prefix) && !prefix.isEmpty()) {
             tableName = prefix + "_" + tableName;
         }
         sql = sql + tableName + "(seq_name, seq_feature) values(?, ?)";
@@ -71,7 +75,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
 
     @Override
     public int curval(String schema, String prefix, String sequenceName, String feature) {
-        if (jdbcTemplate == null){
+        if (jdbcTemplate == null) {
             DataSource dataSource = SpringContextHelper.getBean("defaultDataSource");
             this.jdbcTemplate = new JdbcTemplate(dataSource);
         }
@@ -80,11 +84,16 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware{
         if (schema != null && !schema.isEmpty()) {
             sql = sql + schema + ".";
         }
-        if (StringUtils.isBlank(prefix) && !prefix.isEmpty()){
+        if (StringUtils.isBlank(prefix) && !prefix.isEmpty()) {
             tableName = prefix + "_" + tableName;
         }
         sql = sql + tableName + " where seq_name = ? and seq_feature = ? ";
         Integer seqValue = jdbcTemplate.queryForObject(sql, Integer.class);
         return seqValue;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+
     }
 }
