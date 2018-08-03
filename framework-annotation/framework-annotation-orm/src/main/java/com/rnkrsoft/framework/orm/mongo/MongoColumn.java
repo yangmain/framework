@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo;
 
+import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.ValueMode;
 
 import java.lang.annotation.ElementType;
@@ -34,7 +35,13 @@ public @interface MongoColumn {
     String defaultValue() default "";
 
     /**
-     * 作为条件时作为and
+     * 作为条件时的逻辑模式
+     * @return
+     */
+    LogicMode logicMode() default LogicMode.AND;
+
+    /**
+     * 作为条件时值模式
      * @return
      */
     ValueMode valueMode() default ValueMode.EQUAL;

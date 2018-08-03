@@ -16,16 +16,19 @@ import java.lang.reflect.Field;
  * Created by rnkrsoft.com on 2018/6/21.
  */
 public class MongoEntityUtils {
-    public static TableMetadata extractTable(Class entityClass){
+    public static TableMetadata extractTable(Class entityClass) {
         MongoTable mongoCollection = (MongoTable) entityClass.getAnnotation(MongoTable.class);
-        String schema = mongoCollection.schema();
-        String tableName = mongoCollection.name();
-        TableMetadata tableMetadata = TableMetadata.builder()
+
+        TableMetadata.TableMetadataBuilder builder = TableMetadata.builder()
                 .entityClass(entityClass)
-                .entityClassName(entityClass.getSimpleName())
-                .tableName(tableName)
-                .schema(schema)
-                .build();
+                .entityClassName(entityClass.getSimpleName());
+        if (mongoCollection != null) {
+            String schema = mongoCollection.schema();
+            String tableName = mongoCollection.name();
+            builder.tableName(tableName)
+                    .schema(schema);
+        }
+        TableMetadata tableMetadata = builder.build();
         extractFields(tableMetadata);
         return tableMetadata;
     }
@@ -51,7 +54,7 @@ public class MongoEntityUtils {
         }
     }
 
-    public static boolean extractField(ColumnMetadata columnMetadata){
+    public static boolean extractField(ColumnMetadata columnMetadata) {
         Field field = columnMetadata.getColumnField();
         MongoColumn mongoColumn = field.getAnnotation(MongoColumn.class);
         PrimaryKey primaryKey = field.getAnnotation(PrimaryKey.class);
@@ -60,15 +63,19 @@ public class MongoEntityUtils {
         columnMetadata.setJavaType(field.getType());
         columnMetadata.setDefaultValue(mongoColumn.defaultValue());
         columnMetadata.setNullable(mongoColumn.nullable());
-        if (primaryKey != null){
-            if (columnName.isEmpty()){
+        columnMetadata.setValueMode(mongoColumn.valueMode());
+        columnMetadata.setLogicMode(mongoColumn.logicMode());
+        columnMetadata.setOnUpdateCurrentTimestamp(false);
+        columnMetadata.setAutoIncrement(false);
+        if (primaryKey != null) {
+            if (columnName.isEmpty()) {
                 columnName = "_id";
             }
-            if (!columnName.equals("_id")){
+            if (!columnName.equals("_id")) {
                 throw ErrorContextFactory.instance().message("物理主键不为'_id', 实际 '{}'", columnName).runtimeException();
             }
-            if (mongoColumn.nullable()){
-                if (field.getType() != ObjectId.class){
+            if (mongoColumn.nullable()) {
+                if (field.getType() != ObjectId.class) {
                     throw ErrorContextFactory.instance().message("物理主键允许为空，数据类型必须为 '{}'", ObjectId.class).runtimeException();
                 }
             }
@@ -77,7 +84,7 @@ public class MongoEntityUtils {
             columnMetadata.setPrimaryKeyStrategy(primaryKey.strategy());
             columnMetadata.getTableMetadata().getPrimaryKeys().add(columnName);
         }
-        columnMetadata.setJdbcName(columnName);
+        columnMetadata.setJdbcName(columnName.isEmpty() ? field.getName() : columnName);
         return true;
     }
 }

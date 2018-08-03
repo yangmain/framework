@@ -1,6 +1,5 @@
 package com.rnkrsoft.framework.orm.mongo.delete;
 
-import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.mongo.MongoInterface;
 
 import java.util.Map;
@@ -14,7 +13,7 @@ public interface MongoDeleteMapper<Entity> extends MongoInterface {
      * @param entity 实体
      * @return 影响条数
      */
-    long delete(Entity entity, LogicMode logicMode);
+    long delete(Entity entity);
 
     /**
      * 根据Map中的条件进行删除

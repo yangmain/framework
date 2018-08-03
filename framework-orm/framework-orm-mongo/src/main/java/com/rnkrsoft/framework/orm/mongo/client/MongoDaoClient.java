@@ -10,8 +10,9 @@ import com.rnkrsoft.framework.orm.Pagination;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.orm.mongo.MongoTable;
-import com.rnkrsoft.framework.orm.mongo.utils.BeanUtils;
-import com.rnkrsoft.framework.orm.mongo.utils.BsonUtils;
+import com.rnkrsoft.framework.orm.mongo.bson.BeanSetting;
+import com.rnkrsoft.framework.orm.mongo.bson.BsonDeserializer;
+import com.rnkrsoft.framework.orm.mongo.bson.BsonSerializer;
 import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
 import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
@@ -49,6 +50,9 @@ public class MongoDaoClient<Entity> {
     TableMetadata tableMetadata;
     String schema;
     String tableName;
+    BsonSerializer<Entity> serializer;
+    BsonSerializer<Entity> serializerNullable;
+    BsonDeserializer<Entity> deserializer;
     @Setter
     SequenceServiceConfigure sequenceServiceConfigure;
 
@@ -72,6 +76,9 @@ public class MongoDaoClient<Entity> {
         } else {
             //TODO抛出异常
         }
+        this.serializer = new BsonSerializer(BeanSetting.builder().nullable(false).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build());
+        this.serializerNullable = new BsonSerializer(BeanSetting.builder().nullable(true).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build());
+        this.deserializer = new BsonDeserializer(BeanSetting.builder().nullable(false).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build());
     }
 
     MongoCollection<Document> getTable() {
@@ -101,9 +108,10 @@ public class MongoDaoClient<Entity> {
     }
 
     public void insertSelective(Entity... entities) {
+
         List<Map> list = new ArrayList();
         for (Entity entity : entities) {
-            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            list.add(this.serializer.serialize(entity, false));
         }
         insert(list.toArray(new Map[list.size()]));
     }
@@ -111,7 +119,7 @@ public class MongoDaoClient<Entity> {
     public void insert(Entity... entities) {
         List<Map> list = new ArrayList();
         for (Entity entity : entities) {
-            list.add(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).sequenceServiceConfigure(sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            list.add(this.serializerNullable.serialize(entity, false));
         }
         insert(list.toArray(new Map[list.size()]));
     }
@@ -124,7 +132,6 @@ public class MongoDaoClient<Entity> {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        TableMetadata tableMetadata = MongoEntityUtils.extractTable(entityClass);
         DeleteResult result = null;
         if (tableMetadata.getColumn(tableMetadata.getPrimaryKeys().get(0)).getJavaType() == ObjectId.class) {
             result = getTable().deleteMany(new Document("_id", new ObjectId(id)));
@@ -139,57 +146,48 @@ public class MongoDaoClient<Entity> {
      *
      * @param entity
      */
-    public long delete(Object entity, LogicMode logicMode) {
-        Document document = null;
-        if (logicMode == LogicMode.AND) {
-            document = BsonUtils.and(entity, false);
-        } else if (logicMode == LogicMode.OR) {
-            document = BsonUtils.or(entity, false);
-        }
+    public long delete(Object entity) {
+        Document document = serializer.serialize(entity, true);
         DeleteResult result = getTable().deleteMany(document);
         return result.getDeletedCount();
     }
 
 
     public long updateByPrimaryKeySelective(Object id, Entity entity) {
-        Document document = null;
+        Document condition = null;
         if (id instanceof ObjectId) {
-            document = new Document("_id", id);
+            condition = new Document("_id", id);
         } else if (id instanceof String) {
-            document = new Document("_id", id);
+            condition = new Document("_id", id);
         } else {
             throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
         }
-        UpdateResult result = getTable().updateOne(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        UpdateResult result = getTable().updateOne(condition, serializer.serialize(entity, false));
         return result.getModifiedCount();
     }
 
     public long updateByPrimaryKey(Object id, Entity entity) {
-        Document document = null;
+        Document condition = null;
         if (id instanceof ObjectId) {
-            document = new Document("_id", id);
+            condition = new Document("_id", id);
         } else if (id instanceof String) {
-            document = new Document("_id", id);
+            condition = new Document("_id", id);
         } else {
             throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
         }
-        UpdateResult result = getTable().updateOne(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        UpdateResult result = getTable().updateOne(condition, serializer.serialize(entity, false));
         return result.getModifiedCount();
     }
 
-    public long update(Object condition, Object logicMode, Object entity) {
-        Document document = null;
-        if (logicMode == LogicMode.AND) {
-            document = BsonUtils.and(condition, false);
-        } else if (logicMode == LogicMode.OR) {
-            document = BsonUtils.or(condition, false);
-        }
-        UpdateResult result = getTable().updateMany(document, new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+    public long update(Object condition, Object entity) {
+        Document document = serializer.serialize(condition, true);
+        UpdateResult result = getTable().updateMany(document, serializerNullable.serialize(entity, false));
         return result.getModifiedCount();
     }
 
     public long updateSelective(Entity condition, Entity entity) {
-        UpdateResult result = getTable().updateMany(BsonUtils.and(condition, false), new Document(BeanUtils.describe(entity, BeanUtils.BeanSetting.builder().nullable(false).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build())));
+        Document document = serializer.serialize(condition, true);
+        UpdateResult result = getTable().updateMany(document, serializer.serialize(entity, false));
         return result.getModifiedCount();
     }
 
@@ -206,44 +204,32 @@ public class MongoDaoClient<Entity> {
         Iterator<Document> it = fi.iterator();
         if (it.hasNext()) {
             Document result = it.next();
-            return BeanUtils.populate(result, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build());
+            return deserializer.deserialize(result);
         } else {
             return null;
         }
     }
 
-    public List<Entity> select(Entity entity, LogicMode logicMode) {
+    public List<Entity> select(Entity entity) {
         List<Entity> list = new ArrayList();
-        Document document = BsonUtils.and(entity, false);
-        if (logicMode == LogicMode.AND) {
-            document = BsonUtils.and(entity, false);
-        } else if (logicMode == LogicMode.OR) {
-            document = BsonUtils.or(entity, false);
-        }
+        Document document = serializer.serialize(entity, true);
         FindIterable fi = getTable().find(document);
         Iterator<Document> it = fi.iterator();
         while (it.hasNext()) {
             Document result = it.next();
-            list.add(BeanUtils.populate(result, entityClass, BeanUtils.BeanSetting.builder().nullable(true).tableMetadata(MongoEntityUtils.extractTable(entityClass)).build()));
+            list.add(deserializer.deserialize(result));
         }
         return list;
     }
 
     public Pagination<Entity> selectPage(Pagination<Entity> pagination, LogicMode logicMode) {
         //TODO
-        Entity entity = pagination.getEntity();
-        Document document = BsonUtils.and(entity, false);
-        if (logicMode == LogicMode.AND) {
-            document = BsonUtils.and(entity, false);
-        } else if (logicMode == LogicMode.OR) {
-            document = BsonUtils.or(entity, false);
-        }
 //        getTable().find(document).sort(document).limit()
         return null;
     }
 
     public long count(Entity entity) {
-        Document document = BsonUtils.and(entity, false);
+        Document document = serializer.serialize(entity, true);
         return getTable().count(document);
     }
 

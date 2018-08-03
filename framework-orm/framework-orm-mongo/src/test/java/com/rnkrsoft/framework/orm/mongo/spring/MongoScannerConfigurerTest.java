@@ -20,10 +20,10 @@ public class MongoScannerConfigurerTest extends SpringTest{
     OperateLogDAO operateLogDAO;
     @Test
     public void testAfterPropertiesSet() throws Exception {
-        operateLogDAO.delete(OperateLogEntity.builder().name("sss").build(), LogicMode.OR);
+        operateLogDAO.delete(OperateLogEntity.builder().name("sss").build());
         operateLogDAO.insertSelective(OperateLogEntity.builder().name("sss").age(12).data("xxxxxxxxxxxxxx").build());
-        operateLogDAO.update(OperateLogEntity.builder().name("sss").build(), LogicMode.AND, OperateLogEntity.builder().name("xxx").build());
-        List<OperateLogEntity> list = operateLogDAO.select(OperateLogEntity.builder().name("xxx").build(), LogicMode.AND);
+        operateLogDAO.update(OperateLogEntity.builder().name("sss").build(), OperateLogEntity.builder().name("xxx").build());
+        List<OperateLogEntity> list = operateLogDAO.select(OperateLogEntity.builder().name("xxx").build());
         System.out.println(list);
     }
 }

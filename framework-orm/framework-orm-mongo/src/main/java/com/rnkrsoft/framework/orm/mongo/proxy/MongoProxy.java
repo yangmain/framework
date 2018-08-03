@@ -68,7 +68,7 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
             if (args.length != 2) {
                 throw ErrorContextFactory.instance().message("deleteAnd 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.delete(args[0], (LogicMode) args[1]);
+            return mongoDaoSupport.delete(args[0]);
         } else if (methodName.equals(Constants.DELETE_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("deleteByPrimaryKey 不支持不为一个参数的").runtimeException();
@@ -78,7 +78,7 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
             if (args.length != 3) {
                 throw ErrorContextFactory.instance().message("updateByPrimaryKey 不支持不为三个参数的").runtimeException();
             }
-            return mongoDaoSupport.update(args[0], args[1], args[2]);
+            return mongoDaoSupport.update(args[0], args[1]);
         } else if (methodName.equals(Constants.UPDATE_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("updateByPrimaryKey 不支持不为一个参数的").runtimeException();
@@ -94,7 +94,7 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
                 throw ErrorContextFactory.instance().message("select 不支持不为一个参数的").runtimeException();
             }
             LogicMode logicMode = (LogicMode)args[1];
-            return mongoDaoSupport.select(args[0], logicMode);
+            return mongoDaoSupport.select(args[0]);
         } else if (methodName.equals(Constants.SELECT_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("selectByPrimaryKey 不支持不为一个参数的").runtimeException();

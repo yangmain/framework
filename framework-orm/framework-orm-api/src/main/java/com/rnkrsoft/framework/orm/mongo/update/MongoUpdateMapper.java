@@ -28,7 +28,7 @@ public interface MongoUpdateMapper<Entity> extends MongoInterface {
      * @param entity
      * @return
      */
-    int update(Entity condition, LogicMode logicMode,  Entity entity);
+    int update(Entity condition,  Entity entity);
     /**
      * 按照条件进行更新
      * @param condition

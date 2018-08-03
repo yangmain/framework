@@ -25,7 +25,7 @@ public class MongoDaoSupportTest{
 //        long count = mongoDaoSupport.count(OperateLogEntity.builder().age(12).build());
 //        System.out.println(count);
 //        mongoDaoSupport.delete(OperateLogEntity.builder().age(12).build());
-        List<OperateLogEntity> list = mongoDaoSupport.select(OperateLogEntity.builder().age(12).build(), LogicMode.AND);
+        List<OperateLogEntity> list = mongoDaoSupport.select(OperateLogEntity.builder().age(12).build());
         for (OperateLogEntity entity : list) {
             System.out.println(entity);
         }
