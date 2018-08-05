@@ -20,6 +20,7 @@ import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.Invoker;
 import com.rnkrsoft.reflection4j.Reflector;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -43,6 +44,7 @@ import java.util.Map;
  * 10.按照条件分页查找
  * 11.按照条件统计条数
  */
+@Slf4j
 public class MongoDaoClient<Entity> {
     MongoClient mongoClient;
     Class<Entity> entityClass;
@@ -148,46 +150,65 @@ public class MongoDaoClient<Entity> {
      */
     public long delete(Object entity) {
         Document document = serializer.serialize(entity, true);
+        if (log.isDebugEnabled()) {
+            log.debug("condition :'{}'", document.toJson());
+        }
         DeleteResult result = getTable().deleteMany(document);
         return result.getDeletedCount();
     }
 
 
     public long updateByPrimaryKeySelective(Object id, Entity entity) {
-        Document condition = null;
+        Document conditionDocument = null;
         if (id instanceof ObjectId) {
-            condition = new Document("_id", id);
+            conditionDocument = new Document("_id", id);
         } else if (id instanceof String) {
-            condition = new Document("_id", id);
+            conditionDocument = new Document("_id", id);
         } else {
             throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
         }
-        UpdateResult result = getTable().updateOne(condition, serializer.serialize(entity, false));
+        Document valueDocument = serializer.serialize(entity, false);
+        if (log.isDebugEnabled()) {
+            log.debug("condition :'{}' update value:'{}'", conditionDocument.toJson(), valueDocument.toJson());
+        }
+        UpdateResult result = getTable().updateOne(conditionDocument, new Document("$set", valueDocument));
         return result.getModifiedCount();
     }
 
     public long updateByPrimaryKey(Object id, Entity entity) {
-        Document condition = null;
+        Document conditionDocument = null;
         if (id instanceof ObjectId) {
-            condition = new Document("_id", id);
+            conditionDocument = new Document("_id", id);
         } else if (id instanceof String) {
-            condition = new Document("_id", id);
+            conditionDocument = new Document("_id", id);
         } else {
             throw ErrorContextFactory.instance().message("物理主键不为ObjectId或String").runtimeException();
         }
-        UpdateResult result = getTable().updateOne(condition, serializer.serialize(entity, false));
+        Document valueDocument = serializerNullable.serialize(entity, false);
+        if (log.isDebugEnabled()) {
+            log.debug("condition :'{}' update value:'{}'", conditionDocument.toJson(), valueDocument.toJson());
+        }
+        UpdateResult result = getTable().updateOne(conditionDocument, new Document("$set", valueDocument));
         return result.getModifiedCount();
     }
 
     public long update(Object condition, Object entity) {
-        Document document = serializer.serialize(condition, true);
-        UpdateResult result = getTable().updateMany(document, serializerNullable.serialize(entity, false));
+        Document conditionDocument = serializer.serialize(condition, true);
+        Document valueDocument = serializerNullable.serialize(entity, false);
+        if (log.isDebugEnabled()) {
+            log.debug("condition :'{}' update value:'{}'", conditionDocument.toJson(), valueDocument.toJson());
+        }
+        UpdateResult result = getTable().updateMany(conditionDocument, new Document("$set", valueDocument));
         return result.getModifiedCount();
     }
 
     public long updateSelective(Entity condition, Entity entity) {
-        Document document = serializer.serialize(condition, true);
-        UpdateResult result = getTable().updateMany(document, serializer.serialize(entity, false));
+        Document conditionDocument = serializer.serialize(condition, true);
+        Document valueDocument = serializer.serialize(entity, false);
+        if (log.isDebugEnabled()) {
+            log.debug("condition :'{}' update value:'{}'", conditionDocument.toJson(), valueDocument.toJson());
+        }
+        UpdateResult result = getTable().updateOne(conditionDocument, new Document("$set", valueDocument));
         return result.getModifiedCount();
     }
 

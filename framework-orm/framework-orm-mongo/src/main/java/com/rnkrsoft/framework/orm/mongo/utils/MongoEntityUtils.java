@@ -36,6 +36,9 @@ public class MongoEntityUtils {
     public static void extractFields(TableMetadata tableMetadata) {
         Reflector reflector = GlobalSystemMetadata.reflector(tableMetadata.getEntityClass());
         for (Field field : reflector.getFields()) {
+            if (field.getAnnotation(MongoColumn.class) == null){
+                continue;
+            }
             //任意使用了一个字段注解的
             ColumnMetadata columnMetadata = ColumnMetadata.builder()
                     .tableMetadata(tableMetadata)

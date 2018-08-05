@@ -98,6 +98,7 @@ public class BsonSerializer<T> {
                 if (value == null){
                     if (setting.isNullable()){
                         document.append(columnName, value);
+                        continue;
                     }else{
                         continue;
                     }

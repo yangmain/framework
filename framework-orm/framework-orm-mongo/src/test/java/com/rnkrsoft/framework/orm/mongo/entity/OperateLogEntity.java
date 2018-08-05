@@ -24,7 +24,7 @@ public class OperateLogEntity implements Serializable{
     @MongoColumn(name = "NAME", logicMode = LogicMode.OR, valueMode = ValueMode.EQUAL)
     String name;
 
-    @MongoColumn(name = "AGE", logicMode = LogicMode.AND, valueMode = ValueMode.GT)
+    @MongoColumn(name = "AGE", logicMode = LogicMode.AND, valueMode = ValueMode.EQUAL)
     Integer age;
 
     @MongoColumn(name = "DATA", logicMode = LogicMode.OR, valueMode = ValueMode.LTE)
