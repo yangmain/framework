@@ -6,6 +6,7 @@ package com.rnkrsoft.framework.orm.jdbc.lock;
  */
 public interface JdbcLockMapper<T,K> extends
         JdbcLockByForUpdateByPrimaryKeyMapper<T,K>,
+        JdbcLockByForUpdateAndMapper<T,K>,
         JdbcLockByForUpdateOrMapper<T,K>,
         JdbcLockByUpdateSetPrimaryKeyMapper<T,K>
 {
