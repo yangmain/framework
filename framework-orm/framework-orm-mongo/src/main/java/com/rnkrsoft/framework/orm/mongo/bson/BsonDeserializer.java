@@ -40,9 +40,9 @@ public class BsonDeserializer<T> {
         BeanSetting setting = setting0 != null ? setting0 : this.beanSetting;
         TableMetadata tableMetadata = null;
         Class entityClass = entityClass0 != null ? entityClass0 : setting0.getTableMetadata().getEntityClass();
-        if (entityClass0 != null){
+        if (entityClass0 != null) {
             tableMetadata = MongoEntityUtils.extractTable(entityClass);
-        }else{
+        } else {
             tableMetadata = setting.getTableMetadata();
         }
         MetaClass metaClass = GlobalSystemMetadata.forClass(entityClass);
@@ -82,13 +82,27 @@ public class BsonDeserializer<T> {
             } else if (javaType == Double.class || javaType == Double.TYPE) {
                 metaObject.setValue(javaName, Double.valueOf(StringUtils.safeToString(value0, "0")));
             } else if (javaType == BigDecimal.class) {
-                metaObject.setValue(javaName, new BigDecimal(StringUtils.safeToString(value0, "0")));
+                if (value0 == null) {
+                    continue;
+                }
+                BigDecimal decimal = null;
+                if (value0 instanceof BigDecimal){
+                    decimal = (BigDecimal)value0;
+                }else{
+                    decimal = new BigDecimal(StringUtils.safeToString(value0, "0"));
+                }
+                metaObject.setValue(javaName,decimal);
             } else if (javaType == Date.class) {
+                if (value0 == null) {
+                    continue;
+                }
                 Date date = null;
-                if (value0 instanceof Long) {
+                if (value0 instanceof Date) {
+                    date = (Date) value0;
+                } else if (value0 instanceof Long) {
                     date = new Date(Long.valueOf(StringUtils.safeToString(value0, "0")));
                 } else if (value0 instanceof String) {
-                    date = DateUtils.toDate(StringUtils.safeToString(value0, "1971/01/01 00:00:00"));
+                    date = DateUtils.toDate(StringUtils.safeToString(value0, "1971/01/01 00:00:00.000"));
                 } else {
                     throw ErrorContextFactory.instance().message("'{}'无效日期", value0).runtimeException();
                 }
@@ -97,8 +111,10 @@ public class BsonDeserializer<T> {
                 Document document = (Document) value0;
                 metaObject.setValue(javaName, deserialize(document, javaType, setting));
             } else {
-                log.warn("不支持的'{}' 数据类型: '{}'", value0, value0.getClass());
-                continue;
+                throw ErrorContextFactory.instance()
+                        .message("bson 不支持的'{}' 数据类型: '{}'", value0, value0.getClass())
+                        .solution("修改 '{}'中的'{}'字段", entityClass, javaName)
+                        .runtimeException();
             }
         }
         return val;

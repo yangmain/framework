@@ -10,11 +10,15 @@ import com.rnkrsoft.framework.orm.mongo.utils.MongoEntityUtils;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import com.rnkrsoft.reflection4j.GlobalSystemMetadata;
 import com.rnkrsoft.reflection4j.MetaObject;
+import com.rnkrsoft.time.DateStyle;
+import com.rnkrsoft.utils.DateUtils;
 import org.bson.Document;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,13 +37,13 @@ public class BsonSerializer<T> {
         this.beanSetting = BeanSetting.builder().tableMetadata(tableMetadata).nullable(nullable).build();
     }
 
-    public Document serialize(Object object, boolean condition,Class entityClass0, BeanSetting setting0) {
+    public Document serialize(Object object, boolean condition, Class entityClass0, BeanSetting setting0) {
         BeanSetting setting = setting0 != null ? setting0 : this.beanSetting;
         Class entityClass = entityClass0 != null ? entityClass0 : setting0.getTableMetadata().getEntityClass();
         TableMetadata tableMetadata = null;
-        if (entityClass0 != null){
+        if (entityClass0 != null) {
             tableMetadata = MongoEntityUtils.extractTable(entityClass);
-        }else{
+        } else {
             tableMetadata = setting.getTableMetadata();
         }
 
@@ -48,6 +52,7 @@ public class BsonSerializer<T> {
         for (String columnName : tableMetadata.getOrderColumns()) {
             ColumnMetadata columnMetadata = tableMetadata.getColumn(columnName);
             Object value = metaObject.getValue(columnMetadata.getJavaName());
+            Class javaType = metaObject.getGetterType(columnMetadata.getJavaName());
             if (columnMetadata == null) {
                 continue;
             }
@@ -56,9 +61,9 @@ public class BsonSerializer<T> {
                 LogicMode logicMode = columnMetadata.getLogicMode();
                 //如果值为null,配置不允许为null,则不将值序列化
                 if (value == null) {
-                    if (setting.isNullable()){
+                    if (setting.isNullable()) {
                         document.append(columnName, value);
-                    }else{
+                    } else {
                         continue;
                     }
                 }
@@ -66,6 +71,8 @@ public class BsonSerializer<T> {
                         || value.getClass() == Double.TYPE || value.getClass() == Double.class
                         || value.getClass() == Long.TYPE || value.getClass() == Long.class
                         || value.getClass() == String.class
+                        || value.getClass() == Date.class
+                        || value.getClass() == BigDecimal.class
                         ) {
                     if (logicMode == LogicMode.OR) {
                         List orList = (List) document.get(MongoLogicMode.OR.getCode());
@@ -85,21 +92,23 @@ public class BsonSerializer<T> {
                             document.append(columnName, new Document(MongoValueMode.valueOfCode(valueMode).getCode(), value));
                         }
                     }
-                }else{
+                } else if (Serializable.class.isAssignableFrom(value.getClass())) {
+                    document.append(columnName, serialize(value, condition, value.getClass(), BeanSetting.builder().nullable(beanSetting.nullable).sequenceServiceConfigure(beanSetting.sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(value.getClass())).build()));
+                } else {
                     throw ErrorContextFactory.instance()
-                            .message("Mongo查询条件不支持 '{}'", value.getClass())
-                            .solution("检查对象'{}'", value.getClass())
+                            .message("bson 不支持的'{}' 数据类型: '{}'", value, javaType)
+                            .solution("修改 '{}'中的'{}'字段", entityClass, columnMetadata.getJavaName())
                             .runtimeException();
                 }
             } else {
                 if (value == null && !columnMetadata.getDefaultValue().isEmpty()) {
                     value = columnMetadata.getDefaultValue();
                 }
-                if (value == null){
-                    if (setting.isNullable()){
+                if (value == null) {
+                    if (setting.isNullable()) {
                         document.append(columnName, value);
                         continue;
-                    }else{
+                    } else {
                         continue;
                     }
                 }
@@ -107,14 +116,16 @@ public class BsonSerializer<T> {
                         || value.getClass() == Double.TYPE || value.getClass() == Double.class
                         || value.getClass() == Long.TYPE || value.getClass() == Long.class
                         || value.getClass() == String.class
+                        || value.getClass() == Date.class
+                        || value.getClass() == BigDecimal.class
                         ) {
                     document.append(columnName, value);
                 } else if (Serializable.class.isAssignableFrom(value.getClass())) {
                     document.append(columnName, serialize(value, condition, value.getClass(), BeanSetting.builder().nullable(beanSetting.nullable).sequenceServiceConfigure(beanSetting.sequenceServiceConfigure).tableMetadata(MongoEntityUtils.extractTable(value.getClass())).build()));
-                }else{
+                } else {
                     throw ErrorContextFactory.instance()
-                            .message("Mongo不支持 '{}'", value.getClass())
-                            .solution("检查对象'{}'", value.getClass())
+                            .message("bson 不支持的'{}' 数据类型: '{}'", value, javaType)
+                            .solution("修改 '{}'中的'{}'字段", entityClass, columnMetadata.getJavaName())
                             .runtimeException();
                 }
 

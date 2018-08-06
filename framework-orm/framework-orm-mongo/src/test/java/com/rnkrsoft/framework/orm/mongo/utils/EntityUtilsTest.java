@@ -1,6 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.utils;
 
-import com.rnkrsoft.framework.orm.mongo.entity.OperateLogEntity;
+import com.rnkrsoft.framework.orm.mongo.example.example1.entity.Example1Entity;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ public class EntityUtilsTest {
 
     @Test
     public void testExtractTable() throws Exception {
-        TableMetadata tableMetadata = MongoEntityUtils.extractTable(OperateLogEntity.class);
+        TableMetadata tableMetadata = MongoEntityUtils.extractTable(Example1Entity.class);
         System.out.println(tableMetadata);
     }
 }

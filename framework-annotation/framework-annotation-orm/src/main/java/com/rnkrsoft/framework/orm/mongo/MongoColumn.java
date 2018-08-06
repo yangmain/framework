@@ -44,5 +44,5 @@ public @interface MongoColumn {
      * 作为条件时值模式
      * @return
      */
-    ValueMode valueMode() default ValueMode.EQUAL;
+    ValueMode valueMode() default ValueMode.NONE;
 }

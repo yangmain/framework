@@ -1,18 +1,16 @@
-package com.rnkrsoft.framework.orm.mongo.bson;
+package com.rnkrsoft.framework.orm.mongo.example.example1;
 
 import com.rnkrsoft.framework.orm.mongo.MongoColumn;
 import com.rnkrsoft.framework.orm.mongo.MongoTable;
-import com.rnkrsoft.framework.orm.mongo.entity.OperateLogEntity;
+import com.rnkrsoft.framework.orm.mongo.bson.BsonDeserializer;
+import com.rnkrsoft.framework.orm.mongo.bson.BsonSerializer;
+import com.rnkrsoft.framework.orm.mongo.example.example1.entity.Example1Entity;
 import lombok.ToString;
 import org.bson.Document;
 import org.junit.Test;
 
-import javax.print.Doc;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Administrator on 2018/8/3.
@@ -81,9 +79,9 @@ public class BsonDeserializerTest {
 
     @Test
     public void testSerialize() throws Exception {
-        BsonSerializer<OperateLogEntity> serializer = new BsonSerializer(OperateLogEntity.class, true);
-        BsonDeserializer<OperateLogEntity> deserializer = new BsonDeserializer(OperateLogEntity.class, true);
-        Document document = serializer.serialize(OperateLogEntity.builder().age(12).data("sssss").id(UUID.randomUUID().toString()).name("mike").build(), false);
+        BsonSerializer<Example1Entity> serializer = new BsonSerializer(Example1Entity.class, true);
+        BsonDeserializer<Example1Entity> deserializer = new BsonDeserializer(Example1Entity.class, true);
+        Document document = serializer.serialize(Example1Entity.builder().age(12).data("sssss").id(UUID.randomUUID().toString()).name("mike").build(), false);
         Object object = deserializer.deserialize(document);
         System.out.println(object);
     }
