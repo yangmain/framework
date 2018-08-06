@@ -12,7 +12,8 @@ public enum MongoValueMode implements EnumStringCode{
     LTE("$lte", "小于", ValueMode.LTE),
     GT("$gt", "大于", ValueMode.GT),
     GTE("$lt", "小于", ValueMode.GTE),
-    NE("$ne", "不等于", ValueMode.NE);
+    NE("$ne", "不等于", ValueMode.NE),
+    NONE("","无", ValueMode.NONE);
     String code;
     String desc;
     ValueMode valueMode;
