@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @Table(name = "ORDER", prefix = "TB", suffix = "INF")
 @Comment("演示信息表")
-public class OrderEntity extends Entity implements Serializable {
+public class OrderOrderByEntity extends OrderByEntity implements Serializable {
     @PrimaryKey(strategy = PrimaryKeyStrategy.IDENTITY)
     @NumberColumn(name = "SERIAL_NO", nullable = false)
     @Comment("序列号")

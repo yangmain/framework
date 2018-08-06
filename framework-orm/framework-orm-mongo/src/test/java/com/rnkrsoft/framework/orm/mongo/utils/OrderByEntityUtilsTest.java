@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Created by rnkrsoft.com on 2018/6/21.
  */
-public class EntityUtilsTest {
+public class OrderByEntityUtilsTest {
 
     @Test
     public void testExtractTable() throws Exception {

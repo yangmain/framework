@@ -1,7 +1,7 @@
 //package com.rnkrsoft.framework.test.service.impl;
 //
 //import com.rnkrsoft.framework.test.dao.OrderDAO;
-//import com.rnkrsoft.framework.test.entity.OrderEntity;
+//import com.rnkrsoft.framework.test.entity.OrderOrderByEntity;
 //import com.rnkrsoft.framework.test.service.UserService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@
 //        if(name.equals("!@#$%")){
 //            throw new IllegalArgumentException("无效用户名");
 //        }
-//        OrderEntity orderEntity = new OrderEntity();
+//        OrderOrderByEntity orderEntity = new OrderOrderByEntity();
 //        orderEntity.setAge(age);
 //        orderEntity.setUserName(name);
 //        orderEntity.setCreateDate(new Date());

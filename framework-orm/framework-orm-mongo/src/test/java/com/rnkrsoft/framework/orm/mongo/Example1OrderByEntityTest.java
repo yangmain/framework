@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * Created by rnkrsoft.com on 2018/6/22.
  */
-public class Example1EntityTest {
+public class Example1OrderByEntityTest {
 
     @Test
     public void testGetId() throws Exception {

@@ -17,7 +17,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
     public ByteBuf generate(GenerateContext ctx) {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
         TableMetadata metadata = ctx.getTableMetadata();
-        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "Entity";
+        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "OrderByEntity";
         buf.put("UTF-8", MessageFormatter.format("package {}.entity;", ctx.getPackageName()), "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "import java.io.Serializable;", "\n");

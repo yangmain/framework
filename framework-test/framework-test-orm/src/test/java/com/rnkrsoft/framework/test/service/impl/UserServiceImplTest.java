@@ -10,8 +10,8 @@ import com.rnkrsoft.framework.test.DataSourceTest;
 import com.rnkrsoft.framework.test.DataSourceType;
 import com.rnkrsoft.framework.test.dao.OrderDAO;
 import com.rnkrsoft.framework.test.dao.UserDAO;
-import com.rnkrsoft.framework.test.entity.OrderEntity;
-import com.rnkrsoft.framework.test.entity.UserEntity;
+import com.rnkrsoft.framework.test.entity.OrderOrderByEntity;
+import com.rnkrsoft.framework.test.entity.UserOrderByEntity;
 import com.rnkrsoft.framework.test.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class UserServiceImplTest extends DataSourceTest {
     }
 
 
-    @CreateTable(entities = {UserEntity.class, OrderEntity.class},
+    @CreateTable(entities = {UserOrderByEntity.class, OrderOrderByEntity.class},
             keywordMode = WordMode.lowerCase,
             sqlMode = WordMode.lowerCase,
             prefixMode = NameMode.customize,
@@ -53,7 +53,7 @@ public class UserServiceImplTest extends DataSourceTest {
 //            userDAO.selectAll();
 //            orderDAO.selectAll();
 
-            UserEntity userEntity =  new UserEntity();
+            UserOrderByEntity userEntity =  new UserOrderByEntity();
             userEntity.setUserName("xxx");
             userEntity.addOrderBy(OrderByColumn.builder("user_name", Order.ASC).build());
             userEntity.addOrderBy(OrderByColumn.builder("create_date", Order.ASC).build());

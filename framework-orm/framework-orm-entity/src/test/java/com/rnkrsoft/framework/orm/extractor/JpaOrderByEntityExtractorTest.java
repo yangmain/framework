@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * Created by rnkrsoft.com on 2018/4/9.
  */
-public class JpaEntityExtractorTest {
+public class JpaOrderByEntityExtractorTest {
 
     @Test
     public void testExtractTable() throws Exception {
