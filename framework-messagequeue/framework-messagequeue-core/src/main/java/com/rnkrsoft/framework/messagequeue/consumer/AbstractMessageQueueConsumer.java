@@ -52,9 +52,8 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
             maxTryProcessAge = listenerDefinition.maxTryProcessAge();
             ack = listenerDefinition.ack();
         }
-        listener.getSelectors().clear();
-        listener.getSelectors().addAll(messageQueueSelectors);
         MessageQueueListenerWrapper enhance = new MessageQueueListenerWrapper(listener, whenErrorRequeue, maxTryProcessAge, ack, messageQueueSelectors);
+        enhance.getSelectors().addAll(messageQueueSelectors);
         return enhance;
     }
 }

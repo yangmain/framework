@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-messagequeue</artifactId>
-        <version>1.0.1-beta2</version>
+        <version>1.0.1-beta3</version>
     </parent>
     <artifactId>framework-messagequeue-aliyunmq</artifactId>
     <name>framework-messagequeue-aliyunmq</name>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-messagequeue-core</artifactId>
-            <version>1.0.1-beta2</version>
+            <version>1.0.1-beta3</version>
             <exclusions>
                 <exclusion>
                     <artifactId>netty-all</artifactId>
@@ -29,6 +29,10 @@
             <groupId>com.aliyun.openservices</groupId>
             <artifactId>ons-client</artifactId>
             <version>1.7.8.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
     </dependencies>
 </project>

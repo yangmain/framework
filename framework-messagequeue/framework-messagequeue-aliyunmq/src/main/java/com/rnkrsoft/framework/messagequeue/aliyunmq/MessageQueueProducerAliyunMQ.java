@@ -6,6 +6,7 @@ import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.rnkrsoft.framework.messagequeue.producer.AbstractMessageQueueProducer;
 import com.rnkrsoft.framework.messagequeue.protocol.Message;
 import lombok.Data;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.UnsupportedEncodingException;
@@ -15,13 +16,17 @@ import java.util.UUID;
 /**
  * Created by rnkrsoft.com on 2018/5/22.
  */
-@Data
 @Slf4j
 public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
+    @Setter
     String url;
+    @Setter
     String producerId;
+    @Setter
     String accessKey;
+    @Setter
     String secretKey;
+    @Setter
     String topic;
     Producer producer;
 

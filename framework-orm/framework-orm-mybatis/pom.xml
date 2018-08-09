@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-beta2</version>
+        <version>1.0.1-beta3</version>
     </parent>
     <artifactId>framework-orm-mybatis</artifactId>
     <description>This is the framework-orm-mybatis</description>
@@ -14,18 +14,18 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-test</artifactId>
-            <version>1.0.1-beta2</version>
+            <version>1.0.1-beta3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-entity</artifactId>
-            <version>1.0.1-beta2</version>
+            <version>1.0.1-beta3</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-sequence-api</artifactId>
-            <version>1.0.1-beta2</version>
+            <version>1.0.1-beta3</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>

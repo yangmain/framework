@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-beta2</version>
+        <version>1.0.1-beta3</version>
     </parent>
     <artifactId>framework-orm-api</artifactId>
     <name>framework-orm-api</name>
@@ -13,7 +13,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-orm</artifactId>
-            <version>1.0.1-beta2</version>
+            <version>1.0.1-beta3</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.groundwork</groupId>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-sequence-api</artifactId>
-            <version>1.0.1-beta2</version>
+            <version>1.0.1-beta3</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.logtrace4j</groupId>
