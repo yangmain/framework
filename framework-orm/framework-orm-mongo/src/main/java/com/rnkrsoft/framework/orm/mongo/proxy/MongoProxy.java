@@ -64,7 +64,7 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
             mongoDaoClient.insertSelective(args[0]);
             return 0;
         } else if (methodName.equals(Constants.DELETE)) {
-            if (args.length != 2) {
+            if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("deleteAnd 不支持不为一个参数的").runtimeException();
             }
             return mongoDaoClient.delete(args[0]);

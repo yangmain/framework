@@ -21,7 +21,7 @@ public class MongoScannerConfigurerTest extends SpringTest{
     public void testAfterPropertiesSet() throws Exception {
         example1DAO.delete(Example1Entity.builder().name("sss").build());
         example1DAO.insertSelective(Example1Entity.builder().name("sss").age(12).data("xxxxxxxxxxxxxx").build());
-        example1DAO.update(Example1Entity.builder().name("sss").build(), Example1Entity.builder().name("xxx").build());
+        example1DAO.updateSelective(Example1Entity.builder().name("sss").build(), Example1Entity.builder().name("xxx").build());
         List<Example1Entity> list = example1DAO.select(Example1Entity.builder().name("xxx").build());
         System.out.println(list);
     }
