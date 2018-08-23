@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-beta3</version>
+        <version>1.0.1-beta4</version>
     </parent>
     <artifactId>framework-orm-cache</artifactId>
     <name>framework-orm-cache</name>
@@ -17,17 +17,17 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-orm</artifactId>
-            <version>1.0.1-beta3</version>
+            <version>1.0.1-beta4</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-api</artifactId>
-            <version>1.0.1-beta3</version>
+            <version>1.0.1-beta4</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-cache-client</artifactId>
-            <version>1.0.1-beta3</version>
+            <version>1.0.1-beta4</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-test-core</artifactId>
-            <version>1.0.1-beta3</version>
+            <version>1.0.1-beta4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

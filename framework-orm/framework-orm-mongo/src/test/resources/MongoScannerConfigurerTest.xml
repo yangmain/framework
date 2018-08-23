@@ -18,10 +18,11 @@
 		<bean class="com.rnkrsoft.framework.orm.mongo.spring.MongoScannerConfigurer">
 			<property name="basePackages">
 				<array>
-					<value>com.rnkrsoft.framework.orm.mongo.dao</value>
+					<value>com.rnkrsoft.framework.orm.mongo.**.dao</value>
 				</array>
 			</property>
 			<property name="host" value="192.168.0.111"/>
+			<property name="port" value="3017"/>
 			<property name="mongoInterface" value="com.rnkrsoft.framework.orm.mongo.MongoInterface"/>
 		</bean>
 

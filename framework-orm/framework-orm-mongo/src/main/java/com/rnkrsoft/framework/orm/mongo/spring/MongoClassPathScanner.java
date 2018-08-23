@@ -10,6 +10,7 @@ import com.rnkrsoft.framework.orm.mongo.count.MongoCountMapper;
 import com.rnkrsoft.framework.orm.mongo.insert.MongoInsertMapper;
 import com.rnkrsoft.framework.orm.mongo.select.MongoSelectMapper;
 import com.rnkrsoft.framework.orm.mongo.update.MongoUpdateMapper;
+import com.rnkrsoft.utils.StringUtils;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -37,6 +38,8 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     String schema;
     @Setter
     String host;
+    @Setter
+    int port;
 
 
     public void setMongoMapperFactoryBean(MongoMapperFactoryBean mongoMapperFactoryBean) {
@@ -94,7 +97,7 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     }
 
     void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
-        MongoClient mongoClient = new MongoClient(new ServerAddress(host, 3017), MongoClientOptions.builder().build());
+        MongoClient mongoClient = new MongoClient(new ServerAddress(StringUtils.isBlank(host) ? "localhost" : host, port == 0 ? 27137 : port), MongoClientOptions.builder().build());
         for (BeanDefinitionHolder holder : beanDefinitions) {
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
 

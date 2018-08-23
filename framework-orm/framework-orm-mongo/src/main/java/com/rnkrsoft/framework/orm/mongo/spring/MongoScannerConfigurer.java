@@ -1,6 +1,5 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
-import com.rnkrsoft.framework.orm.mongo.MongoInterface;
 import lombok.Setter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -24,7 +23,9 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
     @Setter
     Class<?> mongoInterface;
     @Setter
-    String host = "127.0.0.1:47190";
+    String host;
+    @Setter
+    int port;
     @Setter
     MongoMapperFactoryBean mongoMapperFactoryBean;
 
@@ -33,6 +34,7 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
         MongoClassPathScanner scanner = new MongoClassPathScanner(registry);
         scanner.setMongoInterface(this.mongoInterface);
         scanner.setHost(this.host);
+        scanner.setPort(this.port);
         scanner.setMongoMapperFactoryBean(this.mongoMapperFactoryBean);
         scanner.registerFilters();
         scanner.doScan(this.basePackages);

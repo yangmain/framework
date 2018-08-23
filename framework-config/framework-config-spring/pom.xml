@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-config</artifactId>
-        <version>1.0.1-beta3</version>
+        <version>1.0.1-beta4</version>
     </parent>
     <artifactId>framework-config-spring</artifactId>
     <name>framework-config-spring</name>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-config-client</artifactId>
-            <version>1.0.1-beta3</version>
+            <version>1.0.1-beta4</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.groundwork</groupId>
