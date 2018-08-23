@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-security</artifactId>
-        <version>1.0.1-beta4</version>
+        <version>1.0.1-beta5</version>
     </parent>
     <artifactId>framework-security-xss</artifactId>
     <name>framework-security-xss</name>

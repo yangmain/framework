@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-sequence</artifactId>
-        <version>1.0.1-beta4</version>
+        <version>1.0.1-beta5</version>
     </parent>
     <artifactId>framework-sequence-myisam</artifactId>
     <name>framework-sequence-myisam</name>
@@ -13,12 +13,12 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-orm</artifactId>
-            <version>1.0.1-beta4</version>
+            <version>1.0.1-beta5</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-test-orm</artifactId>
-            <version>1.0.1-beta4</version>
+            <version>1.0.1-beta5</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
