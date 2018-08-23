@@ -10,6 +10,8 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.Arrays;
+
 /**
  * Created by rnkrsoft.com on 2018/6/27.
  */
@@ -23,9 +25,15 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
     @Setter
     Class<?> mongoInterface;
     @Setter
-    String host;
+    String schema;
     @Setter
-    int port;
+    String[] addresses;
+    @Setter
+    String username;
+    @Setter
+    String password;
+    @Setter
+    String connectionUri;
     @Setter
     MongoMapperFactoryBean mongoMapperFactoryBean;
 
@@ -33,8 +41,13 @@ public class MongoScannerConfigurer implements BeanDefinitionRegistryPostProcess
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         MongoClassPathScanner scanner = new MongoClassPathScanner(registry);
         scanner.setMongoInterface(this.mongoInterface);
-        scanner.setHost(this.host);
-        scanner.setPort(this.port);
+        scanner.setSchema(schema);
+        scanner.setUsername(username);
+        scanner.setPassword(password);
+        if (addresses != null && addresses.length > 0) {
+            scanner.getAddresses().addAll(Arrays.asList(addresses));
+        }
+        scanner.setConnectionUri(connectionUri);
         scanner.setMongoMapperFactoryBean(this.mongoMapperFactoryBean);
         scanner.registerFilters();
         scanner.doScan(this.basePackages);
