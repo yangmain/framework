@@ -1,12 +1,12 @@
 package com.rnkrsoft.framework.toolkit.generator.jdk;
 
-import com.rnkrsoft.io.buffer.ByteBuf;
-import com.rnkrsoft.message.MessageFormatter;
-import com.rnkrsoft.utils.StringUtils;
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
 import com.rnkrsoft.framework.toolkit.generator.GenerateContext;
 import com.rnkrsoft.framework.toolkit.generator.MapperGenerator;
+import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.message.MessageFormatter;
 
 /**
  * Created by rnkrsoft.com on 2018/5/6.
@@ -32,7 +32,7 @@ public class JdkMapperGenerator extends JdkGenerator implements MapperGenerator 
             } else {
                 str = "<result ";
             }
-            str += MessageFormatter.format("column=\"{}\" property=\"{}\" jdbcType=\"{}\" />", columnMetadata.getJdbcName(), columnMetadata.getJavaName(), columnMetadata.getJdbcType());
+            str += MessageFormatter.format("column=\"{}\" property=\"{}\" jdbcType=\"{}\" />", columnMetadata.getJdbcName(), columnMetadata.getJavaName(), getJdbcType(columnMetadata.getJdbcType()));
             buf.put("UTF-8", indent(), indent(), str, "\n");
         }
         buf.put("UTF-8", indent(), "</resultMap>", "\n");
@@ -52,5 +52,21 @@ public class JdkMapperGenerator extends JdkGenerator implements MapperGenerator 
         buf.put("UTF-8", indent(), "</sql>", "\n");
         buf.put("UTF-8", "</mapper>");
         return buf;
+    }
+
+    String getJdbcType(SupportedJdbcType dataType) {
+        if (dataType == SupportedJdbcType.INT) {
+            return SupportedJdbcType.INTEGER.getCode();
+        } else if (dataType == SupportedJdbcType.DATETIME) {
+            return SupportedJdbcType.TIMESTAMP.getCode();
+        } else if (dataType == SupportedJdbcType.DATE) {
+            return SupportedJdbcType.TIMESTAMP.getCode();
+        } else if (dataType == SupportedJdbcType.LONGTEXT) {
+            return SupportedJdbcType.LONGVARCHAR.getCode();
+        } else if (dataType == SupportedJdbcType.TEXT) {
+            return SupportedJdbcType.LONGVARCHAR.getCode();
+        } else {
+            return dataType.getCode();
+        }
     }
 }

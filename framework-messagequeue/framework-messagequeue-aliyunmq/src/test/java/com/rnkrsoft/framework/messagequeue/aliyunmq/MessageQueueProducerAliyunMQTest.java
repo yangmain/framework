@@ -4,7 +4,7 @@ import com.rnkrsoft.framework.messagequeue.protocol.Message;
 import org.junit.Test;
 
 /**
- * Created by woate on 2018/7/13.
+ * Created by rnkrsoft.com on 2018/7/13.
  */
 public class MessageQueueProducerAliyunMQTest {
 
@@ -20,7 +20,7 @@ public class MessageQueueProducerAliyunMQTest {
         producer.produce(new Bean("this is a test"));
     }
 
-    @com.rnkrsoft.framework.messagequeue.annotation.Message(routingKey = "test_1")
+    @com.rnkrsoft.framework.messagequeue.annotation.Message(routingKey = "MEMBER_LOEIN_EVENT")
     public static class Bean{
         String name;
 

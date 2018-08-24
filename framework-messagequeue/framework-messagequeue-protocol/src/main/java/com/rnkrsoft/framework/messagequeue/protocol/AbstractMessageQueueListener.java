@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by woate on 2018/7/13.
+ * Created by rnkrsoft.com on 2018/7/13.
  */
 public abstract class AbstractMessageQueueListener<T> implements MessageQueueListener<T>{
     @Getter

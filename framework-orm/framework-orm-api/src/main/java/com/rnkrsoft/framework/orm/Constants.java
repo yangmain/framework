@@ -82,6 +82,7 @@ public interface Constants {
     String SELECT_PAGE_AND = "selectPageAnd";
     String SELECT_PAGE_OR = "selectPageOr";
     String UPDATE = "update";
+    String UPDATE_SELECTIVE = "updateSelective";
     /**
      * 按照物理主键进行更新
      */

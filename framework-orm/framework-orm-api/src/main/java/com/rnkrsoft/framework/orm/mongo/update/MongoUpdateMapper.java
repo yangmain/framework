@@ -14,13 +14,13 @@ public interface MongoUpdateMapper<Entity> extends MongoInterface {
      * @param entity
      * @return
      */
-    int updateByPrimaryKey(Entity entity);
+    long updateByPrimaryKey(Entity entity);
     /**
      * 按照物理主键进行非null字段的更新
      * @param entity
      * @return
      */
-    int updateByPrimaryKeySelective(Entity entity);
+    long updateByPrimaryKeySelective(Entity entity);
 
     /**
      * 按照条件进行更新
@@ -28,12 +28,19 @@ public interface MongoUpdateMapper<Entity> extends MongoInterface {
      * @param entity
      * @return
      */
-    int update(Entity condition, LogicMode logicMode,  Entity entity);
+    long update(Entity condition,  Entity entity);
+    /**
+     * 按照条件进行更新非null字段的更新
+     * @param condition
+     * @param entity
+     * @return
+     */
+    long updateSelective(Entity condition,  Entity entity);
     /**
      * 按照条件进行更新
      * @param condition
      * @param entity
      * @return
      */
-    int update(Map<String, Object> condition, Map<String, Object> entity);
+    long update(Map<String, Object> condition, Map<String, Object> entity);
 }

@@ -1,8 +1,6 @@
 package com.rnkrsoft.framework.orm.mongo.spring;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import com.rnkrsoft.framework.orm.extractor.GenericsExtractor;
 import com.rnkrsoft.framework.orm.mongo.MongoMapper;
 import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
@@ -10,6 +8,8 @@ import com.rnkrsoft.framework.orm.mongo.count.MongoCountMapper;
 import com.rnkrsoft.framework.orm.mongo.insert.MongoInsertMapper;
 import com.rnkrsoft.framework.orm.mongo.select.MongoSelectMapper;
 import com.rnkrsoft.framework.orm.mongo.update.MongoUpdateMapper;
+import com.rnkrsoft.utils.StringUtils;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -24,20 +24,31 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Created by woate on 2018/6/27.
+ * Created by rnkrsoft.com on 2018/6/27.
  */
 public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     MongoMapperFactoryBean mongoMapperFactoryBean;
     @Setter
     Class mongoInterface;
+    @Setter
     String schema;
     @Setter
-    String host;
+    String username;
+    @Setter
+    String password;
+    @Setter
+    String connectionUri;
+    final List<String> addresses = new ArrayList();
 
+    public List<String> getAddresses() {
+        return addresses;
+    }
 
     public void setMongoMapperFactoryBean(MongoMapperFactoryBean mongoMapperFactoryBean) {
         this.mongoMapperFactoryBean = mongoMapperFactoryBean == null ? new MongoMapperFactoryBean() : mongoMapperFactoryBean;
@@ -94,7 +105,15 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     }
 
     void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
-        MongoClient mongoClient = new MongoClient(new ServerAddress(host, 3017), MongoClientOptions.builder().build());
+        MongoClient mongoClient = null;
+        //如果填写了连接URI则使用URI初始化
+        if (StringUtils.isNotBlank(connectionUri)) {
+            mongoClient = new MongoClient(new MongoClientURI(connectionUri));
+        } else {
+            final List<ServerAddress> serverAddresses = new ArrayList<ServerAddress>();
+            MongoCredential credential = MongoCredential.createCredential(username, schema, password.toCharArray());
+            mongoClient = new MongoClient(serverAddresses, credential, MongoClientOptions.builder().build());
+        }
         for (BeanDefinitionHolder holder : beanDefinitions) {
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
 
@@ -106,7 +125,7 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
             Class mongoMapper = null;
             try {
                 mongoMapper = Class.forName(mapperClassName);
-            }catch (ClassNotFoundException e){
+            } catch (ClassNotFoundException e) {
 
             }
             Class entityClass = GenericsExtractor.extractEntityClass(mongoMapper, MongoMapper.class, MongoInsertMapper.class, MongoUpdateMapper.class, MongoSelectMapper.class, MongoCountMapper.class);

@@ -96,7 +96,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String comment = resultSet.getString("table_comment");
             TableMetadata tableMetadata = TableMetadata.builder()
                     .tableName(name0)
-                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Entity")
+                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "OrderByEntity")
                     .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "DAO")
                     .mapperName(packageName + ".mapper." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Mapper")
                     .autoIncrement(autoIncrement)
@@ -151,6 +151,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 java_type = Long.class;
                 full_jdbc_type = data_type.getCode();
             } else if (data_type == SupportedJdbcType.INT || data_type == SupportedJdbcType.INTEGER) {
+                data_type= SupportedJdbcType.INTEGER;
                 java_type = Integer.class;
                 full_jdbc_type = SupportedJdbcType.INTEGER.getCode();
             } else if (data_type == SupportedJdbcType.SMALLINT) {
@@ -162,8 +163,19 @@ public class JdbcReverseMySQL implements JdbcReverse {
             } else if (data_type == SupportedJdbcType.DECIMAL) {
                 java_type = BigDecimal.class;
                 full_jdbc_type = SupportedJdbcType.DECIMAL.getCode() + "(" + (numeric_precision == 0 ? 18 : numeric_precision) + "," + (numeric_scale == 0 ? 2 : numeric_scale) + ")";
+            } else if (data_type == SupportedJdbcType.DOUBLE) {
+                java_type = Double.class;
+                full_jdbc_type = SupportedJdbcType.DOUBLE.getCode();
             } else if (data_type == SupportedJdbcType.TIMESTAMP) {
-                java_type = java.sql.Timestamp.class;
+                java_type = java.util.Date.class;
+                full_jdbc_type = SupportedJdbcType.TIMESTAMP.getCode();
+            } else if ( data_type == SupportedJdbcType.DATETIME) {
+                data_type = SupportedJdbcType.TIMESTAMP;
+                java_type = java.util.Date.class;
+                full_jdbc_type = SupportedJdbcType.TIMESTAMP.getCode();
+            } else if (data_type == SupportedJdbcType.DATE) {
+                data_type = SupportedJdbcType.TIMESTAMP;
+                java_type = java.util.Date.class;
                 full_jdbc_type = SupportedJdbcType.TIMESTAMP.getCode();
             } else if (data_type == SupportedJdbcType.VARCHAR) {
                 java_type = String.class;

@@ -1,17 +1,17 @@
-package com.rnkrsoft.framework.orm;
+package com.rnkrsoft.framework.orm.jdbc;
 
-import com.rnkrsoft.framework.orm.jdbc.Ignore;
+import com.rnkrsoft.framework.orm.*;
 import lombok.Data;
 import lombok.ToString;
 
 import java.util.*;
 
 /**
- * 实体基类
+ * Created by rnkrsoft.com on 2018/8/6.
  */
 @Data
 @ToString
-public abstract class Entity implements OrderBy, ValueBy{
+public abstract class OrderByEntity implements OrderBy, ValueBy {
     @Ignore
     final List<OrderByColumn> orderByColumns = new ArrayList();
     @Ignore
@@ -50,7 +50,7 @@ public abstract class Entity implements OrderBy, ValueBy{
     @Override
     public ValueBy addValueBy(ValueByColumn... valueByColumns) {
         for (ValueByColumn valueByColumn : valueByColumns){
-            valueModes.put(valueByColumn.column, valueByColumn);
+            valueModes.put(valueByColumn.getColumn(), valueByColumn);
         }
         return this;
     }

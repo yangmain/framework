@@ -1,5 +1,7 @@
 package com.rnkrsoft.framework.test.sequence;
 
+import com.rnkrsoft.framework.orm.jdbc.mysql.DataEngineType;
+import com.rnkrsoft.framework.orm.untils.SqlScriptUtils;
 import com.rnkrsoft.utils.DateUtils;
 import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import com.rnkrsoft.framework.orm.jdbc.WordMode;
@@ -15,26 +17,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.io.IOException;
+
 /**
  * Created by rnkrsoft.com on 2018/4/23.
  */
-@ContextConfiguration("classpath*:testContext-orm.xml")
-@DataSource(DataSourceType.H2)
-public class MyISAMSequenceServiceTest  extends DataSourceTest {
-    @CreateTable(entities = {SequenceEntity.class},
-            keywordMode = WordMode.lowerCase,
-            sqlMode = WordMode.lowerCase,
-            prefixMode = NameMode.auto,
-            suffixMode = NameMode.auto,
-            schemaMode = NameMode.auto,
-            dropAfterTest = false
-    )
+public class MyISAMSequenceServiceTest{
     @Test
-    public void test1(){
-        SequenceService sequenceService = SequenceServiceFactory.instance(MyISAMSequenceService.class.getName());
-        int x1 = sequenceService.nextval("", "", "Test", DateUtils.getCurrDate());
-        Assert.assertEquals(1, x1);
-        int x2 = sequenceService.nextval("", "", "Test", DateUtils.getCurrDate());
-        Assert.assertEquals(2, x2);
+    public void test2() throws IOException {
+        SqlScriptUtils.generate("./target/sql.sql", NameMode.entity, "", NameMode.entity, "", NameMode.entity, "", DataEngineType.MyISAM, WordMode.lowerCase, WordMode.lowerCase, true, true, "com.rnkrsoft.framework.sequence.myisam");
     }
 }

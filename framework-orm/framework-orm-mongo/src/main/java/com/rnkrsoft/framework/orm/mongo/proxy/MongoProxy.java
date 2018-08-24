@@ -6,7 +6,6 @@ import com.rnkrsoft.framework.orm.Pagination;
 import com.rnkrsoft.framework.orm.mongo.client.MongoDaoClient;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -19,10 +18,10 @@ import java.lang.reflect.Type;
 @Slf4j
 public class MongoProxy<MongodbDAO> implements InvocationHandler {
     Class entityClass;
-    MongoDaoClient mongoDaoSupport;
+    MongoDaoClient mongoDaoClient;
 
-    public MongoProxy(MongoDaoClient mongoDaoSupport, Class entityClass) {
-        this.mongoDaoSupport = mongoDaoSupport;
+    public MongoProxy(MongoDaoClient mongoDaoClient, Class entityClass) {
+        this.mongoDaoClient = mongoDaoClient;
         this.entityClass = entityClass;
     }
 
@@ -56,60 +55,64 @@ public class MongoProxy<MongodbDAO> implements InvocationHandler {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("insert 不支持不为一个参数的").runtimeException();
             }
-            mongoDaoSupport.insert(new Object[]{args[0]});
+            mongoDaoClient.insert(new Object[]{args[0]});
             return 0;
         } else if (methodName.equals(Constants.INSERT_SELECTIVE)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("insertSelective 不支持不为一个参数的").runtimeException();
             }
-            mongoDaoSupport.insertSelective(args[0]);
+            mongoDaoClient.insertSelective(args[0]);
             return 0;
         } else if (methodName.equals(Constants.DELETE)) {
-            if (args.length != 2) {
+            if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("deleteAnd 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.delete(args[0], (LogicMode) args[1]);
+            return mongoDaoClient.delete(args[0]);
         } else if (methodName.equals(Constants.DELETE_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("deleteByPrimaryKey 不支持不为一个参数的").runtimeException();
             }
-           return mongoDaoSupport.deleteByPrimaryKey(args[0]);
+           return mongoDaoClient.deleteByPrimaryKey(args[0]);
         } else if (methodName.equals(Constants.UPDATE)) {
-            if (args.length != 3) {
-                throw ErrorContextFactory.instance().message("updateByPrimaryKey 不支持不为三个参数的").runtimeException();
+            if (args.length != 2) {
+                throw ErrorContextFactory.instance().message("updateByPrimaryKey 不支持不为两个参数的").runtimeException();
             }
-            return mongoDaoSupport.update(args[0], args[1], args[2]);
+            return mongoDaoClient.update(args[0], args[1]);
+        } else if (methodName.equals(Constants.UPDATE_SELECTIVE)) {
+            if (args.length != 2) {
+                throw ErrorContextFactory.instance().message("updateByPrimaryKey 不支持不为两个参数的").runtimeException();
+            }
+            return mongoDaoClient.updateSelective(args[0], args[1]);
         } else if (methodName.equals(Constants.UPDATE_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("updateByPrimaryKey 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.updateByPrimaryKey(null, null);
+            return mongoDaoClient.updateByPrimaryKey(null, null);
         } else if (methodName.equals(Constants.UPDATE_BY_PRIMARY_KEY_SELECTIVE)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("updateByPrimaryKeySelective 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.updateByPrimaryKeySelective(null, null);
+            return mongoDaoClient.updateByPrimaryKeySelective(null, null);
         } else if (methodName.equals(Constants.SELECT)) {
-            if (args.length != 2) {
+            if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("select 不支持不为一个参数的").runtimeException();
             }
-            LogicMode logicMode = (LogicMode)args[1];
-            return mongoDaoSupport.select(args[0], logicMode);
+            return mongoDaoClient.select(args[0]);
         } else if (methodName.equals(Constants.SELECT_BY_PRIMARY_KEY)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("selectByPrimaryKey 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.selectByPrimaryKey(args[0]);
+            return mongoDaoClient.selectByPrimaryKey(args[0]);
         } else if (methodName.equals(Constants.SELECT_PAGE_AND)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("selectByPrimaryKey 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.selectPage((Pagination) args[0], LogicMode.AND);
+            return mongoDaoClient.selectPage((Pagination) args[0], LogicMode.AND);
         } else if (methodName.equals(Constants.SELECT_PAGE_OR)) {
             if (args.length != 1) {
                 throw ErrorContextFactory.instance().message("selectByPrimaryKey 不支持不为一个参数的").runtimeException();
             }
-            return mongoDaoSupport.selectPage((Pagination)args[0], LogicMode.OR);
+            return mongoDaoClient.selectPage((Pagination)args[0], LogicMode.OR);
         }
         return null;
     }

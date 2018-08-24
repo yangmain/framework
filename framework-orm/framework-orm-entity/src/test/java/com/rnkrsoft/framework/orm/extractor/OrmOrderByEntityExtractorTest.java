@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Administrator on 2018/6/25.
  */
-public class OrmEntityExtractorTest {
+public class OrmOrderByEntityExtractorTest {
 
     @Test
     public void testExtractTable() throws Exception {

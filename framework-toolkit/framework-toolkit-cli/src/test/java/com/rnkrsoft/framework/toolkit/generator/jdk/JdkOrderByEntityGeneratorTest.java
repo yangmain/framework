@@ -11,7 +11,7 @@ import org.junit.Test;
 /**
  * Created by rnkrsoft.com on 2018/4/23.
  */
-public class JdkEntityGeneratorTest {
+public class JdkOrderByEntityGeneratorTest {
 
     @Test
     public void testGenerate() throws Exception {

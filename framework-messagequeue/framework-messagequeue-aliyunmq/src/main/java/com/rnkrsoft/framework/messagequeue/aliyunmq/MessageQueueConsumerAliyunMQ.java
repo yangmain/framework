@@ -8,6 +8,7 @@ import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.Properties;
  * 基于阿里云MQ的消息队列消费者实现
  */
 @Slf4j
-public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
+public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer implements InitializingBean{
     @Setter
     String consumerId;
     @Setter
@@ -29,9 +30,17 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
     String topic;
     @Setter
     String url;
+    /**
+     * 消费者线程池数
+     */
     @Setter
     int consumeThreadNum;
     Consumer consumer;
+    /**
+     * 通过Spring配置进行监听器注册
+     */
+    @Setter
+    List<MessageQueueListener> messageQueueListeners;
 
     MessageQueueListener lookupListener(String routingKey) {
         for (MessageQueueListener listener : listeners) {
@@ -117,5 +126,14 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer {
     @Override
     public int shutdown() {
         return 0;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (messageQueueListeners != null){
+            for (MessageQueueListener listener : messageQueueListeners){
+                registerListener(listener);
+            }
+        }
     }
 }

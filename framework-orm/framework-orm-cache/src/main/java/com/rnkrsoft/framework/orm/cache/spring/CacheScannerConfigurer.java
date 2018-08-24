@@ -27,21 +27,25 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
     String[] basePackages;
     @Setter
     Class<?> cacheInterface;
-
     @Setter
-    String host = "127.0.0.1:6479";
+    String host;
+    @Setter
+    int port;
     @Setter
     String password;
     @Setter
-    int index = 0;
+    int index = -1;
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         CacheClassPathScanner scanner = new CacheClassPathScanner(registry);
         scanner.setCacheInterface(this.cacheInterface);
         CacheClient cacheClient = new CacheClient();
-        CacheClientSetting.CacheClientSettingBuilder cacheClientSettingBuilder =  CacheClientSetting.builder().host(host).databaseIndex(index).redisType(RedisType.AUTO);
-        if (password != null){
+        CacheClientSetting.CacheClientSettingBuilder cacheClientSettingBuilder =  CacheClientSetting.builder()
+                .host(host + ":" + port)
+                .databaseIndex(index)
+                .redisType(RedisType.AUTO);
+        if (password != null && !password.isEmpty()){
             cacheClientSettingBuilder.password(password);
         }
         cacheClient.init(cacheClientSettingBuilder.build());

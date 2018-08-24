@@ -6,7 +6,7 @@ import org.apache.rocketmq.client.consumer.MQConsumer;
 import java.util.Properties;
 
 /**
- * Created by woate on 2018/7/16.
+ * Created by rnkrsoft.com on 2018/7/16.
  */
 public class RocketMQFactory {
     /**

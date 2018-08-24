@@ -20,6 +20,7 @@ public enum SupportedJdbcType implements EnumStringCode {
     TIMESTAMP("TIMESTAMP", "时间戳"),
     DECIMAL("DECIMAL", "浮点数"),
     DATE("DATE", "日期类型"),
+    TEXT("TEXT", "字符串文本"),
     LONGTEXT("LONGTEXT", "超长字符串文本");
     String code;
     String desc;

@@ -4,17 +4,12 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-messagequeue</artifactId>
-        <version>1.0.1-beta1</version>
+        <version>1.0.1-beta5</version>
     </parent>
     <artifactId>framework-messagequeue-protocol</artifactId>
     <name>framework-messagequeue-protocol</name>
     <description>framework messagequeue protocol</description>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>4.2.0</version>
-        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

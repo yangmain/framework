@@ -22,6 +22,7 @@ public class MessageQueueListenerWrapper<T> extends AbstractMessageQueueListener
     public MessageQueueListenerWrapper(MessageQueueListener<T> proxy, boolean whenErrorRequeue, int maxTryProcessAge, boolean ack, List<MessageQueueSelector> selectors) {
         super(selectors);
         this.proxy = proxy;
+        getSelectors().addAll(proxy.getSelectors());
         this.whenErrorRequeue = whenErrorRequeue;
         this.maxTryProcessAge = maxTryProcessAge;
         this.ack = ack;

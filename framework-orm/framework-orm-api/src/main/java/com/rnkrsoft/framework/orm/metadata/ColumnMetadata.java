@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.orm.metadata;
 
+import com.rnkrsoft.framework.orm.LogicMode;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
 import com.rnkrsoft.framework.orm.SupportedJdbcType;
 import com.rnkrsoft.framework.orm.ValueMode;
@@ -93,11 +94,15 @@ public class ColumnMetadata {
      */
     Boolean onUpdateCurrentTimestamp = false;
     /**
+     * 作为条件时的逻辑模式
+     */
+    LogicMode logicMode = LogicMode.AND;
+    /**
      * 作为条件时的值模式
      */
     ValueMode valueMode = ValueMode.EQUAL;
 
-    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, SupportedJdbcType jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, Boolean onUpdateCurrentTimestamp, ValueMode valueMode) {
+    public ColumnMetadata(boolean primaryKey, TableMetadata tableMetadata, Class entityClass, Field columnField, String javaName, Class javaType, String jdbcName, String fullJdbcType, Integer length, Integer precision, Integer scale, SupportedJdbcType jdbcType, Boolean nullable, Class enumClass, String comment, PrimaryKeyStrategy primaryKeyStrategy, String primaryKeyFeature, String defaultValue, Boolean autoIncrement, Boolean onUpdateCurrentTimestamp, LogicMode logicMode, ValueMode valueMode) {
         this.primaryKey = primaryKey;
         this.tableMetadata = tableMetadata;
         this.entityClass = entityClass;
@@ -118,6 +123,7 @@ public class ColumnMetadata {
         this.defaultValue = defaultValue;
         this.autoIncrement = autoIncrement == null ? false : autoIncrement;
         this.onUpdateCurrentTimestamp = onUpdateCurrentTimestamp == null ? false : autoIncrement;
+        this.logicMode = logicMode == null ? LogicMode.AND : logicMode;
         this.valueMode = valueMode == null ? ValueMode.EQUAL : valueMode;
     }
 
@@ -140,6 +146,7 @@ public class ColumnMetadata {
         sb.append(", defaultValue='").append(defaultValue).append('\'');
         sb.append(", autoIncrement=").append(autoIncrement);
         sb.append(", onUpdateCurrentTimestamp=").append(onUpdateCurrentTimestamp);
+        sb.append(", logicMode=").append(logicMode);
         sb.append(", valueMode=").append(valueMode);
         sb.append('}');
         return sb.toString();

@@ -97,6 +97,9 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
             String mapperClassName = definition.getBeanClassName();
             try {
                 Class mapperClass = Class.forName(mapperClassName);
+                Cache cache = (Cache) mapperClass.getAnnotation(Cache.class);
+                int annoIndex = cache.index();
+                //TODO 暂时未实现
                 Method[] methods = mapperClass.getMethods();
                 for (Method method : methods) {
                     Get getAnnotation = method.getAnnotation(Get.class);

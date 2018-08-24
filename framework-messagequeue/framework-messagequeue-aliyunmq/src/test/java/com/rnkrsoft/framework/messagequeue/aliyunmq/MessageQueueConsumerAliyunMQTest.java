@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by woate on 2018/7/13.
+ * Created by rnkrsoft.com on 2018/7/13.
  */
 @Slf4j
 public class MessageQueueConsumerAliyunMQTest {
@@ -29,12 +29,16 @@ public class MessageQueueConsumerAliyunMQTest {
         consumer.setConsumerId("CID_test_evpop");
         consumer.setConsumeThreadNum(4);
         consumer.setTopic("test_evpop");
-        consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "test_1"))) {
+        consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "MEMBER_LOEIN_EVENT"))) {
             @Override
             public void execute(Message message) {
                 log.info(message.asJson());
                 log.info("age : '{}'",message.getAge());
                 log.info("routingKey: '{}'", message.getRoutingKey());
+                Object object = message.get();
+                System.out.println(object.getClass());
+                com.rnkrsoft.framework.messagequeue.aliyunmq.MessageQueueProducerAliyunMQTest.Bean bean = (com.rnkrsoft.framework.messagequeue.aliyunmq.MessageQueueProducerAliyunMQTest.Bean)object;
+                System.out.println(bean.getName());
             }
         });
         consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "register"))) {

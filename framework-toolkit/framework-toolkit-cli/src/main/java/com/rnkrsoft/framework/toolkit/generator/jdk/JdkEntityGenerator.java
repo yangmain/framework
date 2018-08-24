@@ -17,7 +17,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
     public ByteBuf generate(GenerateContext ctx) {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
         TableMetadata metadata = ctx.getTableMetadata();
-        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "Entity";
+        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "OrderByEntity";
         buf.put("UTF-8", MessageFormatter.format("package {}.entity;", ctx.getPackageName()), "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "import java.io.Serializable;", "\n");
@@ -100,13 +100,13 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
                 buf.put("UTF-8", indent(), MessageFormatter.format("@NumberColumn(name = \"{}\", nullable = {}, type = NumberType.DECIMAL )", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("BigDecimal {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.DATE) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.DATE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = false, type = DateType.DATE)", columnMetadata.getJdbcName()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.DATETIME) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.DATE)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = false, type = DateType.DATE)", columnMetadata.getJdbcName()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
             } else if (columnMetadata.getJdbcType() == SupportedJdbcType.TIMESTAMP) {
-                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = {}, type = DateType.TIMESTAMP)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
+                buf.put("UTF-8", indent(), MessageFormatter.format("@DateColumn(name = \"{}\", nullable = false, type = DateType.TIMESTAMP)", columnMetadata.getJdbcName()), "\n");
                 buf.put("UTF-8", indent(), MessageFormatter.format("Date {};", columnMetadata.getJavaName()));
             } else {
                 buf.put("UTF-8", indent(), MessageFormatter.format("@StringColumn(name = \"{}\", nullable = {}, type = StringType.VARCHAR)", columnMetadata.getJdbcName(), columnMetadata.getNullable()), "\n");
