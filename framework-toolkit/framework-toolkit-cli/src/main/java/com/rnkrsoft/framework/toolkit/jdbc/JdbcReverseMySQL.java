@@ -96,7 +96,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String comment = resultSet.getString("table_comment");
             TableMetadata tableMetadata = TableMetadata.builder()
                     .tableName(name0)
-                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "OrderByEntity")
+                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Entity")
                     .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "DAO")
                     .mapperName(packageName + ".mapper." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Mapper")
                     .autoIncrement(autoIncrement)
