@@ -164,8 +164,9 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 java_type = BigDecimal.class;
                 full_jdbc_type = SupportedJdbcType.DECIMAL.getCode() + "(" + (numeric_precision == 0 ? 18 : numeric_precision) + "," + (numeric_scale == 0 ? 2 : numeric_scale) + ")";
             } else if (data_type == SupportedJdbcType.DOUBLE) {
-                java_type = Double.class;
-                full_jdbc_type = SupportedJdbcType.DOUBLE.getCode();
+                data_type = SupportedJdbcType.DECIMAL;
+                java_type = BigDecimal.class;
+                full_jdbc_type = SupportedJdbcType.DECIMAL.getCode() + "(" + (numeric_precision == 0 ? 18 : numeric_precision) + "," + (numeric_scale == 0 ? 2 : numeric_scale) + ")";
             } else if (data_type == SupportedJdbcType.TIMESTAMP) {
                 java_type = java.util.Date.class;
                 full_jdbc_type = SupportedJdbcType.TIMESTAMP.getCode();

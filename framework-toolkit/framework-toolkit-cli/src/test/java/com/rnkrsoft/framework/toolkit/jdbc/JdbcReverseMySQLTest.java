@@ -23,7 +23,7 @@ public class JdbcReverseMySQLTest {
 //        List<TableMetadata> metadatas = jdbcReverse.reverses("192.168.0.111:3333", "ccclubs_yun_sys", "root", "root", "com.zxevpop", new String []{"srv"}, new String []{"LOG"});
 
         for (TableMetadata tableMetadata : metadatas){
-            if (!tableMetadata.getTableName().equalsIgnoreCase("API")){
+            if (!tableMetadata.getTableName().equalsIgnoreCase("ORDER")){
                 continue;
             }
             Generator generator = new JdkEntityGenerator();
