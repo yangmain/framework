@@ -16,12 +16,12 @@ public class MessageQueueProducerActiveMQTest {
     @Test
     public void testProduce() throws Exception {
         MessageQueueProducer producer = new MessageQueueProducerActiveMQ();
-        producer.setUrl("tcp://127.0.0.1:61616");
+        producer.setUrl("tcp://221.5.140.21:6161");
         producer.setUsername("admin");
         producer.setPassword("admin");
         producer.init();
         Message message = new Message(new Bean("test1", 2));
-        message.setRoutingKey("FirstQueue1");
+        message.setRoutingKey("FirstQueue");
         producer.produce(message);
     }
 

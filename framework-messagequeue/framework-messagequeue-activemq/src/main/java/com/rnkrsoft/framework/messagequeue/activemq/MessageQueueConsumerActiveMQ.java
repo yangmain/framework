@@ -8,6 +8,7 @@ import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import javax.jms.*;
 import java.util.ArrayList;
@@ -17,18 +18,31 @@ import java.util.List;
  * Created by rnkrsoft.com on 2018/5/22.
  */
 @Slf4j
-public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
+public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer implements InitializingBean {
     @Setter
     String username;
     @Setter
     String password;
     @Setter
     String url;
-    ConnectionFactory connectionFactory; // 连接工厂
-    Connection connection = null; // 连接
-    Session session; // 会话 接受或者发送消息的线程
-    final List<MessageConsumer> consumers = new ArrayList<MessageConsumer>();
-
+    /**
+     * 连接工厂
+     */
+    ConnectionFactory connectionFactory;
+    /**
+     * 连接
+     */
+    Connection connection = null;
+    /**
+     * 会话
+     */
+    Session session;
+    final List<MessageConsumer> consumers = new ArrayList();
+    /**
+     * 通过Spring配置进行监听器注册
+     */
+    @Setter
+    List<MessageQueueListener> messageQueueListeners;
 
     @Override
     public int startup(ConsumerType type) {
@@ -38,6 +52,10 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
             this.connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             this.connection.start(); // 启动连接
             this.session = this.connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE); // 创建Session
+            if (log.isDebugEnabled()) {
+                log.debug("consumer init...");
+                log.debug("listeners {}", listeners.size());
+            }
             for (final MessageQueueListener listener : listeners) {
                 List<MessageQueueSelector> selectors = listener.getSelectors();
                 for (MessageQueueSelector selector : selectors) {
@@ -86,6 +104,15 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer {
         } catch (JMSException e) {
             e.printStackTrace();
             return FAILURE;
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (messageQueueListeners != null){
+            for (MessageQueueListener listener : messageQueueListeners){
+                registerListener(listener);
+            }
         }
     }
 }
