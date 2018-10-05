@@ -4,6 +4,7 @@ import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionTemplate;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -29,6 +30,7 @@ import java.util.Set;
  * Created by rnkrsoft.com on 2018/4/2.
  * classpath Mapper扫描器
  */
+@Slf4j
 @Setter
 public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     /**
@@ -111,7 +113,7 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
 
         if (beanDefinitions.isEmpty()) {
-            logger.warn("No ORM mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
+            log.warn("No ORM mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
         } else {
             processBeanDefinitions(beanDefinitions);
         }
@@ -124,8 +126,8 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         for (BeanDefinitionHolder holder : beanDefinitions) {
             definition = (GenericBeanDefinition) holder.getBeanDefinition();
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Creating OrmMapperFactoryBean with name '" + holder.getBeanName()
+            if (log.isDebugEnabled()) {
+                log.debug("Creating OrmMapperFactoryBean with name '" + holder.getBeanName()
                         + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
 
@@ -147,21 +149,21 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
             if (StringUtils.hasText(this.ormSessionTemplateBeanName)) {
                 if (explicitFactoryUsed) {
-                    logger.warn("Cannot use both: ormSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
+                    log.warn("Cannot use both: ormSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
                 }
                 definition.getPropertyValues().add("ormSessionTemplate", new RuntimeBeanReference(this.ormSessionTemplateBeanName));
                 explicitFactoryUsed = true;
             } else if (this.ormSessionTemplate != null) {
                 if (explicitFactoryUsed) {
-                    logger.warn("Cannot use both: ormSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
+                    log.warn("Cannot use both: ormSessionTemplate and sqlSessionFactory together. sqlSessionFactory is ignored.");
                 }
                 definition.getPropertyValues().add("ormSessionTemplate", this.ormSessionTemplate);
                 explicitFactoryUsed = true;
             }
 
             if (!explicitFactoryUsed) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Enabling autowire by type for OrmMapperFactoryBean with name '" + holder.getBeanName() + "'.");
+                if (log.isDebugEnabled()) {
+                    log.debug("Enabling autowire by type for OrmMapperFactoryBean with name '" + holder.getBeanName() + "'.");
                 }
                 definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             }
@@ -178,7 +180,7 @@ public class OrmClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
         if (super.checkCandidate(beanName, beanDefinition)) {
             return true;
         } else {
-            logger.warn("Skipping OrmMapperFactoryBean with name '" + beanName
+            log.warn("Skipping OrmMapperFactoryBean with name '" + beanName
                     + "' and '" + beanDefinition.getBeanClassName() + "' mapperInterface"
                     + ". Bean already defined with the same name!");
             return false;

@@ -1,7 +1,6 @@
 package com.rnkrsoft.framework.config.connector;
 
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.message.MessageFormatter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rnkrsoft.framework.config.Debug;
@@ -12,7 +11,7 @@ import com.rnkrsoft.framework.config.v1.PushRequest;
 import com.rnkrsoft.framework.config.v1.PushResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.log4j.MDC;
+import org.slf4j.MDC;
 
 /**
  * Created by rnkrsoft.com on 2018/5/8.

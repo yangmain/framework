@@ -4,6 +4,7 @@ import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.sequence.spring.SequenceServiceConfigure;
 import com.rnkrsoft.framework.orm.mybatis.spring.OrmSessionDaoSupport;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.Configuration;
 import org.springframework.beans.factory.FactoryBean;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.springframework.util.Assert.notNull;
 
+@Slf4j
 public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements FactoryBean<T> {
     Class<T> mapperInterface;
 
@@ -50,7 +52,7 @@ public class OrmMapperFactoryBean<T> extends OrmSessionDaoSupport implements Fac
             try {
                 configuration.addMapper(this.mapperInterface);
             } catch (Exception e) {
-                logger.error("Error while adding the mapper '" + this.mapperInterface + "' to configuration.", e);
+                log.error("Error while adding the mapper '" + this.mapperInterface + "' to configuration.", e);
                 throw new IllegalArgumentException(e);
             } finally {
                 ErrorContext.instance().reset();

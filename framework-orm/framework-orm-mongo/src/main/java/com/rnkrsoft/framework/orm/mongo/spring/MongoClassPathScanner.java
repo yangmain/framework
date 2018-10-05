@@ -11,6 +11,7 @@ import com.rnkrsoft.framework.orm.mongo.update.MongoUpdateMapper;
 import com.rnkrsoft.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -32,6 +33,7 @@ import java.util.Set;
 /**
  * Created by rnkrsoft.com on 2018/6/27.
  */
+@Slf4j
 public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     MongoMapperFactoryBean mongoMapperFactoryBean;
     @Setter
@@ -97,7 +99,7 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
     protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
         if (beanDefinitions.isEmpty()) {
-            logger.warn("No Mongo mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
+            log.warn("No Mongo mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
         } else {
             processBeanDefinitions(beanDefinitions);
         }
@@ -106,7 +108,6 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
 
     void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
         MongoClient mongoClient = null;
-        //如果填写了连接URI则使用URI初始化
         if (StringUtils.isNotBlank(connectionUri)) {
             mongoClient = new MongoClient(new MongoClientURI(connectionUri));
         } else {
@@ -117,8 +118,8 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
         for (BeanDefinitionHolder holder : beanDefinitions) {
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Creating MongoMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
+            if (log.isDebugEnabled()) {
+                log.debug("Creating MongoMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
             String mapperClassName = definition.getBeanClassName();
 
@@ -134,8 +135,8 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
             definition.getPropertyValues().add("mongoMapper", mapperClassName);
             definition.getPropertyValues().add("entityClass", entityClass);
             definition.getPropertyValues().add("mongoDaoClient", new MongoDaoClient(mongoClient, schema, entityClass));
-            if (logger.isDebugEnabled()) {
-                logger.debug("Enabling autowire by type for MongoMapperFactoryBean with name '" + holder.getBeanName() + "'.");
+            if (log.isDebugEnabled()) {
+                log.debug("Enabling autowire by type for MongoMapperFactoryBean with name '" + holder.getBeanName() + "'.");
             }
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             registerBeanDefinition(holder, getRegistry());
@@ -152,7 +153,7 @@ public class MongoClassPathScanner extends ClassPathBeanDefinitionScanner {
         if (super.checkCandidate(beanName, beanDefinition)) {
             return true;
         } else {
-            logger.warn("Skipping MongoMapperFactoryBean with name '" + beanName + "' and '" + beanDefinition.getBeanClassName() + "' mongoInterface"
+            log.warn("Skipping MongoMapperFactoryBean with name '" + beanName + "' and '" + beanDefinition.getBeanClassName() + "' mongoInterface"
                     + ". Bean already defined with the same name!");
             return false;
         }

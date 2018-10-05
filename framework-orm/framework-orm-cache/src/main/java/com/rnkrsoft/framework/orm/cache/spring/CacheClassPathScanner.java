@@ -80,7 +80,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
     protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
         if (beanDefinitions.isEmpty()) {
-            logger.warn("No Cache mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
+            log.warn("No Cache mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
         } else {
             processBeanDefinitions(beanDefinitions);
         }
@@ -91,8 +91,8 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
         for (BeanDefinitionHolder holder : beanDefinitions) {
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Creating CacheMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
+            if (log.isDebugEnabled()) {
+                log.debug("Creating CacheMapperFactoryBean with name '" + holder.getBeanName() + "' and '" + definition.getBeanClassName() + "' mapperInterface");
             }
             String mapperClassName = definition.getBeanClassName();
             try {
@@ -348,8 +348,8 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
             definition.setBeanClass(this.cacheMapperFactoryBean.getClass());
             definition.getPropertyValues().add("cacheInterface", mapperClassName);
             definition.getPropertyValues().add("cacheClient", this.cacheClient);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Enabling autowire by type for CacheMapperFactoryBean with name '" + holder.getBeanName() + "'.");
+            if (log.isDebugEnabled()) {
+                log.debug("Enabling autowire by type for CacheMapperFactoryBean with name '" + holder.getBeanName() + "'.");
             }
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             registerBeanDefinition(holder, getRegistry());
@@ -366,7 +366,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
         if (super.checkCandidate(beanName, beanDefinition)) {
             return true;
         } else {
-            logger.warn("Skipping OrmMapperFactoryBean with name '" + beanName
+            log.warn("Skipping OrmMapperFactoryBean with name '" + beanName
                     + "' and '" + beanDefinition.getBeanClassName() + "' mapperInterface"
                     + ". Bean already defined with the same name!");
             return false;

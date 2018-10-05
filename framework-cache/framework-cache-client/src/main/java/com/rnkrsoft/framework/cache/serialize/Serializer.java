@@ -1,10 +1,5 @@
 package com.rnkrsoft.framework.cache.serialize;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 
 /**
  * 序列化标准

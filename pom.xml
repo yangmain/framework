@@ -14,13 +14,6 @@
     <version>1.0.1-beta6</version>
     <name>framework library</name>
     <description>氡氪网络科技基础库</description>
-    <url>https://www.rnkrsoft.com</url>
-    <licenses>
-        <license>
-            <name>rnkrsoft Copyright Version 1.0</name>
-            <url>http://www.rnkrsoft.com/open-source/licenses</url>
-        </license>
-    </licenses>
     <modules>
         <module>framework-annotation</module>
         <module>framework-sequence-api</module>
@@ -71,6 +64,14 @@
         <developerConnection>http://admin@git.rnkrsoft.com/r/framework.git </developerConnection>
         <url>https://www.rnkrsoft.com</url>
     </scm>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <repositories>
         <repository>
             <id>rnkrsoft</id>
@@ -80,20 +81,12 @@
     </repositories>
     <distributionManagement>
         <snapshotRepository>
-            <id>rnkrsoft</id>
-            <url>http://nexus.rnkrsoft.com/content/repositories/snapshots/</url>
+            <id>open-source-snapshots</id>
+            <url>http://nexus.rnkrsoft.com/content/repositories/open-source-snapshots/</url>
         </snapshotRepository>
         <repository>
-            <id>rnkrsoft</id>
-            <url>http://nexus.rnkrsoft.com/content/repositories/releases/</url>
+            <id>open-source-releases</id>
+            <url>http://nexus.rnkrsoft.com/content/repositories/open-source-releases/</url>
         </repository>
     </distributionManagement>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
