@@ -53,7 +53,6 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
             ack = listenerDefinition.ack();
         }
         MessageQueueListenerWrapper enhance = new MessageQueueListenerWrapper(listener, whenErrorRequeue, maxTryProcessAge, ack, messageQueueSelectors);
-        enhance.getSelectors().addAll(messageQueueSelectors);
         return enhance;
     }
 }

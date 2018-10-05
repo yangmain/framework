@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-beta5</version>
+        <version>1.0.1-beta6</version>
     </parent>
     <artifactId>framework-orm-messagequeue</artifactId>
     <name>framework-orm-messagequeue</name>
@@ -40,13 +40,13 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-test-core</artifactId>
-            <version>1.0.1-beta5</version>
+            <version>1.0.1-beta6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-messagequeue-protocol</artifactId>
-            <version>1.0.1-beta5</version>
+            <version>1.0.1-beta6</version>
         </dependency>
     </dependencies>
 </project>

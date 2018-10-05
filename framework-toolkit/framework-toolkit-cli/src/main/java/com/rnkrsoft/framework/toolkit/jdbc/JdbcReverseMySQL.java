@@ -96,7 +96,7 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String comment = resultSet.getString("table_comment");
             TableMetadata tableMetadata = TableMetadata.builder()
                     .tableName(name0)
-                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "OrderByEntity")
+                    .entityClassName(packageName + ".entity." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Entity")
                     .daoClassName(packageName + ".dao." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "DAO")
                     .mapperName(packageName + ".mapper." + StringUtils.firstCharToUpper(StringUtils.underlineToCamel(name0)) + "Mapper")
                     .autoIncrement(autoIncrement)
@@ -164,8 +164,9 @@ public class JdbcReverseMySQL implements JdbcReverse {
                 java_type = BigDecimal.class;
                 full_jdbc_type = SupportedJdbcType.DECIMAL.getCode() + "(" + (numeric_precision == 0 ? 18 : numeric_precision) + "," + (numeric_scale == 0 ? 2 : numeric_scale) + ")";
             } else if (data_type == SupportedJdbcType.DOUBLE) {
-                java_type = Double.class;
-                full_jdbc_type = SupportedJdbcType.DOUBLE.getCode();
+                data_type = SupportedJdbcType.DECIMAL;
+                java_type = BigDecimal.class;
+                full_jdbc_type = SupportedJdbcType.DECIMAL.getCode() + "(" + (numeric_precision == 0 ? 18 : numeric_precision) + "," + (numeric_scale == 0 ? 2 : numeric_scale) + ")";
             } else if (data_type == SupportedJdbcType.TIMESTAMP) {
                 java_type = java.util.Date.class;
                 full_jdbc_type = SupportedJdbcType.TIMESTAMP.getCode();

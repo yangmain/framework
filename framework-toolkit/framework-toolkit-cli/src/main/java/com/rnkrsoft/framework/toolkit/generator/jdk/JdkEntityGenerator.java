@@ -17,7 +17,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
     public ByteBuf generate(GenerateContext ctx) {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
         TableMetadata metadata = ctx.getTableMetadata();
-        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "OrderByEntity";
+        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "Entity";
         buf.put("UTF-8", MessageFormatter.format("package {}.entity;", ctx.getPackageName()), "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "import java.io.Serializable;", "\n");
@@ -35,6 +35,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
         buf.put("UTF-8", "import com.rnkrsoft.framework.orm.jdbc.StringType;", "\n");
         buf.put("UTF-8", "import com.rnkrsoft.framework.orm.jdbc.NumberType;", "\n");
         buf.put("UTF-8", "import com.rnkrsoft.framework.orm.jdbc.DateType;", "\n");
+        buf.put("UTF-8", "import com.rnkrsoft.framework.orm.jdbc.OrderByEntity;", "\n");
         buf.put("UTF-8", "\n");
         buf.put("UTF-8", "import lombok.Data;", "\n");
         buf.put("UTF-8", "import lombok.Builder;", "\n");
@@ -52,7 +53,7 @@ public class JdkEntityGenerator extends JdkGenerator implements EntityGenerator 
         buf.put("UTF-8", "@ToString", "\n");
         buf.put("UTF-8", MessageFormatter.format("@Table(name = \"{}\", prefix = \"{}\", suffix = \"{}\")", metadata.getTableName(), metadata.getPrefix(), metadata.getSuffix()), "\n");
         buf.put("UTF-8", MessageFormatter.format("@Comment(\"{}\")", metadata.getComment()), "\n");
-        buf.put("UTF-8", MessageFormatter.format("public class {} implements Serializable {", entityName), "\n");
+        buf.put("UTF-8", MessageFormatter.format("public class {} extends OrderByEntity implements Serializable {", entityName), "\n");
         for (String columnName : metadata.getOrderColumns()) {
             ColumnMetadata columnMetadata = metadata.getColumnMetadataSet().get(columnName);
             buf.put("UTF-8", indent(), MessageFormatter.format("@Comment(\"{}\")", columnMetadata.getComment()), "\n");

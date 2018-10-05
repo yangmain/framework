@@ -23,20 +23,24 @@ public class MessageQueueConsumerActiveMQTest {
     @Test
     public void testStartup() throws Exception {
         MessageQueueConsumerActiveMQ consumer = new MessageQueueConsumerActiveMQ();
-        consumer.setUrl(ActiveMQConnection.DEFAULT_BROKER_URL);
+        consumer.setUrl("tcp://221.5.140.21:6161");
         consumer.setUsername(ActiveMQConnection.DEFAULT_USER);
         consumer.setPassword(ActiveMQConnection.DEFAULT_PASSWORD);
-        consumer.registerListener(new MessageQueueListener() {
+        consumer.setMessageQueueListeners(Arrays.<MessageQueueListener>asList(new MessageQueueListener() {
             @Override
             public List<MessageQueueSelector> getSelectors() {
-                return new ArrayList<MessageQueueSelector>(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "FirstQueue1")));
+                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "FirstQueue"));
             }
 
             @Override
             public void execute(Message message) {
                 log.debug("----------" +message.get());
+                MessageQueueProducerActiveMQTest.Bean bean = (MessageQueueProducerActiveMQTest.Bean)message.get();
+                log.debug("name:{}" ,bean.getName());
+                log.debug("age:{}",bean.getAge());
             }
-        });
+        }));
+        consumer.afterPropertiesSet();
         consumer.startup();
         Thread.sleep(60 * 1000);
     }

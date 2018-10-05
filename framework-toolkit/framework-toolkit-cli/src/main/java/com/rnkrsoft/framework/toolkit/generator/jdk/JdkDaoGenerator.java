@@ -18,7 +18,7 @@ public class JdkDaoGenerator extends JdkGenerator implements DaoGenerator {
     public ByteBuf generate(GenerateContext ctx) {
         ByteBuf buf = ByteBuf.allocate(1024).autoExpand(true);
         TableMetadata metadata = ctx.getTableMetadata();
-        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "OrderByEntity";
+        String entityName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "Entity";
         String daoName = StringUtils.firstCharToUpper(StringUtils.underlineToCamel(metadata.getTableName())) + "DAO";
         if (metadata.getPrimaryKeys().isEmpty()){
             throw ErrorContextFactory.instance().message("table {} has not primary key", metadata.getTableName()).runtimeException();

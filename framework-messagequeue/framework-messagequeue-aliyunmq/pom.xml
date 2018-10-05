@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-messagequeue</artifactId>
-        <version>1.0.1-beta5</version>
+        <version>1.0.1-beta6</version>
     </parent>
     <artifactId>framework-messagequeue-aliyunmq</artifactId>
     <name>framework-messagequeue-aliyunmq</name>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-messagequeue-core</artifactId>
-            <version>1.0.1-beta5</version>
+            <version>1.0.1-beta6</version>
             <exclusions>
                 <exclusion>
                     <artifactId>netty-all</artifactId>
