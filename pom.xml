@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1-beta7</version>
     <name>framework library</name>
     <description>氡氪网络科技基础库</description>
     <modules>
@@ -79,14 +79,14 @@
             <url>http://nexus.rnkrsoft.com/content/groups/public/</url>
         </repository>
     </repositories>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>open-source-snapshots</id>
-            <url>http://nexus.rnkrsoft.com/content/repositories/open-source-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>open-source-releases</id>
-            <url>http://nexus.rnkrsoft.com/content/repositories/open-source-releases/</url>
-        </repository>
-    </distributionManagement>
+    <!--<distributionManagement>-->
+        <!--<snapshotRepository>-->
+            <!--<id>open-source-snapshots</id>-->
+            <!--<url>http://nexus.rnkrsoft.com/content/repositories/open-source-snapshots/</url>-->
+        <!--</snapshotRepository>-->
+        <!--<repository>-->
+            <!--<id>open-source-releases</id>-->
+            <!--<url>http://nexus.rnkrsoft.com/content/repositories/open-source-releases/</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
 </project>

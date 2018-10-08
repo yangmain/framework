@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-monitor</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.1-beta7</version>
     </parent>
     <artifactId>framework-monitor-heartbeat</artifactId>
     <name>framework-monitor-heartbeat</name>
@@ -17,13 +17,13 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-spring</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-test-orm</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta7</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -3,10 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
-        <artifactId>framework-sequence</artifactId>
-        <version>1.0.1-beta7</version>
+        <artifactId>framework-orm</artifactId>
+        <version>1.0.1-beta5</version>
     </parent>
-    <artifactId>framework-sequence-h2</artifactId>
-    <name>framework-sequence-h2</name>
-    <description>This is the framework4j-sequence-h2</description>
+    <artifactId>framework-orm-log4jdbc</artifactId>
+    <name>framework-orm-log4jdbc</name>
+    <description>This is the framework-orm-log4jdbc</description>
+    <dependencies>
+    </dependencies>
 </project>
