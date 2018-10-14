@@ -394,6 +394,7 @@ public class OrmEntityExtractor implements EntityExtractor {
                 throw ErrorContextFactory.instance().message("字段'{}' 不能设置onUpdate,必须在数据库类型为TimeStamp类型上设置", columnMetadata.getJavaName()).runtimeException();
             }
         }
+        ErrorContextFactory.instance().activity(null);
         return this;
     }
 
