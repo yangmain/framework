@@ -64,8 +64,14 @@ public class JdbcReverseMySQL implements JdbcReverse {
             String name = resultSet.getString("table_name").toUpperCase();
             int dotIndex = name.indexOf("_");
             int lastDotIndex = name.lastIndexOf("_");
-            String prefix = name.substring(0, dotIndex).toUpperCase();
-            String suffix = name.substring(lastDotIndex + 1).toUpperCase();
+            String prefix = "";
+            String suffix = "";
+            if (dotIndex > 0){
+                 prefix = name.substring(0, dotIndex).toUpperCase();
+            }
+            if (lastDotIndex > 0){
+                 suffix = name.substring(lastDotIndex + 1).toUpperCase();
+            }
             String name0 = name;
             if (prefixes0.contains(prefix)) {
                 if (dotIndex + 1 >= name.length()) {
