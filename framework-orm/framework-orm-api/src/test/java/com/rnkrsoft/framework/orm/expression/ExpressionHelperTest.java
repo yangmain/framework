@@ -11,6 +11,7 @@ public class ExpressionHelperTest {
     @Test
     public void testParse() throws Exception {
         Expression expression = ExpressionHelper.parse("ABCD_${yyyyMMddHHmmssSSS}_${SEQ:5}_${SEQ:8}_${RANDOM:8}_EFGH", false);
+        System.out.println(expression);
     }
 
 
