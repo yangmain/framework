@@ -116,7 +116,7 @@ public class ConfigClient {
             } else {
                 throw new Error(MessageFormatter.format("not supported connectorType!"));
             }
-            log.info("finish inited config client...");
+            log.info("finish inite config client...");
         }
         return this;
     }
