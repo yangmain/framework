@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework-test-standalone</artifactId>
-    <version>1.0.1-beta7</version>
+    <version>1.0.1-beta8</version>
     <name>framework-test-standalone</name>
     <description>framework测试发布包</description>
     <build>
@@ -152,5 +152,12 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>rnkrsoft</id>
+            <name>RnKrSoft Repository</name>
+            <url>http://nexus.rnkrsoft.com/content/groups/public/</url>
+        </repository>
+    </repositories>
 </project>
 

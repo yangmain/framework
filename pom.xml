@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework</artifactId>
-    <version>1.0.1-beta7</version>
+    <version>1.0.1-beta8</version>
     <name>framework library</name>
     <description>氡氪网络科技基础库</description>
     <modules>
@@ -37,27 +37,27 @@
             <dependency>
                 <groupId>com.rnkrsoft.reflection4j</groupId>
                 <artifactId>reflection4j</artifactId>
-                <version>1.0.1-beta1</version>
+                <version>1.0.1-beta2</version>
             </dependency>
             <dependency>
                 <groupId>com.rnkrsoft.skeleton4j</groupId>
                 <artifactId>skeleton4j-api</artifactId>
-                <version>1.0.1-beta1</version>
+                <version>1.0.1-beta2</version>
             </dependency>
             <dependency>
                 <groupId>com.rnkrsoft.io4j</groupId>
                 <artifactId>io4j</artifactId>
-                <version>1.0.1-beta1</version>
+                <version>1.0.1-beta2</version>
             </dependency>
             <dependency>
                 <groupId>com.rnkrsoft.logtrace4j</groupId>
                 <artifactId>logtrace4j</artifactId>
-                <version>1.0.1-beta1</version>
+                <version>1.0.1-beta2</version>
             </dependency>
             <dependency>
                 <groupId>com.rnkrsoft.groundwork</groupId>
                 <artifactId>groundwork</artifactId>
-                <version>1.0.1-beta1</version>
+                <version>1.0.1-beta2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -4,7 +4,7 @@
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework-standalone</artifactId>
     <name>氡氪网络科技基础库发布包</name>
-    <version>1.0.1-beta7</version>
+    <version>1.0.1-beta8</version>
     <description>氡氪网络科技基础库发布包</description>
     <dependencies>
         <dependency>
@@ -139,14 +139,4 @@
             <url>http://nexus.rnkrsoft.com/content/groups/public/</url>
         </repository>
     </repositories>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>open-source-snapshots</id>
-            <url>http://nexus.rnkrsoft.com/content/repositories/open-source-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>open-source-releases</id>
-            <url>http://nexus.rnkrsoft.com/content/repositories/open-source-releases/</url>
-        </repository>
-    </distributionManagement>
 </project>
