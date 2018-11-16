@@ -13,7 +13,7 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-annotation-orm</artifactId>
-            <version>1.0.1-beta8</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
@@ -28,6 +28,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
