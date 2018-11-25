@@ -16,4 +16,14 @@
         <module>framework-config-spring</module>
         <module>framework-config-boot-starter</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.rnkrsoft.skeleton4j</groupId>
+            <artifactId>skeleton4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+    </dependencies>
 </project>

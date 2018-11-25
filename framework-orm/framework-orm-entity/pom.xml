@@ -11,10 +11,6 @@
     <description>This is the framework4j-orm-api</description>
     <dependencies>
         <dependency>
-            <groupId>com.rnkrsoft.skeleton4j</groupId>
-            <artifactId>skeleton4j-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-api</artifactId>
             <version>${project.version}</version>
@@ -24,6 +20,10 @@
             <artifactId>framework-annotation-test</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.groundwork</groupId>

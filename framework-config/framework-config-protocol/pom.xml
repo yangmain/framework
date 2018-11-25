@@ -15,10 +15,6 @@
             <artifactId>groundwork</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rnkrsoft.skeleton4j</groupId>
-            <artifactId>skeleton4j-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.rnkrsoft.logtrace4j</groupId>
             <artifactId>logtrace4j</artifactId>
         </dependency>
