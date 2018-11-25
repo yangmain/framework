@@ -41,27 +41,27 @@ public final class EntityExtractorHelper {
         javax.persistence.Table tableAnnJPA = (javax.persistence.Table) entityClass.getAnnotation(javax.persistence.Table.class);
         Table tableAnnORM = (Table) entityClass.getAnnotation(Table.class);
         if (tableAnnJPA == null && tableAnnORM == null) {
-            ErrorContextFactory.instance().activity("提取实体类{}的元信息", entityClass)
+            throw ErrorContextFactory.instance().activity("提取实体类{}的元信息", entityClass)
                     .message("没有使用JPA注解{}，也没使用ORM注解{}", javax.persistence.Table.class, Table.class)
                     .solution("建议使用{}注解", Table.class)
-                    .throwError();
+                    .runtimeException();
         }
         if (tableAnnJPA != null && tableAnnORM != null) {
-            ErrorContextFactory.instance()
+            throw ErrorContextFactory.instance()
                     .activity("提取实体类{}的元信息", entityClass)
                     .message("同时使用JPA注解{}和使用ORM注解{}", javax.persistence.Table.class, Table.class)
                     .solution("建议使用{}注解，也可以使用JPA注解{}", Table.class, javax.persistence.Table.class)
-                    .throwError();
+                    .runtimeException();
         }
         TableMetadata tableMetadata = TableMetadata.builder().entityClass(entityClass).entityClassName(entityClass.getSimpleName()).build();
         //严格模式下，只能使用Wing4j注解
         if (strict) {
             if (tableAnnORM == null) {
-                ErrorContextFactory.instance()
+                throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", entityClass)
                         .message("由于已开启强制使用ORM注解，但是实际使用ORM注解{}", javax.persistence.Table.class)
                         .solution("必须强制使用ORM注解", Table.class)
-                        .throwError();
+                        .runtimeException();
             }
             checkCouldNotUseJpaAnnotation(tableMetadata);
         }

@@ -1,12 +1,12 @@
 package com.rnkrsoft.framework.orm.extractor;
 
 import com.rnkrsoft.framework.orm.EntityExtractor;
-import com.rnkrsoft.framework.orm.SupportedJdbcType;
-import com.rnkrsoft.logtrace4j.ErrorContextFactory;
-import com.rnkrsoft.framework.orm.jdbc.Ignore;
 import com.rnkrsoft.framework.orm.PrimaryKeyStrategy;
+import com.rnkrsoft.framework.orm.SupportedJdbcType;
+import com.rnkrsoft.framework.orm.jdbc.Ignore;
 import com.rnkrsoft.framework.orm.metadata.ColumnMetadata;
 import com.rnkrsoft.framework.orm.metadata.TableMetadata;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
@@ -81,11 +81,11 @@ public class JpaEntityExtractor implements EntityExtractor {
                 dataType = "BIGINT";
                 jdbcType = "BIGINT";
                 if (column.nullable()) {
-                    ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
                             .message("字段{}为整型包装类型，不允许为空", columnMetadata.getJdbcName())
                             .solution("在标注{}注解上的属性{}设置为{}", Column.class, "nullable", false)
-                            .throwError();
+                            .runtimeException();
                 }
             } else if (fieldClass == Long.TYPE) {
                 dataType = "BIGINT";
@@ -94,11 +94,11 @@ public class JpaEntityExtractor implements EntityExtractor {
                 dataType = "INTEGER";
                 jdbcType = "INTEGER";
                 if (column.nullable()) {
-                    ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
                             .message("字段{}为整型包装类型，不允许为空", columnMetadata.getJdbcName())
                             .solution("在标注{}注解上的属性{}设置为{}", Column.class, "nullable", false)
-                            .throwError();
+                            .runtimeException();
                 }
             } else if (fieldClass == Integer.TYPE) {
                 dataType = "INTEGER";
@@ -107,10 +107,11 @@ public class JpaEntityExtractor implements EntityExtractor {
                 dataType = "TINYINT";
                 jdbcType = "TINYINT";
                 if (column.nullable()) {
-                    ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
                             .message("字段{}为布尔值包装类型，不允许为空", columnMetadata.getJdbcName())
-                            .solution("在标注{}注解上的属性{}设置为{}", Column.class, "nullable", false).throwError();
+                            .solution("在标注{}注解上的属性{}设置为{}", Column.class, "nullable", false)
+                            .runtimeException();
                 }
             } else if (fieldClass == Boolean.TYPE) {
                 dataType = "TINYINT";
@@ -205,25 +206,28 @@ public class JpaEntityExtractor implements EntityExtractor {
                 primaryKeyStrategy = PrimaryKeyStrategy.UUID;
             } else if (generatedValue.strategy() == GenerationType.SEQUENCE) {
                 if (columnMetadata.getJavaType() != Integer.class && columnMetadata.getJavaType() != Integer.TYPE) {
-                    ErrorContextFactory.instance()
+                   throw  ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}使用了自增主键，类型必须为整数", field.getName())
-                            .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
+                            .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int")
+                           .runtimeException();
                 }
                 primaryKeyStrategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
                 columnMetadata.setPrimaryKeyFeature(generatedValue.generator());
-            }else{
+            } else {
                 //TODO
-                ErrorContextFactory.instance()
+                throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                         .message("字段{}使用了不支持的物理主键", field.getName())
-                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
+                        .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int")
+                        .runtimeException();
             }
             if (columnMetadata.getNullable() != null && columnMetadata.getNullable()) {
-                ErrorContextFactory.instance()
+                throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                         .message("字段{}是主键，该字段不允许为空", field.getName())
-                        .solution("在字段{}将{}属性修改为{}", field.getName(), "nullabe", false).throwError();
+                        .solution("在字段{}将{}属性修改为{}", field.getName(), "nullabe", false)
+                        .runtimeException();
             }
         }
         columnMetadata.setPrimaryKey(true);
@@ -244,7 +248,7 @@ public class JpaEntityExtractor implements EntityExtractor {
         Class entityClass = columnMetadata.getEntityClass();
         Column column = field.getAnnotation(Column.class);
         Ignore ignore = field.getAnnotation(Ignore.class);
-        if (ignore != null){
+        if (ignore != null) {
             return false;
         }
         if ("schema".equals(columnMetadata.getJavaName())) {

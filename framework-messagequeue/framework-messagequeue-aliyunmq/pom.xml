@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-messagequeue</artifactId>
-        <version>1.0.1-beta8</version>
+        <version>1.0.1-beta9</version>
     </parent>
     <artifactId>framework-messagequeue-aliyunmq</artifactId>
     <name>framework-messagequeue-aliyunmq</name>

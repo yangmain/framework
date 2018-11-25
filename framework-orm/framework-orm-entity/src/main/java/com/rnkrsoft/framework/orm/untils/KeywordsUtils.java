@@ -61,7 +61,9 @@ public abstract class KeywordsUtils {
         }else if (mode == WordMode.none){
             return sql;
         }else {
-            throw ErrorContextFactory.instance().message("转换 SQL '{}' 发生错误", sql).runtimeException();
+            throw ErrorContextFactory.instance()
+                    .message("转换 SQL '{}' 发生错误", sql)
+                    .runtimeException();
         }
     }
 }
