@@ -36,11 +36,11 @@ public class JpaEntityExtractor implements EntityExtractor {
         String jdbcType = null;
         if (column != null) {
             if (column.length() <= 0) {
-                ErrorContextFactory.instance()
+                throw ErrorContextFactory.instance()
                         .activity("提取实体类{}的元信息中{}字段", columnMetadata.getEntityClass(), columnMetadata.getJavaName())
                         .message("字段{}为VARCHAR类型，但是没有指定length", columnMetadata.getJdbcName())
                         .solution("在标注{}注解上的属性{}设置字符串长度", Column.class, "length")
-                        .throwError();
+                        .runtimeException();
             } else if (column.length() > 255) {
                 log.warn("实体[{}]字段[{}]的文本长度超过了256，自动使用TEXT数据类型", columnMetadata.getEntityClass().getName(), columnMetadata.getJdbcName());
                 dataType = "TEXT";
@@ -196,21 +196,22 @@ public class JpaEntityExtractor implements EntityExtractor {
                 }
             } else if (generatedValue.strategy() == GenerationType.IDENTITY) {
                 if (columnMetadata.getJavaType() != Integer.class && columnMetadata.getJavaType() != Integer.TYPE) {
-                    ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}使用了自增主键，类型必须为整数", field.getName())
-                            .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int").throwError();
+                            .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int")
+                            .runtimeException();
                 }
                 primaryKeyStrategy = PrimaryKeyStrategy.IDENTITY;
             } else if (generatedValue.strategy() == GenerationType.StringType) {
                 primaryKeyStrategy = PrimaryKeyStrategy.UUID;
             } else if (generatedValue.strategy() == GenerationType.SEQUENCE) {
                 if (columnMetadata.getJavaType() != Integer.class && columnMetadata.getJavaType() != Integer.TYPE) {
-                   throw  ErrorContextFactory.instance()
+                    throw ErrorContextFactory.instance()
                             .activity("提取实体类{}的元信息", columnMetadata.getEntityClass())
                             .message("字段{}使用了自增主键，类型必须为整数", field.getName())
                             .solution("将字段{}的类型从{}修改为{}或者{}", field.getName(), columnMetadata.getJavaType(), Integer.class, "int")
-                           .runtimeException();
+                            .runtimeException();
                 }
                 primaryKeyStrategy = PrimaryKeyStrategy.SEQUENCE_SERVICE;
                 columnMetadata.setPrimaryKeyFeature(generatedValue.generator());
