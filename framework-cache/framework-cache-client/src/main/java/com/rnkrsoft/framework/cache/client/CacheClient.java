@@ -109,9 +109,15 @@ public class CacheClient {
         List<String> hosts = settings.getHosts();
         int size = hosts.size();
         if (size == 0) {
-
+            throw ErrorContextFactory.instance()
+                    .message("Standalone模式下Redis配置地址信息为空")
+                    .solution("配置一条Redis地址信息")
+                    .runtimeException();
         } else if (size > 1) {
-
+            throw ErrorContextFactory.instance()
+                    .message("Standalone模式下Redis配置地址信息超过一条")
+                    .solution("配置一条Redis地址信息")
+                    .runtimeException();
         }
         String[] strings = hosts.get(0).split(":");
         String host = strings[0];
