@@ -23,7 +23,7 @@ public class MessageQueueConsumerActiveMQTest {
     @Test
     public void testStartup() throws Exception {
         MessageQueueConsumerActiveMQ consumer = new MessageQueueConsumerActiveMQ();
-        consumer.setUrl("tcp://221.5.140.21:6161");
+        consumer.setUri("tcp://221.5.140.21:6161");
         consumer.setUsername(ActiveMQConnection.DEFAULT_USER);
         consumer.setPassword(ActiveMQConnection.DEFAULT_PASSWORD);
         consumer.setMessageQueueListeners(Arrays.<MessageQueueListener>asList(new MessageQueueListener() {

@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 public class MessageQueueSelector {
-    SelectorType type = SelectorType.fusing;
+    SelectorType type = SelectorType.necessarily;
     String routingKey;
 
     public boolean accept(String routingKey){

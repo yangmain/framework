@@ -13,7 +13,7 @@ public class MessageQueueProducerRabbitMQTest {
     @Test
     public void testProduce() throws Exception {
         MessageQueueProducerRabbitMQ messageQueueProducerRabbitMQ = new MessageQueueProducerRabbitMQ();
-        messageQueueProducerRabbitMQ.setUrl("amqp://zxevpop:pro_123456@192.168.100.245:5672");
+        messageQueueProducerRabbitMQ.setUri("amqp://zxevpop:pro_123456@192.168.100.245:5672");
         messageQueueProducerRabbitMQ.setExchangeName("framework.test");
         messageQueueProducerRabbitMQ.init();
         Message message = new Message("xxxxxxxxxxxxxxxx");

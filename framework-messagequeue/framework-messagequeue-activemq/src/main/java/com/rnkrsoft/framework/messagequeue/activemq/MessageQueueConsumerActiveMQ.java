@@ -22,6 +22,10 @@ import java.util.List;
 public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer implements InitializingBean {
     @Setter
     String uri;
+    @Setter
+    String username;
+    @Setter
+    String password;
     /**
      * 是否使用自动确认消息
      */
@@ -57,7 +61,7 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
         }
         // 实例化连接工厂
         try {
-            this.connectionFactory = new ActiveMQConnectionFactory(new URI(uri));
+            this.connectionFactory = new ActiveMQConnectionFactory(username, password, new URI(uri));
             this.connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             this.connection.start(); // 启动连接
             this.session = this.connection.createSession(Boolean.FALSE, autoAck ? Session.AUTO_ACKNOWLEDGE : Session.CLIENT_ACKNOWLEDGE); // 创建Session

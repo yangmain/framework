@@ -82,6 +82,11 @@
             <artifactId>framework-messagequeue-aliyunmq</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-messagequeue-rabbitmq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -124,6 +129,7 @@
                                     <include>com.rnkrsoft.framework:framework-messagequeue-core</include>
                                     <include>com.rnkrsoft.framework:framework-messagequeue-activemq</include>
                                     <include>com.rnkrsoft.framework:framework-messagequeue-aliyunmq</include>
+                                    <include>com.rnkrsoft.framework:framework-messagequeue-rabbitmq</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

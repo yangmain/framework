@@ -4,8 +4,9 @@ package com.rnkrsoft.framework.messagequeue.protocol;
  * Created by rnkrsoft.com on 2018/5/21.
  */
 public class DemoProducer implements MessageQueueProducer{
+
     @Override
-    public void setUrl(String url) {
+    public void setUri(String uri) {
 
     }
 

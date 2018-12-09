@@ -20,9 +20,9 @@ public class MessageQueueConsumerRabbitMQTest {
     @Test
     public void testInit() throws Exception {
         MessageQueueConsumerRabbitMQ consumerRabbitMQ = new MessageQueueConsumerRabbitMQ();
-        consumerRabbitMQ.setUrl("amqp://zxevpop:pro_123456@192.168.100.245:5672");
+        consumerRabbitMQ.setUri("amqp://zxevpop:pro_123456@192.168.100.245:5672");
         consumerRabbitMQ.setAutoAck(false);
-        consumerRabbitMQ.setMaxThreadNum(50);
+        consumerRabbitMQ.setConsumeThreadNum(50);
         consumerRabbitMQ.setQueueName("queue.test");
         List<MessageQueueListener> listeners = new ArrayList();
         listeners.add(new MessageQueueListener() {
