@@ -8,10 +8,15 @@ public interface MessageQueueProducer {
     int SUCCESS = 0;
     int FAILURE = -1;
 
-    void setUrl(String url);
+    void setUri(String uri);
     void setUsername(String username);
     void setPassword(String password);
     void init();
+
+    /**
+     * 销毁
+     */
+    void destroy();
     /**
      * 生产一个消息
      * @param message 消息对象

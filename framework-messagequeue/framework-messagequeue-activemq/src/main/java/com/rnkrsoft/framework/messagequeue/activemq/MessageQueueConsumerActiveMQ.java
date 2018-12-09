@@ -2,15 +2,16 @@ package com.rnkrsoft.framework.messagequeue.activemq;
 
 import com.rnkrsoft.framework.messagequeue.consumer.AbstractMessageQueueConsumer;
 import com.rnkrsoft.framework.messagequeue.consumer.listener.MessageQueueSelector;
-import com.rnkrsoft.framework.messagequeue.protocol.ConsumerType;
 import com.rnkrsoft.framework.messagequeue.protocol.Message;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.jms.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +21,13 @@ import java.util.List;
 @Slf4j
 public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer implements InitializingBean {
     @Setter
-    String username;
+    String uri;
+    /**
+     * 是否使用自动确认消息
+     */
     @Setter
-    String password;
-    @Setter
-    String url;
+    boolean autoAck = false;
+
     /**
      * 连接工厂
      */
@@ -45,16 +48,27 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
     List<MessageQueueListener> messageQueueListeners;
 
     @Override
-    public int startup(ConsumerType type) {
+    protected void init() {
+        if (uri == null || uri.isEmpty()) {
+            throw ErrorContextFactory.instance()
+                    .message("rabbit consumer is not config uri!")
+                    .solution("please set amqp://zxevpop:pro_123456@192.168.1.2:5672")
+                    .runtimeException();
+        }
         // 实例化连接工厂
-        this.connectionFactory = new ActiveMQConnectionFactory(username, password, url);
         try {
+            this.connectionFactory = new ActiveMQConnectionFactory(new URI(uri));
             this.connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             this.connection.start(); // 启动连接
-            this.session = this.connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE); // 创建Session
+            this.session = this.connection.createSession(Boolean.FALSE, autoAck ? Session.AUTO_ACKNOWLEDGE : Session.CLIENT_ACKNOWLEDGE); // 创建Session
             if (log.isDebugEnabled()) {
                 log.debug("consumer init...");
                 log.debug("listeners {}", listeners.size());
+            }
+            if (messageQueueListeners != null) {
+                for (MessageQueueListener listener : messageQueueListeners) {
+                    registerListener(listener);
+                }
             }
             for (final MessageQueueListener listener : listeners) {
                 List<MessageQueueSelector> selectors = listener.getSelectors();
@@ -72,24 +86,25 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
                                     log.debug("receive message: '{}'", textMessage.getText());
                                 }
                                 message = Message.message(textMessage.getText());
+                                listener.execute(message);
+                                if (!autoAck){
+                                    MessageQueueConsumerActiveMQ.this.session.commit();
+                                }
                             } catch (JMSException e) {
-                               log.error("转换MQ Message发生错误", e);
+                                log.error("转换MQ Message发生错误", e);
                             }
-                            listener.execute(message);
+
                         }
                     });
                 }
             }
-        } catch (JMSException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("activeMQ consumer init happens error!", e);
+            throw ErrorContextFactory.instance()
+                    .message("activeMQ consumer init happens error!")
+                    .solution("检查Rabbit MQ是否已启动")
+                    .runtimeException();
         }
-
-        return SUCCESS;
-    }
-
-    @Override
-    public int startup() {
-        return startup(ConsumerType.HEAD);
     }
 
     @Override
@@ -109,10 +124,6 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (messageQueueListeners != null){
-            for (MessageQueueListener listener : messageQueueListeners){
-                registerListener(listener);
-            }
-        }
+        init();
     }
 }

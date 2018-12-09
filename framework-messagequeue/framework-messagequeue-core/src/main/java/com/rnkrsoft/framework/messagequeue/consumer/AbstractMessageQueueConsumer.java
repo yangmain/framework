@@ -5,6 +5,7 @@ import com.rnkrsoft.framework.messagequeue.annotation.Selector;
 import com.rnkrsoft.framework.messagequeue.annotation.SelectorType;
 import com.rnkrsoft.framework.messagequeue.consumer.listener.MessageQueueListenerWrapper;
 import com.rnkrsoft.framework.messagequeue.consumer.listener.MessageQueueSelector;
+import com.rnkrsoft.framework.messagequeue.protocol.ConsumerType;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueConsumer;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
 
@@ -19,6 +20,22 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
      * 子类遍历该列表
      */
     protected final List<MessageQueueListenerWrapper> listeners = new ArrayList();
+
+    /**
+     * 初始化消费者
+     */
+    protected abstract void init();
+
+    @Override
+    public int startup(ConsumerType type) {
+        init();
+        return 0;
+    }
+
+    @Override
+    public int startup() {
+        return startup(ConsumerType.AUTO);
+    }
 
     @Override
     public int registerListener(MessageQueueListener listener) {
@@ -55,4 +72,6 @@ public abstract class AbstractMessageQueueConsumer implements MessageQueueConsum
         MessageQueueListenerWrapper enhance = new MessageQueueListenerWrapper(listener, whenErrorRequeue, maxTryProcessAge, ack, messageQueueSelectors);
         return enhance;
     }
+
+
 }

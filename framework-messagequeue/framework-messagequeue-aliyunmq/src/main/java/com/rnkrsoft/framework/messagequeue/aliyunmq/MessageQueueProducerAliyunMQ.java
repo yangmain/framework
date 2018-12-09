@@ -19,7 +19,7 @@ import java.util.UUID;
 @Slf4j
 public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
     @Setter
-    String url;
+    String uri;
     @Setter
     String producerId;
     @Setter
@@ -46,9 +46,14 @@ public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
         properties.put(PropertyKeyConst.ProducerId, producerId);// 您在控制台创建的 Producer ID
         properties.put(PropertyKeyConst.AccessKey, accessKey);// AccessKey 阿里云身份验证，在阿里云服务器管理控制台创建
         properties.put(PropertyKeyConst.SecretKey, secretKey);// SecretKey 阿里云身份验证，在阿里云服务器管理控制台创建
-        properties.put(PropertyKeyConst.ONSAddr, url);//此处以公共云生产环境为例
+        properties.put(PropertyKeyConst.ONSAddr, uri);//此处以公共云生产环境为例
         this.producer = ONSFactory.createProducer(properties);
         this.producer.start();
+    }
+
+    @Override
+    public void destroy() {
+        this.producer.shutdown();
     }
 
     @Override

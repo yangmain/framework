@@ -5,6 +5,7 @@ import com.rnkrsoft.framework.messagequeue.consumer.AbstractMessageQueueConsumer
 import com.rnkrsoft.framework.messagequeue.consumer.listener.MessageQueueSelector;
 import com.rnkrsoft.framework.messagequeue.protocol.ConsumerType;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -29,12 +30,13 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer i
     @Setter
     String topic;
     @Setter
-    String url;
+    String uri;
     /**
      * 消费者线程池数
      */
     @Setter
     int consumeThreadNum;
+
     Consumer consumer;
     /**
      * 通过Spring配置进行监听器注册
@@ -71,56 +73,75 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer i
     }
 
     @Override
-    public int startup(ConsumerType type) {
+    protected void init() {
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.AccessKey, accessKey);// AccessKey 阿里云身份验证，在阿里云服务器管理控制台创建
         properties.put(PropertyKeyConst.SecretKey, secretKey);// SecretKey 阿里云身份验证，在阿里云服务器管理控制台创建
-        properties.put(PropertyKeyConst.ONSAddr, url);//此处以公共云生产环境为例
+        properties.put(PropertyKeyConst.ONSAddr, uri);//此处以公共云生产环境为例
         properties.put(PropertyKeyConst.ConsumerId, consumerId);// 您在控制台创建的 Consumer ID
         properties.put(PropertyKeyConst.ConsumeThreadNums, consumeThreadNum);
         if (log.isDebugEnabled()) {
             log.debug("consumer '{}' init...", consumerId);
         }
-        this.consumer = ONSFactory.createConsumer(properties);
-        this.consumer.subscribe(topic, getTag(), new MessageListener() {
-            @Override
-            public Action consume(Message message, ConsumeContext context) {
-                String sessionId = message.getKey();
-                int age = message.getReconsumeTimes();
-                MDC.put("sessionId", sessionId);
-                String json = null;
-                try {
-                    json = new String(message.getBody(), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    log.error("receive message happen error!", e);
+        if (uri == null || uri.isEmpty()) {
+            throw ErrorContextFactory.instance()
+                    .message("AliyunMQ consumer is not config uri!")
+                    .solution("please set http://onsaddr-internal.aliyun.com:8080/rocketmq/nsaddr4client-internal")
+                    .runtimeException();
+        }
+        if (messageQueueListeners == null || messageQueueListeners.isEmpty()) {
+            throw ErrorContextFactory.instance()
+                    .message("AliyunMQ consumer is not config messageQueueListeners!")
+                    .solution("please set message Queue Listeners")
+                    .runtimeException();
+        }
+        try {
+            if (messageQueueListeners != null){
+                for (MessageQueueListener listener : messageQueueListeners){
+                    registerListener(listener);
                 }
-                String routingKey = message.getTag();
-
-                if (log.isDebugEnabled()) {
-                    log.debug("receive message: '{}' routingKey:'{}' age:'{}'", json, routingKey, age);
-                }
-                //topic + tag构成路由关键字
-                MessageQueueListener listener = lookupListener(message.getTag());
-                if (listener == null) {
-                    return Action.ReconsumeLater;
-                }
-                com.rnkrsoft.framework.messagequeue.protocol.Message msg = com.rnkrsoft.framework.messagequeue.protocol.Message.message(json);
-                msg.setAge(age);
-                msg.setCreateDate(message.getBornTimestamp());
-                if (log.isDebugEnabled()) {
-                    log.debug("call listener '{}'", msg);
-                }
-                listener.execute(msg);
-                return Action.CommitMessage;
             }
-        });
-        this.consumer.start();
-        return SUCCESS;
-    }
+            this.consumer = ONSFactory.createConsumer(properties);
+            this.consumer.subscribe(topic, getTag(), new MessageListener() {
+                @Override
+                public Action consume(Message message, ConsumeContext context) {
+                    String sessionId = message.getKey();
+                    int age = message.getReconsumeTimes();
+                    MDC.put("sessionId", sessionId);
+                    String json = null;
+                    try {
+                        json = new String(message.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        log.error("receive message happen error!", e);
+                    }
+                    String routingKey = message.getTag();
 
-    @Override
-    public int startup() {
-        return startup(ConsumerType.HEAD);
+                    if (log.isDebugEnabled()) {
+                        log.debug("receive message: '{}' routingKey:'{}' age:'{}'", json, routingKey, age);
+                    }
+                    //topic + tag构成路由关键字
+                    MessageQueueListener listener = lookupListener(message.getTag());
+                    if (listener == null) {
+                        return Action.ReconsumeLater;
+                    }
+                    com.rnkrsoft.framework.messagequeue.protocol.Message msg = com.rnkrsoft.framework.messagequeue.protocol.Message.message(json);
+                    msg.setAge(age);
+                    msg.setCreateDate(message.getBornTimestamp());
+                    if (log.isDebugEnabled()) {
+                        log.debug("call listener '{}'", msg);
+                    }
+                    listener.execute(msg);
+                    return Action.CommitMessage;
+                }
+            });
+            this.consumer.start();
+        }catch (Exception e){
+            log.error("aliyunMQ consumer init happens error!", e);
+            throw ErrorContextFactory.instance()
+                    .message("aliyunMQ consumer init happens error!")
+                    .solution("检查Rabbit MQ是否已启动")
+                    .runtimeException();
+        }
     }
 
     @Override
@@ -130,10 +151,6 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer i
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (messageQueueListeners != null){
-            for (MessageQueueListener listener : messageQueueListeners){
-                registerListener(listener);
-            }
-        }
+        init();
     }
 }

@@ -25,6 +25,11 @@ public class DemoProducer implements MessageQueueProducer{
     }
 
     @Override
+    public void destroy() {
+
+    }
+
+    @Override
     public int produce(Message message) {
         return SUCCESS;
     }

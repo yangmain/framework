@@ -5,11 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Created by rnkrsoft.com on 2018/5/21.
  * 消息包装类
  */
+@ToString
 public class Message<T> {
     @Getter
     @Setter
@@ -82,6 +84,4 @@ public class Message<T> {
             return (T) object;
         }
     }
-
-
 }

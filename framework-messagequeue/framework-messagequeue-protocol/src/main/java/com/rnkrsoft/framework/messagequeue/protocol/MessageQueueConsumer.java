@@ -7,6 +7,7 @@ package com.rnkrsoft.framework.messagequeue.protocol;
 public interface MessageQueueConsumer {
     int SUCCESS = 0;
     int FAILURE = -1;
+
     /**
      * 注册监听器
      * @param listener 监听器
