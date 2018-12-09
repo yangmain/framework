@@ -23,7 +23,7 @@ public class MessageQueueConsumerAliyunMQTest {
     @Test
     public void testStartup() throws Exception {
         MessageQueueConsumerAliyunMQ consumer = new MessageQueueConsumerAliyunMQ();
-        consumer.setUrl("http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
+        consumer.setUri("http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
         consumer.setAccessKey("LTAI5x0QB7HAnY4T");
         consumer.setSecretKey("NnXaoXaSP32NQc4wwAKJUD4W2qNV0g");
         consumer.setConsumerId("CID_test_evpop");

@@ -11,7 +11,7 @@ public class MessageQueueProducerAliyunMQTest {
     @Test
     public void testInit() throws Exception {
         MessageQueueProducerAliyunMQ producer = new MessageQueueProducerAliyunMQ();
-        producer.setUrl("http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
+        producer.setUri("http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
         producer.setAccessKey("LTAI5x0QB7HAnY4T");
         producer.setSecretKey("NnXaoXaSP32NQc4wwAKJUD4W2qNV0g");
         producer.setProducerId("PID_test_evpop");
