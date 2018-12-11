@@ -2,8 +2,10 @@ package com.rnkrsoft.framework.messagequeue.activemq;
 
 import com.rnkrsoft.framework.messagequeue.producer.AbstractMessageQueueProducer;
 import com.rnkrsoft.framework.messagequeue.protocol.Message;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Data;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -12,6 +14,7 @@ import java.net.URI;
 /**
  * Created by rnkrsoft.com on 2018/5/22.
  */
+@Slf4j
 public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
     @Setter
     String uri;
@@ -45,7 +48,11 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
             this.connection.start(); // 启动连接
             this.session = this.connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE); // 创建Session
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("activeMQ consumer init happens error!", e);
+            throw ErrorContextFactory.instance()
+                    .message("activeMQ consumer init happens error!")
+                    .solution("检查activeMQ是否已启动")
+                    .runtimeException();
         }
     }
 
@@ -55,7 +62,10 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
             this.session.close();
             this.connection.close();
         } catch (JMSException e) {
-            e.printStackTrace();
+            log.error("activeMQ consumer destroy happens error!", e);
+            throw ErrorContextFactory.instance()
+                    .message("activeMQ consumer destroy happens error!")
+                    .runtimeException();
         }
     }
 
@@ -70,7 +80,8 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
             textMessage.setText(message.asJson());
             messageProducer.send(textMessage);
         } catch (JMSException e) {
-            e.printStackTrace();
+            log.error("activeMQ consumer produce happens error!", e);
+            return FAILURE;
         }
         return SUCCESS;
     }

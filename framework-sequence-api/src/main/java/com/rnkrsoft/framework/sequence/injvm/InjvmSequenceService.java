@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InjvmSequenceService implements SequenceService{
     final static Map<String, AtomicInteger> SEQUENCES = new ConcurrentHashMap();
     @Override
-    public int nextval(String schema, String prefix, String sequenceName, String feature) {
+    public long nextval(String schema, String prefix, String sequenceName, String feature) {
         String key = schema + "_" + prefix + "_" + sequenceName + "_" + feature;
         AtomicInteger seq = SEQUENCES.get(key);
         if(seq == null){
@@ -29,7 +29,7 @@ public class InjvmSequenceService implements SequenceService{
     }
 
     @Override
-    public int curval(String schema, String prefix, String sequenceName, String feature) {
+    public long curval(String schema, String prefix, String sequenceName, String feature) {
         String key = schema + "_" + prefix + "_" + sequenceName + "_" + feature;
         AtomicInteger seq = SEQUENCES.get(key);
         if(seq == null){

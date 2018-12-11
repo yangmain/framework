@@ -13,7 +13,7 @@ public interface SequenceService {
      * @param feature 特征，如果固定的则是自增序列，如果是变化特征，则会从0开始自增
      * @return 序号值
      */
-    int nextval(String schema, String prefix, String sequenceName, String feature);
+    long nextval(String schema, String prefix, String sequenceName, String feature);
 
     /**
      * 当前值
@@ -23,5 +23,5 @@ public interface SequenceService {
      * @param feature 特征，如果固定的则是自增序列，如果是变化特征，则会从0开始自增
      * @return 序号值
      */
-    int curval(String schema, String prefix, String sequenceName, String feature);
+    long curval(String schema, String prefix, String sequenceName, String feature);
 }

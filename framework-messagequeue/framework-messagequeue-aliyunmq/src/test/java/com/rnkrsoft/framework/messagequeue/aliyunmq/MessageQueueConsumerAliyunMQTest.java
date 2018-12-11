@@ -24,24 +24,23 @@ public class MessageQueueConsumerAliyunMQTest {
     public void testStartup() throws Exception {
         MessageQueueConsumerAliyunMQ consumer = new MessageQueueConsumerAliyunMQ();
         consumer.setUri("http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
-        consumer.setAccessKey("LTAI5x0QB7HAnY4T");
-        consumer.setSecretKey("NnXaoXaSP32NQc4wwAKJUD4W2qNV0g");
+        consumer.setAccessKey("LTAI4OniOR0rB0N6");
+        consumer.setSecretKey("VPvYdGHyzFfIzrJpf8Kqs8oJoyTUOU");
         consumer.setConsumerId("CID_test_evpop");
-        consumer.setConsumeThreadNum(4);
         consumer.setTopic("test_evpop");
-        consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "MEMBER_LOEIN_EVENT"))) {
+        consumer.setConsumeThreadNum(4);
+        consumer.setMessageQueueListeners(Arrays.<MessageQueueListener>asList(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "MEMBER_LOEIN_EVENT"))) {
             @Override
             public void execute(Message message) {
                 log.info(message.asJson());
                 log.info("age : '{}'",message.getAge());
-                log.info("routingKey: '{}'", message.getRoutingKey());
+                log.info("MEMBER_LOEIN_EVENT: '{}'", message.getRoutingKey());
                 Object object = message.get();
                 System.out.println(object.getClass());
-                com.rnkrsoft.framework.messagequeue.aliyunmq.MessageQueueProducerAliyunMQTest.Bean bean = (com.rnkrsoft.framework.messagequeue.aliyunmq.MessageQueueProducerAliyunMQTest.Bean)object;
+                MessageQueueProducerAliyunMQTest.Bean bean = (MessageQueueProducerAliyunMQTest.Bean)object;
                 System.out.println(bean.getName());
             }
-        });
-        consumer.registerListener(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "register"))) {
+        },new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "register"))) {
             @Override
             public void execute(Message message) {
                 log.info("register user");
@@ -49,8 +48,8 @@ public class MessageQueueConsumerAliyunMQTest {
                 log.info("age : '{}'",message.getAge());
                 log.info("routingKey: '{}'", message.getRoutingKey());
             }
-        });
-        consumer.startup();
+        }));
+        consumer.afterPropertiesSet();
         Thread.sleep(600 * 1000);
     }
 }

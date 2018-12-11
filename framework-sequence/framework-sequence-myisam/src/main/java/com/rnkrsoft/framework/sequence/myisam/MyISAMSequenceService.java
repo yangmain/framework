@@ -30,7 +30,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware ,
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public int nextval(String schema, String prefix, final String sequenceName, final String feature) {
+    public long nextval(String schema, String prefix, final String sequenceName, final String feature) {
         if (jdbcTemplate == null) {
             this.jdbcTemplate = new JdbcTemplate(dataSource);
         }
@@ -74,7 +74,7 @@ public class MyISAMSequenceService implements SequenceService, DataSourceAware ,
     }
 
     @Override
-    public int curval(String schema, String prefix, String sequenceName, String feature) {
+    public long curval(String schema, String prefix, String sequenceName, String feature) {
         if (jdbcTemplate == null) {
             DataSource dataSource = SpringContextHelper.getBean("defaultDataSource");
             this.jdbcTemplate = new JdbcTemplate(dataSource);

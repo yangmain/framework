@@ -97,7 +97,7 @@ public class ExpressionHelper {
     public static String value(Token token, ExpressionContext ctx) {
         if (token.type == ExpressionType.SEQ) {
             SequenceService sequenceService = SequenceServiceFactory.instance(ctx.getSequenceClassName());
-            int val = sequenceService.nextval(ctx.getSchema(), ctx.getPrefix(), ctx.getSequenceName(), ctx.getFeature());
+            long val = sequenceService.nextval(ctx.getSchema(), ctx.getPrefix(), ctx.getSequenceName(), ctx.getFeature());
             return StringUtils.fill(String.valueOf(val), true, '0', token.length);
         } else if (token.type == ExpressionType.RANDOM) {
             int bit = new Random(System.nanoTime()).nextInt(token.length);

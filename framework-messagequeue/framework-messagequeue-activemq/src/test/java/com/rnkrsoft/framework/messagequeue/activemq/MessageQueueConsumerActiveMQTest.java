@@ -29,7 +29,7 @@ public class MessageQueueConsumerActiveMQTest {
         consumer.setMessageQueueListeners(Arrays.<MessageQueueListener>asList(new MessageQueueListener() {
             @Override
             public List<MessageQueueSelector> getSelectors() {
-                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "FirstQueue"));
+                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "FirstQueue?customer.prefetchSize=100"));
             }
 
             @Override

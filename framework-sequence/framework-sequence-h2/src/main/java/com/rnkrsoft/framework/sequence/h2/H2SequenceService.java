@@ -8,12 +8,12 @@ import com.rnkrsoft.framework.sequence.SequenceService;
  */
 public class H2SequenceService implements SequenceService{
     @Override
-    public int nextval(String schema, String prefix, String sequenceName, String feature) {
+    public long nextval(String schema, String prefix, String sequenceName, String feature) {
         return 0;
     }
 
     @Override
-    public int curval(String schema, String prefix, String sequenceName, String feature) {
+    public long curval(String schema, String prefix, String sequenceName, String feature) {
         return 0;
     }
 }

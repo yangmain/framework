@@ -113,7 +113,7 @@ public class PrimaryKeyHelper {
                 public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
                     Object primaryKey = null;
                     if (primaryKeyMetadata.getJavaType() == String.class) {
-                        Integer seqNo = null;
+                        Long seqNo = null;
                         try {
                             seqNo = sequenceService.nextval(schema, tableMetadata.getPrefix(), tableName, seqFeature);
                         } catch (Exception e) {
@@ -127,13 +127,13 @@ public class PrimaryKeyHelper {
                         }
                         if (feature == null) {
                             if (primaryKeyMetadata.getJavaType() == String.class) {
-                                primaryKey = StringUtils.fill(Integer.toString(seqNo), true, '0', 5);
+                                primaryKey = StringUtils.fill(Long.toString(seqNo), true, '0', 5);
                             } else {
                                 primaryKey = seqNo;
                             }
 
                         } else if (feature.equals(PrimaryKeyFeatureConstant.YYYY_MM_DD_HH_MM_SS_SSS_SEQUEUE5)) {
-                            primaryKey = seqFeature + StringUtils.fill(Integer.toString(seqNo), true, '0', 5);
+                            primaryKey = seqFeature + StringUtils.fill(Long.toString(seqNo), true, '0', 5);
                         }
                     } else if (primaryKeyMetadata.getJavaType() == Integer.class || primaryKeyMetadata.getJavaType() == Integer.TYPE) {
                         try {

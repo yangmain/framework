@@ -55,8 +55,8 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
     protected void init() {
         if (uri == null || uri.isEmpty()) {
             throw ErrorContextFactory.instance()
-                    .message("rabbit consumer is not config uri!")
-                    .solution("please set amqp://zxevpop:pro_123456@192.168.1.2:5672")
+                    .message("activeMQ consumer is not config uri!")
+                    .solution("please set activeMQ uri")
                     .runtimeException();
         }
         // 实例化连接工厂
@@ -106,7 +106,7 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
             log.error("activeMQ consumer init happens error!", e);
             throw ErrorContextFactory.instance()
                     .message("activeMQ consumer init happens error!")
-                    .solution("检查Rabbit MQ是否已启动")
+                    .solution("检查activeMQ是否已启动")
                     .runtimeException();
         }
     }
