@@ -23,7 +23,7 @@ public class RedisSequenceService implements SequenceService {
     @Setter
     int database = Protocol.DEFAULT_DATABASE;
     @Setter
-    int timeout = 30;
+    int timeout = Protocol.DEFAULT_TIMEOUT;
     @Setter
     String password;
     protected Pool<Jedis> connectionPool = null;
