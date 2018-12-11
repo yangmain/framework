@@ -49,6 +49,11 @@
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-sequence-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-config-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -118,6 +123,7 @@
                                     <include>com.rnkrsoft.framework:framework-orm-mongo</include>
                                     <include>com.rnkrsoft.framework:framework-sequence-api</include>
                                     <include>com.rnkrsoft.framework:framework-sequence-myisam</include>
+                                    <include>com.rnkrsoft.framework:framework-sequence-redis</include>
                                     <include>com.rnkrsoft.framework:framework-config-protocol</include>
                                     <include>com.rnkrsoft.framework:framework-config-client</include>
                                     <include>com.rnkrsoft.framework:framework-config-spring</include>
