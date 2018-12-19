@@ -71,6 +71,10 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
             ConnectionFactory factory = new ConnectionFactory();
             //设置RabbitMQ地址
             factory.setUri(uri);
+            //设置网络异常重连
+            factory.setAutomaticRecoveryEnabled(true);
+            //设置 没10s ，重试一次
+            factory.setNetworkRecoveryInterval(10000);
             //创建一个新的连接
             connection = factory.newConnection(Executors.newFixedThreadPool(consumeThreadNum));
             //创建一个通道

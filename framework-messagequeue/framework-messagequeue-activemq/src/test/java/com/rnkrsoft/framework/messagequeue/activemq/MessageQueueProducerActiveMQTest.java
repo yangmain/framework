@@ -16,7 +16,8 @@ public class MessageQueueProducerActiveMQTest {
     @Test
     public void testProduce() throws Exception {
         MessageQueueProducer producer = new MessageQueueProducerActiveMQ();
-        producer.setUri("tcp://221.5.140.21:6161");
+//        producer.setUri("tcp://221.5.140.21:6161");
+        producer.setUri("failover:(tcp://221.5.140.21:6161)?Randomize=false");
         producer.setUsername(ActiveMQConnection.DEFAULT_USER);
         producer.setPassword(ActiveMQConnection.DEFAULT_PASSWORD);
         producer.init();

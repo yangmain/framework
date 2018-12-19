@@ -46,6 +46,10 @@ public class MessageQueueProducerRabbitMQ extends AbstractMessageQueueProducer i
             //设置RabbitMQ地址
             //amqp://username:password@localhost:5671
             factory.setUri(uri);
+            //设置网络异常重连
+            factory.setAutomaticRecoveryEnabled(true);
+            //设置 没10s ，重试一次
+            factory.setNetworkRecoveryInterval(10 * 1000);
             //创建一个新的连接
             connection = factory.newConnection();
             //创建一个通道
