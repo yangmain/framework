@@ -22,7 +22,6 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
      */
     @Setter
     boolean autoAck = false;
-    boolean
 
     Connection connection = null; // 连接
 
@@ -67,7 +66,7 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
             session = this.connection.createSession(Boolean.FALSE, autoAck ? Session.AUTO_ACKNOWLEDGE : Session.CLIENT_ACKNOWLEDGE); // 创建Session
             destination = session.createTopic(message.getRoutingKey()); // 创建消息队列
             messageProducer = session.createProducer(destination); // 创建消息生产者
-            messageProducer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+            messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
             TextMessage textMessage = session.createTextMessage();
             textMessage.setText(message.asJson());
             messageProducer.send(textMessage);
