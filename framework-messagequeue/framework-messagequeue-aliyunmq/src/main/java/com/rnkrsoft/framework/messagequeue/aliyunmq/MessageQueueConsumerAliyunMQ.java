@@ -139,7 +139,7 @@ public class MessageQueueConsumerAliyunMQ extends AbstractMessageQueueConsumer i
             log.error("aliyunMQ consumer init happens error!", e);
             throw ErrorContextFactory.instance()
                     .message("aliyunMQ consumer init happens error!")
-                    .solution("检查Rabbit MQ是否已启动")
+                    .solution("检查Aliyun MQ是否已启动")
                     .runtimeException();
         }
     }

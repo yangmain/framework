@@ -68,7 +68,7 @@ public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
             this.producer.send(msg);
             return SUCCESS;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("send message happen error!", e);
             return FAILURE;
         }
 

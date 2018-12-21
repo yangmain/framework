@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-config</artifactId>
-        <version>1.0.1-beta10</version>
+        <version>1.0.1-beta11</version>
     </parent>
     <artifactId>framework-config-client</artifactId>
     <name>framework-config-client</name>

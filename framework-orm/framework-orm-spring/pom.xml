@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.1-beta10</version>
+        <version>1.0.1-beta11</version>
     </parent>
     <artifactId>framework-orm-spring</artifactId>
     <name>framework-orm-spring</name>
