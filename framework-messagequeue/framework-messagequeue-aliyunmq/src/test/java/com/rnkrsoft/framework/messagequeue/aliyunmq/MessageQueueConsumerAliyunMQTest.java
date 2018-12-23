@@ -24,9 +24,9 @@ public class MessageQueueConsumerAliyunMQTest {
     public void testStartup() throws Exception {
         MessageQueueConsumerAliyunMQ consumer = new MessageQueueConsumerAliyunMQ();
         consumer.setUri("http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
-        consumer.setAccessKey("LTAIKDX2i8zh3ePu");
-        consumer.setSecretKey("8pNr17TsrrVKmgw2jzlpXuAS62gzHf");
-        consumer.setConsumerId("CID_test_evpop");
+        consumer.setAccessKey("LTAI4EbPym0G5KV3");
+        consumer.setSecretKey("9ykQFhFnOKmHRINWSWxpBlpv1RuQ1t");
+        consumer.setConsumerId("CID_LOGIN_EVENT");
         consumer.setTopic("test_evpop");
         consumer.setConsumeThreadNum(4);
         consumer.setMessageQueueListeners(Arrays.<MessageQueueListener>asList(new AbstractMessageQueueListener(Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "MEMBER_LOEIN_EVENT"))) {
