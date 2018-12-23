@@ -64,7 +64,7 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
             this.connectionFactory = new ActiveMQConnectionFactory(username, password, new URI(uri));
             this.connection = connectionFactory.createConnection(); // 通过连接工厂获取连接
             this.connection.start(); // 启动连接
-            this.session = this.connection.createSession(Boolean.FALSE, autoAck ? Session.AUTO_ACKNOWLEDGE : Session.CLIENT_ACKNOWLEDGE); // 创建Session
+            this.session = this.connection.createSession(Boolean.TRUE, autoAck ? Session.AUTO_ACKNOWLEDGE : Session.CLIENT_ACKNOWLEDGE); // 创建Session
             if (log.isDebugEnabled()) {
                 log.debug("consumer init...");
                 log.debug("listeners {}", listeners.size());
@@ -91,11 +91,11 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
                                 }
                                 message = Message.message(textMessage.getText());
                                 listener.execute(message);
-                                if (!autoAck){
+                                if (MessageQueueConsumerActiveMQ.this.session.getAcknowledgeMode() == Session.CLIENT_ACKNOWLEDGE){
                                     MessageQueueConsumerActiveMQ.this.session.commit();
                                 }
-                            } catch (JMSException e) {
-                                log.error("转换MQ Message发生错误", e);
+                            } catch (Exception e) {
+                                log.error("consume message happens error", e);
                             }
 
                         }
@@ -107,8 +107,10 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
             throw ErrorContextFactory.instance()
                     .message("activeMQ consumer init happens error!")
                     .solution("检查activeMQ是否已启动")
+                    .cause(e)
                     .runtimeException();
         }
+        log.info("init activeMQ consumer finished!");
     }
 
     @Override

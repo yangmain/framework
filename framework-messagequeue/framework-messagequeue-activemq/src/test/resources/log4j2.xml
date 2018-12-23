@@ -13,38 +13,8 @@
     </appenders>
 
     <loggers>
-        <AsyncRoot level="debug">
+        <AsyncRoot level="info">
             <appender-ref ref="Console"/>
         </AsyncRoot>
-        <!--
-            additivity开启的话，由于这个logger也是满足root的，所以会被打印两遍。
-            -->
-        <logger name="org.springframework" level="info" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="com.rnkrsoft.framework" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="log4jdbc" level="info" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="jdbc.audit" level="off" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="jdbc.sqlonly" level="off" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="jdbc.sqltiming" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="jdbc.connection" level="off" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="jdbc.resultset" level="off" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="jdbc.resultsettable" level="debug" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
     </loggers>
 </configuration>

@@ -43,6 +43,7 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
                     .solution("检查activeMQ是否已启动")
                     .runtimeException();
         }
+        log.info("init activeMQ producer finished!");
     }
 
     @Override
@@ -50,9 +51,9 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
         try {
             this.connection.close();
         } catch (JMSException e) {
-            log.error("activeMQ consumer destroy happens error!", e);
+            log.error("activeMQ producer destroy happens error!", e);
             throw ErrorContextFactory.instance()
-                    .message("activeMQ consumer destroy happens error!")
+                    .message("activeMQ producer destroy happens error!")
                     .runtimeException();
         }
     }
@@ -71,16 +72,16 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
             textMessage.setText(message.asJson());
             messageProducer.send(textMessage);
         } catch (JMSException e) {
-            log.error("activeMQ consumer produce happens error!", e);
+            log.error("activeMQ producer happens error!", e);
             return FAILURE;
         } finally {
             if (session != null) {
                 try {
                     session.close();
                 } catch (JMSException e) {
-                    log.error("activeMQ consumer close session happens error!", e);
+                    log.error("activeMQ producer close session happens error!", e);
                     throw ErrorContextFactory.instance()
-                            .message("activeMQ consumer close session happens error!")
+                            .message("activeMQ producer close session happens error!")
                             .runtimeException();
                 }
             }

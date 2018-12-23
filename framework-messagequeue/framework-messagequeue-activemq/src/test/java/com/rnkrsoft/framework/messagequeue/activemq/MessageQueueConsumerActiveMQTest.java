@@ -23,25 +23,33 @@ public class MessageQueueConsumerActiveMQTest {
     @Test
     public void testStartup() throws Exception {
         MessageQueueConsumerActiveMQ consumer = new MessageQueueConsumerActiveMQ();
-        consumer.setUri("tcp://221.5.140.21:6161");
+        consumer.setUri("failover:(tcp://221.5.140.21:6161)?Randomize=false");
         consumer.setUsername(ActiveMQConnection.DEFAULT_USER);
         consumer.setPassword(ActiveMQConnection.DEFAULT_PASSWORD);
+        consumer.setAutoAck(true);
         consumer.setMessageQueueListeners(Arrays.<MessageQueueListener>asList(new MessageQueueListener() {
             @Override
             public List<MessageQueueSelector> getSelectors() {
-                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "FirstQueue?customer.prefetchSize=100"));
+                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "test.routingkey"));
             }
 
             @Override
             public void execute(Message message) {
                 log.debug("----------" +message.get());
                 MessageQueueProducerActiveMQTest.Bean bean = (MessageQueueProducerActiveMQTest.Bean)message.get();
-                log.debug("name:{}" ,bean.getName());
-                log.debug("age:{}",bean.getAge());
+                log.info("name:{}", bean.getName());
+                log.info("age:{}", bean.getAge());
+                if (bean.getAge() % 3 ==0){
+                    throw new RuntimeException();
+                }
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }));
         consumer.afterPropertiesSet();
-        consumer.startup();
-        Thread.sleep(60 * 1000);
+        Thread.sleep(600 * 1000);
     }
 }
