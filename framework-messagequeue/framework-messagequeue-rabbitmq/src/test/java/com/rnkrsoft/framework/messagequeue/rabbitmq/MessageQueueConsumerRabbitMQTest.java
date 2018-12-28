@@ -20,20 +20,22 @@ public class MessageQueueConsumerRabbitMQTest {
     @Test
     public void testInit() throws Exception {
         MessageQueueConsumerRabbitMQ consumerRabbitMQ = new MessageQueueConsumerRabbitMQ();
-        consumerRabbitMQ.setUri("amqp://zxevpop:pro_123456@192.168.100.245:5672");
-        consumerRabbitMQ.setAutoAck(false);
+        consumerRabbitMQ.setUri("amqp://zxevpop:pro_123456@221.5.140.21:5672");
+        consumerRabbitMQ.setAutoAck(true);
+        consumerRabbitMQ.setUseNio(false);
         consumerRabbitMQ.setConsumeThreadNum(50);
-        consumerRabbitMQ.setQueueName("queue.test");
+        consumerRabbitMQ.setQueueName("evpop_queue");
         List<MessageQueueListener> listeners = new ArrayList();
-        listeners.add(new MessageQueueListener() {
+        listeners.add(new MessageQueueListener<MessageQueueProducerRabbitMQTest.Bean>() {
             @Override
             public List<MessageQueueSelector> getSelectors() {
-                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "test.routingkey"));
+                return Arrays.asList(new MessageQueueSelector(SelectorType.fusing, "USER_LOGIN_EVENT"));
             }
 
             @Override
-            public void execute(Message message) {
+            public void execute(Message<MessageQueueProducerRabbitMQTest.Bean> message) {
                 System.out.println(Thread.currentThread().getName() + ":" + message);
+                throw new RuntimeException();
             }
         });
         consumerRabbitMQ.setMessageQueueListeners(listeners);

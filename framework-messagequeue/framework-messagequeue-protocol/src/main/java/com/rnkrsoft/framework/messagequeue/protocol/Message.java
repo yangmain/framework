@@ -77,7 +77,11 @@ public class Message<T> {
             try {
                 clazz = Class.forName(className);
             } catch (ClassNotFoundException e) {
-                throw ErrorContextFactory.instance().cause(e).runtimeException();
+                throw ErrorContextFactory.instance()
+                        .message("消息对应的类对象‘{}’不存在", className)
+                        .solution("请确认所在项目是否存在类'{}'", className)
+                        .cause(e)
+                        .runtimeException();
             }
             Object object = GSON.fromJson(json, clazz);
             this.value = (T) object;

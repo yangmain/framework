@@ -19,7 +19,6 @@ import java.util.concurrent.TimeoutException;
  */
 @Slf4j
 public class MessageQueueProducerRabbitMQ extends AbstractMessageQueueProducer implements InitializingBean {
-    Channel channel;
     Connection connection;
 
     @Setter
@@ -30,12 +29,18 @@ public class MessageQueueProducerRabbitMQ extends AbstractMessageQueueProducer i
 
     @Override
     public void setUsername(String username) {
-        throw ErrorContextFactory.instance().message("不支持").runtimeException();
+        throw ErrorContextFactory.instance()
+                .message("rabbitmq consumer is not supported username!")
+                .solution("please set amqp://username:password@localhost:5672")
+                .runtimeException();
     }
 
     @Override
     public void setPassword(String password) {
-        throw ErrorContextFactory.instance().message("不支持").runtimeException();
+        throw ErrorContextFactory.instance()
+                .message("rabbitmq consumer is not supported password!")
+                .solution("please set amqp://username:password@localhost:5672")
+                .runtimeException();
     }
 
     @Override
@@ -52,35 +57,6 @@ public class MessageQueueProducerRabbitMQ extends AbstractMessageQueueProducer i
             factory.setNetworkRecoveryInterval(10 * 1000);
             //创建一个新的连接
             connection = factory.newConnection();
-            //创建一个通道
-            channel = connection.createChannel();
-            try {
-                //检测交换区是否存在
-                channel.exchangeDeclarePassive(exchangeName);
-            } catch (Exception e) {
-                if (e instanceof ShutdownSignalException) {
-                    ShutdownSignalException shutdownSignalException = (ShutdownSignalException) e;
-                    if (shutdownSignalException.getMessage().contains("reply-code=404")) {
-                        log.error("rabbit producer init happens error!", e);
-                        throw ErrorContextFactory.instance()
-                                .message("rabbit producer init happens error!")
-                                .solution("检查Rabbit MQ是否已启动")
-                                .runtimeException();
-                    } else {
-                        log.error("rabbit producer init happens error!", e);
-                        throw ErrorContextFactory.instance()
-                                .message("rabbit producer init happens error!")
-                                .solution("检查Rabbit MQ是否已启动")
-                                .runtimeException();
-                    }
-                } else {
-                    log.error("rabbit producer init happens error!", e);
-                    throw ErrorContextFactory.instance()
-                            .message("rabbit producer init happens error!")
-                            .solution("检查Rabbit MQ是否已启动")
-                            .runtimeException();
-                }
-            }
         } catch (Exception e) {
             log.error("rabbit producer init happens error!", e);
             throw ErrorContextFactory.instance()
@@ -94,32 +70,61 @@ public class MessageQueueProducerRabbitMQ extends AbstractMessageQueueProducer i
     @Override
     public void destroy() {
         try {
-            channel.close();
             connection.close();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public int produce(Message message) {
+        //创建一个通道
+       Channel channel = null;
         try {
+            channel = connection.createChannel();
+            //检测交换区是否存在
+            channel.exchangeDeclarePassive(exchangeName);
             //发送消息到队列中
             channel.basicPublish(exchangeName, message.getRoutingKey(), null, message.asJson().getBytes("UTF-8"));
         } catch (Exception e) {
-            log.error("rabbit producer publish message  happens error!", e);
-            throw ErrorContextFactory.instance()
-                    .message("rabbit producer publish message  happens error!")
-                    .solution("检查Rabbit MQ是否已启动")
-                    .runtimeException();
+            if (e instanceof ShutdownSignalException) {
+                ShutdownSignalException shutdownSignalException = (ShutdownSignalException) e;
+                if (shutdownSignalException.getMessage().contains("reply-code=404")) {
+                    throw ErrorContextFactory.instance()
+                            .message("rabbitmq exchange is not defined!")
+                            .solution("在服务器端定义交换区'{}'", exchangeName)
+                            .cause(e)
+                            .runtimeException();
+                } else {
+                    throw ErrorContextFactory.instance()
+                            .message("rabbitmq producer happens error!")
+                            .solution("检查rabbitmq相关配置")
+                            .cause(e)
+                            .runtimeException();
+                }
+            } else {
+                throw ErrorContextFactory.instance()
+                        .message("rabbitmq producer happens error!")
+                        .solution("检查rabbitmq相关配置")
+                        .cause(e)
+                        .runtimeException();
+            }
+        }finally {
+            if (channel != null){
+                try {
+                    channel.close();
+                } catch (Exception e) {
+                    log.warn("close channel happens error!", e);
+                }
+            }
         }
         return SUCCESS;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        ErrorContextFactory.instance().reset();
         init();
+        ErrorContextFactory.instance().reset();
     }
 }

@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ShutdownSignalException;
+import com.rabbitmq.client.impl.nio.NioParams;
 import com.rnkrsoft.framework.messagequeue.consumer.AbstractMessageQueueConsumer;
 import com.rnkrsoft.framework.messagequeue.protocol.MessageQueueListener;
 import com.rnkrsoft.logtrace4j.ErrorContextFactory;
@@ -27,6 +28,9 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
     @Setter
     boolean autoAck = false;
 
+    @Setter
+    boolean useNio = false;
+
     Connection connection;
 
     Channel channel;
@@ -47,19 +51,19 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
     protected void init() {
         if (uri == null || uri.isEmpty()) {
             throw ErrorContextFactory.instance()
-                    .message("rabbit consumer is not config uri!")
-                    .solution("please set amqp://zxevpop:pro_123456@192.168.1.2:5672")
+                    .message("rabbitmq consumer is not config uri!")
+                    .solution("please set amqp://username:password@localhost:5672")
                     .runtimeException();
         }
         if (queueName == null || queueName.isEmpty()) {
             throw ErrorContextFactory.instance()
-                    .message("rabbit consumer is not config queue name!")
+                    .message("rabbitmq consumer is not config queue name!")
                     .solution("please set queue name")
                     .runtimeException();
         }
         if (messageQueueListeners == null || messageQueueListeners.isEmpty()) {
             throw ErrorContextFactory.instance()
-                    .message("rabbit consumer is not config messageQueueListeners!")
+                    .message("rabbitmq consumer is not config messageQueueListeners!")
                     .solution("please set message Queue Listeners")
                     .runtimeException();
         }
@@ -73,17 +77,21 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
             factory.setUri(uri);
             //设置网络异常重连
             factory.setAutomaticRecoveryEnabled(true);
-            //设置 没10s ，重试一次
+            //设置 10s ，重试一次
             factory.setNetworkRecoveryInterval(10000);
+            if (useNio) {
+                factory.useNio();
+                factory.setNioParams(new NioParams().setNbIoThreads(4));
+            }
             //创建一个新的连接
             connection = factory.newConnection(Executors.newFixedThreadPool(consumeThreadNum));
             //创建一个通道
             channel = connection.createChannel();
         } catch (Exception e) {
-            log.error("rabbit consumer init happens error!", e);
             throw ErrorContextFactory.instance()
-                    .message("rabbit consumer init happens error!")
+                    .message("rabbitmq consumer init happens error!")
                     .solution("检查Rabbit MQ是否已启动")
+                    .cause(e)
                     .runtimeException();
         }
         if (log.isDebugEnabled()) {
@@ -95,23 +103,23 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
             if (e.getCause() instanceof ShutdownSignalException) {
                 ShutdownSignalException shutdownSignalException = (ShutdownSignalException) e.getCause();
                 if (shutdownSignalException.getMessage().contains("reply-code=404")) {
-                    log.error("rabbit queue is not exists!", e);
                     throw ErrorContextFactory.instance()
-                            .message("rabbit queue is not exists!")
+                            .message("rabbitmq queue '{}' is not exists!", queueName)
                             .solution("确认MQ是否定义了队列 {}", queueName)
+                            .cause(e)
                             .runtimeException();
                 } else {
-                    log.error("rabbit producer init happens error!", e);
                     throw ErrorContextFactory.instance()
-                            .message("rabbit producer init happens error!")
+                            .message("rabbitmq consume init happens error!")
                             .solution("检查Rabbit MQ是否已启动")
+                            .cause(e)
                             .runtimeException();
                 }
             } else {
-                log.error("rabbit producer init happens error!", e);
                 throw ErrorContextFactory.instance()
-                        .message("rabbit producer init happens error!")
+                        .message("rabbitmq consume happens error!")
                         .solution("检查Rabbit MQ是否已启动")
+                        .cause(e)
                         .runtimeException();
             }
         }
@@ -121,29 +129,29 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
         try {
             //每次从队列获取的数量
             channel.basicQos(1);
-            //启用ACK事务 autoack 为真，表示无事务
-            channel.basicConsume(queueName, autoAck, new MessageQueueConsumer(channel, autoAck, listeners));
+            //启用ACK事务 autoAck 为真，表示无事务
+            channel.basicConsume(queueName, autoAck, new RabbitMQConsumeCallback(channel, autoAck, listeners));
         } catch (Exception e) {
             if (e.getCause() instanceof ShutdownSignalException) {
                 ShutdownSignalException shutdownSignalException = (ShutdownSignalException) e.getCause();
                 if (shutdownSignalException.getMessage().contains("reply-code=404")) {
-                    log.error("rabbit queue is not exists!", e);
                     throw ErrorContextFactory.instance()
-                            .message("rabbit queue is not exists!")
+                            .message("rabbitmq queue '{}' is not exists!", queueName)
                             .solution("确认MQ是否定义了队列 {}", queueName)
+                            .cause(e)
                             .runtimeException();
                 } else {
-                    log.error("rabbit producer init happens error!", e);
                     throw ErrorContextFactory.instance()
-                            .message("rabbit producer init happens error!")
+                            .message("rabbitmq consume happens error!")
                             .solution("检查Rabbit MQ是否已启动")
+                            .cause(e)
                             .runtimeException();
                 }
             }
-            log.error("rabbit consumer init happens error!", e);
             throw ErrorContextFactory.instance()
-                    .message("rabbit consumer init happens error!")
+                    .message("rabbit consumer happens error!")
                     .solution("检查Rabbit MQ是否已启动")
+                    .cause(e)
                     .runtimeException();
         }
     }
@@ -155,13 +163,15 @@ public class MessageQueueConsumerRabbitMQ extends AbstractMessageQueueConsumer i
             channel.close();
             connection.close();
         } catch (Exception e) {
-
+            log.warn("shutdown rabbitmq happens error!", e);
         }
         return SUCCESS;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        ErrorContextFactory.instance().reset();
         startup();
+        ErrorContextFactory.instance().reset();
     }
 }

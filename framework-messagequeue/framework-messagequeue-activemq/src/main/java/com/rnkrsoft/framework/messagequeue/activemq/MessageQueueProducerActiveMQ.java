@@ -6,6 +6,7 @@ import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import javax.jms.*;
 import java.net.URI;
@@ -14,7 +15,7 @@ import java.net.URI;
  * Created by rnkrsoft.com on 2018/5/22.
  */
 @Slf4j
-public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
+public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer implements InitializingBean{
     @Setter
     String uri;
     /**
@@ -87,5 +88,12 @@ public class MessageQueueProducerActiveMQ extends AbstractMessageQueueProducer {
             }
         }
         return SUCCESS;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        ErrorContextFactory.instance().reset();
+        init();
+        ErrorContextFactory.instance().reset();
     }
 }

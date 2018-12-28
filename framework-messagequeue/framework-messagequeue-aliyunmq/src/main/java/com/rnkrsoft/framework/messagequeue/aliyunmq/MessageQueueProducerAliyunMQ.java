@@ -5,9 +5,11 @@ import com.aliyun.openservices.ons.api.Producer;
 import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.rnkrsoft.framework.messagequeue.producer.AbstractMessageQueueProducer;
 import com.rnkrsoft.framework.messagequeue.protocol.Message;
+import com.rnkrsoft.logtrace4j.ErrorContextFactory;
 import lombok.Data;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
@@ -17,7 +19,7 @@ import java.util.UUID;
  * Created by rnkrsoft.com on 2018/5/22.
  */
 @Slf4j
-public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
+public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer implements InitializingBean{
     @Setter
     String uri;
     @Setter
@@ -72,5 +74,12 @@ public class MessageQueueProducerAliyunMQ extends AbstractMessageQueueProducer {
             return FAILURE;
         }
 
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        ErrorContextFactory.instance().reset();
+        init();
+        ErrorContextFactory.instance().reset();
     }
 }

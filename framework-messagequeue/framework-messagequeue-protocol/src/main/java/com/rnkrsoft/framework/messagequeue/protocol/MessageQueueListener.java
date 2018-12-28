@@ -10,6 +10,10 @@ import java.util.List;
  * 消息队列监听器
  */
 public interface MessageQueueListener<T> {
+    /**
+     * 获取监听器对应的选择器列表
+     * @return
+     */
     List<MessageQueueSelector> getSelectors();
     /**
      * 执行监听器处理消息对象

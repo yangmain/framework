@@ -130,6 +130,8 @@ public class MessageQueueConsumerActiveMQ extends AbstractMessageQueueConsumer i
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        ErrorContextFactory.instance().reset();
         init();
+        ErrorContextFactory.instance().reset();
     }
 }

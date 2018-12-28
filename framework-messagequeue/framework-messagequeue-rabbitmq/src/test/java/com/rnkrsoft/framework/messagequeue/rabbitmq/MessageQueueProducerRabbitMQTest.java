@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public class MessageQueueProducerRabbitMQTest {
 
-    @com.rnkrsoft.framework.messagequeue.annotation.Message(routingKey = "test.routingkey")
+    @com.rnkrsoft.framework.messagequeue.annotation.Message(routingKey = "USER_LOGIN_EVENT")
     public static class Bean {
         String name;
         int age;
@@ -33,11 +33,11 @@ public class MessageQueueProducerRabbitMQTest {
     @Test
     public void testProduce() throws Exception {
         MessageQueueProducerRabbitMQ messageQueueProducerRabbitMQ = new MessageQueueProducerRabbitMQ();
-        messageQueueProducerRabbitMQ.setUri("amqp://zxevpop:pro_123456@192.168.100.245:5672");
-        messageQueueProducerRabbitMQ.setExchangeName("framework.test");
+        messageQueueProducerRabbitMQ.setUri("amqp://zxevpop:pro_123456@221.5.140.21:5672");
+        messageQueueProducerRabbitMQ.setExchangeName("evpop");
         messageQueueProducerRabbitMQ.init();
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 1000; i++) {
             Bean bean1 = new Bean(UUID.randomUUID().toString(), i);
             try {
                 messageQueueProducerRabbitMQ.produce(bean1);
