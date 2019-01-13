@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-sequence</artifactId>
-        <version>1.0.0-beta12</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>framework-sequence-h2</artifactId>
     <name>framework-sequence-h2</name>

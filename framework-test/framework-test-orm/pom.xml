@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-test</artifactId>
-        <version>1.0.0-beta12</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>framework-test-orm</artifactId>
     <name>framework-test-orm</name>
@@ -27,27 +27,17 @@
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-annotation-orm</artifactId>
+            <artifactId>framework-standalone</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-annotation-test</artifactId>
+            <artifactId>framework-test-annotation</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-test-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-orm-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-orm-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

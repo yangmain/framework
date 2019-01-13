@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-sequence</artifactId>
-        <version>1.0.0-beta12</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>framework-sequence-myisam</artifactId>
     <name>framework-sequence-myisam</name>
@@ -17,9 +17,8 @@
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-test-orm</artifactId>
+            <artifactId>framework-orm-entity</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>

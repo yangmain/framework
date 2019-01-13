@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.0-beta12</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>framework-orm-entity</artifactId>
     <name>framework-orm-entity</name>
@@ -14,12 +14,6 @@
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-orm-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-annotation-test</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

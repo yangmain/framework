@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-monitor</artifactId>
-        <version>1.0.0-beta12</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>framework-monitor-boot-starter</artifactId>
     <name>framework-monitor-boot-starter</name>
