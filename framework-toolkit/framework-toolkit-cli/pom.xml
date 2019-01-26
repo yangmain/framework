@@ -61,7 +61,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.rnkrsoft.framework.toolkit.Main</mainClass>
+                        <mainClass>com.rnkrsoft.framework.toolkit.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
