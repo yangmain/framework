@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DataSourceLookup {
+    static String globalDataSource = null;
     static ThreadLocal<String> currentDataSource = new ThreadLocal();
     public static final String H2_DATASOURCE = "h2DataSource";
     public static final String MYSQL_DATASOURCE = "mysqlDataSource";

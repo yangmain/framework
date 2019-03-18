@@ -1,10 +1,10 @@
 package com.rnkrsoft.framework.test.config;
 
+import com.rnkrsoft.framework.orm.config.ItemConfig;
+import com.rnkrsoft.framework.orm.config.OrmConfig;
 import com.rnkrsoft.framework.orm.jdbc.DatabaseType;
 import com.rnkrsoft.framework.orm.jdbc.NameMode;
 import com.rnkrsoft.framework.orm.jdbc.WordMode;
-import com.rnkrsoft.framework.orm.config.ItemConfig;
-import com.rnkrsoft.framework.orm.config.OrmConfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.core.io.Resource;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 @Getter
 public class TestOrmConfig implements OrmConfig {
-    boolean   strict;
+    boolean strict;
     /**
      * 数据库类型
      */
