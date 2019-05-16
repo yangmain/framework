@@ -49,7 +49,7 @@ public class CommandDefineTest {
             define.setExtrInfo("有关详细信息, 请参阅 http://www.rnkrsoft.com/framework/help");
             COMMAND_COLLECTION.addDefine(define);
         }
-        String cmd = "reverse -h 192.168.0.111:3333 -u root -p root -schema ccclubs_yun_sys -pres tb srv";
+        String cmd = "reverse -h 192.168.0.111:3333 -u root -p root -schema demo -pres tb srv";
         Command command = COMMAND_COLLECTION.getOptionCollection().get("reverse").parseCommand(cmd);
         System.out.println(command);
     }
