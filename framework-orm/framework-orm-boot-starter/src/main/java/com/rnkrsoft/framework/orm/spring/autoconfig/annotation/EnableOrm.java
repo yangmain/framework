@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 
 /**
  *  Created by rnkrsoft.com on 2018/2/10.
- *  ÓÃÓÚ±ê×¢ÔÚÆô¶¯ÀàÉÏ
+ *  ç”¨äºæ ‡æ³¨åœ¨å¯åŠ¨ç±»ä¸Š
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,7 +18,7 @@ import java.lang.annotation.*;
 @Import(OrmRegister.class)
 public @interface EnableOrm {
     /**
-     * ÅäÖÃ¶ÔÏóÀà
+     * é…ç½®å¯¹è±¡ç±»
      * @return
      */
     Class<OrmConfig> config();

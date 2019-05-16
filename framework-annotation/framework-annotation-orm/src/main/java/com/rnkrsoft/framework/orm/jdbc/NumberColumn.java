@@ -57,7 +57,7 @@ public @interface NumberColumn {
 
     /**
      * 字段枚举值
-     * @return
+     * @return 字段枚举值
      */
     Class enumClass() default Object.class;
 }

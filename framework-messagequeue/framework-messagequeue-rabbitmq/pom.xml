@@ -9,6 +9,10 @@
     <artifactId>framework-messagequeue-rabbitmq</artifactId>
     <name>framework-messagequeue-rabbitmq</name>
     <description>framework messagequeue rabbitmq</description>
+    <properties>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -27,12 +31,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.logger4j</groupId>
-            <artifactId>logger4j</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

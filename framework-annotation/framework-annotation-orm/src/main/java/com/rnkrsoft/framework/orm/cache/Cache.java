@@ -15,19 +15,19 @@ public @interface Cache {
     /**
      * 超时时间
      *
-     * @return
+     * @return 超时时间
      */
     int expire() default -1;
 
     /**
      * 键值前缀
-     * @return
+     * @return 键值前缀
      */
     String prefix() default "";
 
     /**
      * 数据库索引
-     * @return
+     * @return 数据库索引
      */
     int index() default 1;
 }

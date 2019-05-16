@@ -40,11 +40,5 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.rnkrsoft.logger4j</groupId>
-            <artifactId>logger4j</artifactId>
-            <version>1.0.0</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>

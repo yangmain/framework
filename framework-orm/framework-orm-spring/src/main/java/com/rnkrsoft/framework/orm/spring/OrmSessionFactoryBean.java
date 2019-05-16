@@ -173,7 +173,7 @@ public class OrmSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
                     paginationStage2Interceptor = true;
                 }
             }
-            pluginSet = Arrays.asList(plugins);
+            pluginSet = new ArrayList(Arrays.asList(plugins));
         } else {
             pluginSet = new ArrayList();
         }
