@@ -1,9 +1,8 @@
 package com.rnkrsoft.framework.config.v1;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,9 @@ import java.util.List;
 @Data
 @ToString
 @Builder
-public class PushRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class PushRequest implements Serializable {
     /**
      * 只读方式,并不会覆盖，用于进行参数比较
      */
@@ -35,13 +36,17 @@ public class PushRequest {
      */
     String desc;
     /**
-     * 环境
-     */
-    String env;
-    /**
      * 机器标识
      */
     String machine;
+    /**
+     * 机器标识
+     */
+    String userId;
+    /**
+     * 访问令牌
+     */
+    String token;
     /**
      * 网卡地址号
      */

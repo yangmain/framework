@@ -1,8 +1,6 @@
 package com.rnkrsoft.framework.config.v1;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.web.doc.AbstractResponse;
 import javax.web.doc.annotation.ApidocElement;
@@ -13,6 +11,8 @@ import javax.web.doc.annotation.ApidocElement;
 @Data
 @ToString
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PushResponse extends AbstractResponse{
     @ApidocElement("参数总数")
     int totalParamCount;

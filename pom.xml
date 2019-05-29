@@ -7,11 +7,11 @@
     <!--<parent>-->
         <!--<groupId>com.rnkrsoft</groupId>-->
         <!--<artifactId>tech-stack</artifactId>-->
-        <!--<version>1.0.1</version>-->
+        <!--<version>1.0.2-SNAPSHOT</version>-->
     <!--</parent>-->
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>framework library</name>
     <description>氡氪网络科技基础库</description>
     <modules>
@@ -21,21 +21,21 @@
         <module>framework-orm</module>
         <module>framework-sequence</module>
         <module>framework-monitor</module>
-        <module>framework-config</module>
         <module>framework-messagequeue</module>
         <module>framework-toolkit</module>
         <module>framework-security</module>
+        <module>framework-config</module>
         <module>framework-standalone</module>
         <module>framework-test</module>
         <module>framework-test-standalone</module>
     </modules>
     <properties>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit.version>4.12</junit.version>
-        <groundwork.version>1.0.2</groundwork.version>
+        <groundwork.version>1.0.3</groundwork.version>
         <logtrace4j.version>1.0.1</logtrace4j.version>
         <reflection4j.version>1.0.2</reflection4j.version>
         <io4j.version>1.0.2</io4j.version>
@@ -44,8 +44,7 @@
         <spring-data.version>2.1.4.RELEASE</spring-data.version>
         <spring.version>4.3.22.RELEASE</spring.version>
         <spring-batch-infrastructure.version>3.0.6.RELEASE</spring-batch-infrastructure.version>
-        <lombok.version>1.18.4</lombok.version>
-        <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
+        <lombok.version>1.16.16</lombok.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
         <persistence-api.version>1.0</persistence-api.version>
         <javassist.version>3.18.2-GA</javassist.version>
@@ -61,7 +60,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-dbcp.version>1.2.2</commons-dbcp.version>
-        <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
+        <mysql-connector-java.version>5.1.47</mysql-connector-java.version>
         <aspectjweaver.version>1.8.10</aspectjweaver.version>
         <jstl.version>1.2</jstl.version>
         <gson.version>2.2.4</gson.version>

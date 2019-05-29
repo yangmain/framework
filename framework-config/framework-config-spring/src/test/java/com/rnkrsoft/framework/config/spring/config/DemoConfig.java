@@ -19,14 +19,17 @@ public class DemoConfig {
     @Value(value = "${name:this is a test}")
     String param1;
 
-    @DynamicParam(value = "${param2}", type = ParamType.SYSTEM, encrypt = true, desc = "测试1")
+    @DynamicParam(value = "${param2}", type = ParamType.SYSTEM,  desc = "测试1")
     String param2;
 
-    @DynamicParam(value = "${param3}", type = ParamType.SYSTEM, encrypt = false, desc = "测试2")
+    @DynamicParam(value = "${param3}", type = ParamType.SYSTEM, desc = "测试2")
     String param3;
 
-    @DynamicParam(type = ParamType.SYSTEM, encrypt = true, desc = "测试4")
+    @DynamicParam(type = ParamType.SYSTEM,  desc = "测试4")
     boolean param4;
+
+    @DynamicParam(value = "${log}",type = ParamType.SYSTEM, desc = "日志")
+    String log;
 
     @DynamicFile(value = "/demo/demo.txt", encrypt = true, desc = "参数")
     public InputStream openTest() {

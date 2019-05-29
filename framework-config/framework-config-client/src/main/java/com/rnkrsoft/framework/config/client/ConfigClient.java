@@ -1,8 +1,10 @@
 package com.rnkrsoft.framework.config.client;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rnkrsoft.framework.config.connector.Connector;
 import com.rnkrsoft.framework.config.connector.HttpConnector;
-import com.rnkrsoft.framework.config.security.AesUtils;
+import com.rnkrsoft.framework.config.security.AES;
 import com.rnkrsoft.framework.config.utils.FileSystemUtils;
 import com.rnkrsoft.framework.config.utils.Http;
 import com.rnkrsoft.framework.config.utils.PropertiesUtils;
@@ -38,7 +40,7 @@ public class ConfigClient {
     /**
      * 运行时的属性
      */
-    Properties runtimeProperties;
+    final Properties runtimeProperties = new Properties();
 
     /**
      * 连接器
@@ -66,6 +68,8 @@ public class ConfigClient {
     public static ConfigClient getInstance() {
         return CONFIG_CLIENT;
     }
+
+    static Gson GSON = new GsonBuilder().serializeNulls().create();
 
     /**
      * 从服务器拿配置信息
@@ -97,11 +101,7 @@ public class ConfigClient {
                 this.timer.cancel();
             }
             this.timer = new Timer("config-center-timer-fetch", true);
-            if (this.runtimeProperties != null) {
-                this.runtimeProperties.clear();
-                this.runtimeProperties = null;
-            }
-            this.runtimeProperties = new Properties();
+            this.runtimeProperties.clear();
             if (this.connector != null) {
                 this.connector.stop();
                 this.connector = null;
@@ -109,8 +109,10 @@ public class ConfigClient {
             if (setting.connectorType == ConnectorType.HTTP) {
                 //初始化HTTP连接器
                 this.connector = new HttpConnector(setting.host, setting.port);
+                this.connector.start();
                 //初始化定时器，每隔一段事件主动拉去一次配置
-                this.timer.schedule(new FetchConfigTask(this), setting.fetchDelaySeconds * 1000, setting.fetchIntervalSeconds * 1000);
+                this.timer.schedule(new FetchConfigTask(this), setting.fetchIntervalSeconds * 1000, setting.fetchIntervalSeconds * 1000);
+                fetch();
             } else if (setting.connectorType == ConnectorType.DUBBO) {
                 //初始化 DUBBO的服务
             } else {
@@ -135,153 +137,134 @@ public class ConfigClient {
                 .machine(setting.machine)
                 .build();
         FetchResponse response = connector.fetch(request);
-        if (RspCode.valueOfCode(response.getRspCode()) != RspCode.SUCCESS) {
+        if (ResponseCode.valueOfCode(response.getRspCode()) != ResponseCode.SUCCESS) {
             log.error("fetch config happens error!");
             return;
         }
+        if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() >= response.getUpdateTimestamp()) {
+            log.info("no change!");
+            return;
+        }
+        Map<String, ParamObject> oldParams = null;
+        Map<String, FileObject> oldFiles = null;
         if (CONFIG_CACHE != null) {
-            Map<String, ParamObject> oldParams = CONFIG_CACHE.getParams();
-            Map<String, FileObject> oldFiles = CONFIG_CACHE.getFiles();
-            ConfigCache configCache = new ConfigCache(response);
-            Map<String, ParamObject> newParams = configCache.getParams();
-            Map<String, FileObject> newFiles = configCache.getFiles();
-            Properties tempProperties = PropertiesUtils.clone(runtimeProperties);
-            //对删除的参数进行处理
-            for (String oldKey : oldParams.keySet()) {
-                if (newParams.containsKey(oldKey)) {
+            oldParams = CONFIG_CACHE.getParams();
+            oldFiles = CONFIG_CACHE.getFiles();
+        } else {
+            oldParams = new HashMap();
+            oldFiles = new HashMap();
+        }
+        ConfigCache configCache = new ConfigCache(response, setting);
+        Map<String, ParamObject> newParams = configCache.getParams();
+        Map<String, FileObject> newFiles = configCache.getFiles();
+        Properties tempProperties = PropertiesUtils.clone(runtimeProperties);
+        //对删除的参数进行处理
+        for (String oldKey : oldParams.keySet()) {
+            if (newParams.containsKey(oldKey)) {
 
-                } else {
-                    if (setting.printLog) {
-                        log.info("delete '{}' in runtimeProperties", oldKey);
-                    }
-                    //如果没有发现，说明删除了
-                    tempProperties.remove(oldKey);
-                    if (System.getProperties().containsKey(oldKey)) {
-                        System.getProperties().remove(oldKey);
-                    }
+            } else {
+                if (setting.printLog) {
+                    log.info("delete '{}' in runtimeProperties", oldKey);
                 }
-
-            }
-            //对新增，更新参数进行处理
-            for (ParamObject newParamObject : newParams.values()) {
-                //原来有，现在也有为更新
-                if (oldParams.containsKey(newParamObject.getKey())) {
-                    if (setting.printLog) {
-                        log.info("update '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
-                    }
-                    String val = newParamObject.getValue();
-                    if (tempProperties.containsKey(newParamObject.getKey())) {
-                        tempProperties.remove(newParamObject.getKey());
-                    }
-                    tempProperties.setProperty(newParamObject.getKey(), val);
-                    if (newParamObject.isSystemProperties()) {
-                        if (System.getProperties().containsKey(newParamObject.getKey())) {
-                            System.getProperties().remove(newParamObject.getKey());
-                        }
-                        System.getProperties().setProperty(newParamObject.getKey(), val);
-                    }
-                    ParamObject oldParamObject = oldParams.get(newParamObject.getKey());
-                    newParamObject.setDynamic(oldParamObject.isDynamic());
-                } else {//原来没有，现在有为新增
-                    if (setting.printLog) {
-                        log.info("add '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
-                    }
-                    String val = newParamObject.getValue();
-                    tempProperties.setProperty(newParamObject.getKey(), val);
-                    if (newParamObject.isSystemProperties()) {
-                        System.getProperties().setProperty(newParamObject.getKey(), val);
-                    }
-                    newParamObject.setDynamic(false);
+                //如果没有发现，说明删除了
+                tempProperties.remove(oldKey);
+                if (System.getProperties().containsKey(oldKey)) {
+                    System.getProperties().remove(oldKey);
                 }
             }
-            //2.拉取后异步下载文件到本地
-            //对删除的文件进行处理
-            for (String oldKey : oldFiles.keySet()) {
-                if (oldFiles.containsKey(oldKey)) {
 
-                } else {
-                    if (setting.printLog) {
-                        log.info("delete '{}' file", oldKey);
-                    }
+        }
+        //对新增，更新参数进行处理
+        for (ParamObject newParamObject : newParams.values()) {
+            //原来有，现在也有为更新
+            if (oldParams.containsKey(newParamObject.getKey())) {
+                if (setting.printLog) {
+                    log.info("update '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
                 }
-
-            }
-            //对新增和修改
-            for (String newKey : newFiles.keySet()) {
-                FileObject newFileObject = newFiles.get(newKey);
-                String oldFileFingerprint = null;
-                if (oldFiles.containsKey(newKey)) {//更新
-                    if (setting.printLog) {
-                        log.info("modify '{}' file", newKey);
-                    }
-                    oldFileFingerprint = oldFiles.get(newKey).getFileFingerprint();
-                } else {//新增
-                    if (setting.printLog) {
-                        log.info("create '{}' file", newKey);
-                    }
+                String val = newParamObject.getValue();
+                if (tempProperties.containsKey(newParamObject.getKey())) {
+                    tempProperties.remove(newParamObject.getKey());
                 }
-                if (!newFileObject.isLazyDownload()) {
-                    //下载
-                    if (newFileObject.getTransferType() == FileTransferType.HTTP) {
-                        final String oldFileFingerprint0 = oldFileFingerprint;
-                        final FileObject newFileObject0 = newFileObject;
-                        final String fileName0 = newKey;
-                        fileCopyPool.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    downloadFile(newFileObject0, oldFileFingerprint0);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                if (setting.printLog) {
-                                    log.info("http download file  " + fileName0 + " success!");
-                                }
-                            }
-                        });
-
-                    } else {
-                        log.error("'{}'not support transfer Type '{}'", newFileObject.getFileFullName(), newFileObject.getTransferType());
+                tempProperties.setProperty(newParamObject.getKey(), val);
+                if (newParamObject.isSystemProperties()) {
+                    if (System.getProperties().containsKey(newParamObject.getKey())) {
+                        System.getProperties().remove(newParamObject.getKey());
                     }
+                    System.getProperties().setProperty(newParamObject.getKey(), val);
                 }
-            }
-            //防止并发问题
-            synchronized (this) {
-                runtimeProperties.clear();
-                runtimeProperties.putAll(tempProperties);
+                ParamObject oldParamObject = oldParams.get(newParamObject.getKey());
+                newParamObject.setDynamic(oldParamObject.isDynamic());
+            } else {//原来没有，现在有为新增
+                if (setting.printLog) {
+                    log.info("add '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
+                }
+                String val = newParamObject.getValue();
+                tempProperties.setProperty(newParamObject.getKey(), val);
+                if (newParamObject.isSystemProperties()) {
+                    System.getProperties().setProperty(newParamObject.getKey(), val);
+                }
+                newParamObject.setDynamic(false);
             }
         }
-        CONFIG_CACHE = new ConfigCache(response);
+        //2.拉取后异步下载文件到本地
+        //对删除的文件进行处理
+        for (String oldKey : oldFiles.keySet()) {
+            if (oldFiles.containsKey(oldKey)) {
+
+            } else {
+                if (setting.printLog) {
+                    log.info("delete '{}' file", oldKey);
+                }
+            }
+
+        }
+        //对新增和修改
+        for (String newKey : newFiles.keySet()) {
+            FileObject newFileObject = newFiles.get(newKey);
+            String oldFileFingerprint = null;
+            if (oldFiles.containsKey(newKey)) {//更新
+                if (setting.printLog) {
+                    log.info("modify '{}' file", newKey);
+                }
+                oldFileFingerprint = oldFiles.get(newKey).getFileFingerprint();
+            } else {//新增
+                if (setting.printLog) {
+                    log.info("create '{}' file", newKey);
+                }
+            }
+            if (!newFileObject.isLazyDownload()) {
+                //下载
+                if (newFileObject.getTransferType() == FileTransferType.HTTP) {
+                    final String oldFileFingerprint0 = oldFileFingerprint;
+                    final FileObject newFileObject0 = newFileObject;
+                    final String fileName0 = newKey;
+                    fileCopyPool.submit(new Runnable() {
+                        public void run() {
+                            try {
+                                downloadFile(newFileObject0, oldFileFingerprint0);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (setting.printLog) {
+                                log.info("http download file  " + fileName0 + " success!");
+                            }
+                        }
+                    });
+
+                } else {
+                    log.error("'{}'not support transfer Type '{}'", newFileObject.getFileFullName(), newFileObject.getTransferType());
+                }
+            }
+        }
+        //防止并发问题
+        synchronized (this) {
+            runtimeProperties.clear();
+            runtimeProperties.putAll(tempProperties);
+        }
+        CONFIG_CACHE = configCache;
         //预置打印日志的属性
         this.setting.printLog = getProperty("system.config.log.print", "true", Boolean.TYPE);
 
-    }
-
-    /**
-     * 将本地的参数和文件信息推送到服务器
-     *
-     * @param params
-     * @param files
-     */
-    public void push(List<ParamObject> params, List<FileObject> files) {
-        //调用连接器的推送
-        PushRequest request = PushRequest.builder()
-                .groupId(setting.groupId)
-                .artifactId(setting.artifactId)
-                .version(setting.version)
-                .env(setting.env)
-                .machine(setting.machine)
-                .desc(setting.desc)
-                .readonly(false)
-                .build();
-        request.getParams().addAll(params);
-        request.getFiles().addAll(files);
-        PushResponse pushResponse = this.connector.push(request);
-        if (RspCode.valueOfCode(pushResponse.getRspCode()) != RspCode.SUCCESS) {
-            throw new RuntimeException("push happens error!");
-        } else {
-
-        }
     }
 
     /**
@@ -330,7 +313,7 @@ public class ConfigClient {
             http.receive(buffer);
             byte[] newData = null;
             if (fileObject.isEncrypt()) {
-                newData = AesUtils.decrypt(buffer.toByteArray(), "");
+                newData = AES.decrypt(setting.getSecurityKey(), AES.DEFAULT_IV, buffer.toByteArray());
             } else {
                 newData = buffer.toByteArray();
             }
@@ -356,7 +339,6 @@ public class ConfigClient {
                     final String filePath = fileKey;
                     final boolean printLog0 = setting.printLog;
                     fileCopyPool.submit(new Runnable() {
-                        @Override
                         public void run() {
                             //如果存在文件
                             try {
@@ -436,6 +418,23 @@ public class ConfigClient {
             throw new FileNotFoundException(MessageFormatter.format("'{}' not found!", filePath + "/" + fileName));
         }
         return file.getFile().stream();
+    }
+
+
+
+    /**
+     * 获取本地的信息
+     *
+     * @return
+     */
+    public String getRuntime() {
+        //写入请求的参数
+        String json = GSON.toJson(CONFIG_CACHE);
+        return json;
+    }
+
+    public Properties getProperties() {
+        return this.runtimeProperties;
     }
 
     /**

@@ -11,7 +11,6 @@ public enum InstructionType implements EnumIntegerCode{
     PUSH(2, "推送配置"),
     PUSH_READONLY_SYNC(3, "同步只读推送"),
     PUSH_READONLY_ASYN(4, "异步只读推送"),
-    HEARTBEAT(5, "心跳检测"),
     CLIENT_INFO(6, "获取客户端信息"),
     SUPPORT_INSTRUCTION_SET(7, "获取支持的指令集列表");
     int code;
@@ -23,12 +22,10 @@ public enum InstructionType implements EnumIntegerCode{
     }
 
 
-    @Override
     public int getCode() {
         return code;
     }
 
-    @Override
     public String getDesc() {
         return desc;
     }

@@ -4,10 +4,10 @@ import com.rnkrsoft.interfaces.EnumStringCode;
 import com.rnkrsoft.message.MessageFormatter;
 
 /**
- * Created by liyue on 2017/2/8.
+ * Created by rnkrsoft.com on 2017/2/8.
  * 返回状态
  */
-public enum RspCode implements EnumStringCode {
+public enum ResponseCode implements EnumStringCode {
     SUCCESS("0000", "成功"),
     NO_DATA("0001", "暂无数据"),
     HAPPENS_ERROR("0002", "程序异常"),
@@ -18,23 +18,21 @@ public enum RspCode implements EnumStringCode {
     String code;
     String desc;
 
-    RspCode(String code, String desc) {
+    ResponseCode(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    @Override
     public String getCode() {
         return code;
     }
 
-    @Override
     public String getDesc() {
         return desc;
     }
-    public static RspCode valueOfCode(String code){
-        RspCode[] values = values();
-        for (RspCode value : values){
+    public static ResponseCode valueOfCode(String code){
+        ResponseCode[] values = values();
+        for (ResponseCode value : values){
             if(value.code.equals(code)){
                 return value;
             }

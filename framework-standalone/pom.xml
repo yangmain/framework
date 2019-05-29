@@ -4,7 +4,7 @@
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework-standalone</artifactId>
     <name>Rnkrsoft Framework Community Edition</name>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <description>Rnkrsoft Framework Community Edition</description>
     <url>https://github.com/rnkrsoft/framework.git</url>
     <licenses>

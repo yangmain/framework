@@ -20,12 +20,10 @@ public enum FileTransferType implements EnumIntegerCode{
     }
 
 
-    @Override
     public int getCode() {
         return code;
     }
 
-    @Override
     public String getDesc() {
         return desc;
     }

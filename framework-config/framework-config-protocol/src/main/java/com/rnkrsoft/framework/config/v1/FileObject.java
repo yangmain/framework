@@ -2,8 +2,6 @@ package com.rnkrsoft.framework.config.v1;
 
 import lombok.*;
 
-import java.util.Date;
-
 /**
  * Created by rnkrsoft.com on 2018/5/7.
  * 文件对象

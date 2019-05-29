@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.config.spring.aspect;
 
+import com.rnkrsoft.framework.config.utils.ValueUtils;
 import com.rnkrsoft.message.MessageFormatter;
 import com.rnkrsoft.utils.StringUtils;
 import com.rnkrsoft.framework.config.annotation.DynamicFile;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Properties;
 
 /**
  * Created by rnkrsoft.com on 2018/2/24.
@@ -69,7 +71,7 @@ public class DynamicConfigAspectJ implements ApplicationContextAware {
                 String fieldName = null;
                 if (methodName.startsWith(prefix)) {
                     fieldName = StringUtils.firstCharToLower(methodName.substring(prefix.length()));
-                    if (configurer.getProperty("system.config.log.print", "false").equals("true")) {
+                    if (configurer.getProperty("system.config.log.print", "false", Boolean.class)) {
                         log.info("getter method '{}' has not @Value,so lookup field '{}'!", methodName, fieldName);
                     }
                 }
@@ -81,14 +83,14 @@ public class DynamicConfigAspectJ implements ApplicationContextAware {
 
         }
         if (dynamicParam == null && value == null) {
-            if (configurer.getProperty("system.config.log.print", "false").equals("true")) {
+            if (configurer.getProperty("system.config.log.print", "false", Boolean.class)) {
                 log.info("getter method has not @Value,@DynamicParam,and field has not @Value,@DynamicParam!");
             }
             return joinPoint.proceed(joinPoint.getArgs());
         }
 
         if (dynamicParam != null && value != null) {
-            if (configurer.getProperty("system.config.log.print", "false").equals("true")) {
+            if (configurer.getProperty("system.config.log.print", "false", Boolean.class)) {
                 log.info("illegal annotation, field '{}' at same time use @DynamicValue and @Value");
             }
             throw new IllegalArgumentException("illegal annotation, field '{}' at same time use @DynamicValue and @Value");
@@ -107,7 +109,8 @@ public class DynamicConfigAspectJ implements ApplicationContextAware {
                 key = clazz.getName() + "." + field.getName();
                 remoteVal = configurer.getProperty(key);
             }else{
-                remoteVal = placeholderHelper.replacePlaceholders(key, configurer.getProperties());
+                Properties properties = configurer.getProperties();
+                remoteVal = placeholderHelper.replacePlaceholders(key, properties);
             }
             Object val = convert(method, remoteVal);
             field.setAccessible(true);
@@ -143,28 +146,7 @@ public class DynamicConfigAspectJ implements ApplicationContextAware {
     }
 
     Object convert(Method method, String remoteVal){
-        if (method.getReturnType() == Byte.TYPE || method.getReturnType() == Byte.class) {
-            return Byte.valueOf(remoteVal);
-        } else if (method.getReturnType() == Short.TYPE || method.getReturnType() == Short.class) {
-            return Short.valueOf(remoteVal);
-        } else if (method.getReturnType() == Integer.TYPE || method.getReturnType() == Integer.class) {
-            return Integer.valueOf(remoteVal);
-        } else if (method.getReturnType() == Float.TYPE || method.getReturnType() == Float.class) {
-            return Float.valueOf(remoteVal);
-        } else if (method.getReturnType() == Long.TYPE || method.getReturnType() == Long.class) {
-            return Long.valueOf(remoteVal);
-        } else if (method.getReturnType() == Double.TYPE || method.getReturnType() == Double.class) {
-            return Double.valueOf(remoteVal);
-        } else if (method.getReturnType() == BigDecimal.class) {
-            return new BigDecimal(remoteVal);
-        } else if (method.getReturnType() == Boolean.TYPE || method.getReturnType() == Boolean.class) {
-            return Boolean.valueOf(remoteVal);
-        } else if (method.getReturnType() == String.class) {
-            return remoteVal;
-        } else {
-            throw new IllegalArgumentException(MessageFormatter.format("无效返回数据类型'{}'", method.getReturnType()));
-        }
-
+        return ValueUtils.convert(remoteVal, method.getReturnType());
     }
 
     @Override

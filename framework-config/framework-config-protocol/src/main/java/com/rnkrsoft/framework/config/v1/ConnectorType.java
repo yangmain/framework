@@ -19,12 +19,10 @@ public enum ConnectorType implements EnumStringCode{
     }
 
 
-    @Override
     public String getCode() {
         return code;
     }
 
-    @Override
     public String getDesc() {
         return desc;
     }

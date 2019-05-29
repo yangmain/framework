@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FetchResponse extends AbstractResponse{
+public class FetchResponse extends AbstractResponse {
     /**
      * 请求唯一标识
      */
@@ -25,26 +25,6 @@ public class FetchResponse extends AbstractResponse{
      */
     final int formatVersion = ProtocolConstants.VERSION_1;
     /**
-     * 组织编号
-     */
-    String groupId;
-    /**
-     * 组件编号
-     */
-    String artifactId;
-    /**
-     * 版本
-     */
-    String version;
-    /**
-     * 环境
-     */
-    String env;
-    /**
-     * 机器标识
-     */
-    String machine;
-    /**
      * 配置文件列表
      */
     final List<FileObject> files = new ArrayList();
@@ -52,4 +32,8 @@ public class FetchResponse extends AbstractResponse{
      * 配置参数列表
      */
     final List<ParamObject> params = new ArrayList();
+    /**
+     * 变动时间戳，如果客户端保存的上次变更与当次大于或者等于，则不进行参数处理操作
+     */
+    long updateTimestamp;
 }

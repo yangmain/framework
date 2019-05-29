@@ -16,12 +16,28 @@ public class ValueUtils {
             Boolean val = Boolean.valueOf(value);
             return (T) val;
         }
+        if (type == Byte.TYPE || type == Byte.class){
+            Byte val = Byte.valueOf(value);
+            return (T) val;
+        }
+        if (type == Short.TYPE || type == Short.class){
+            Short val = Short.valueOf(value);
+            return (T) val;
+        }
         if (type == Integer.TYPE || type == Integer.class){
             Integer val = Integer.valueOf(value);
             return (T) val;
         }
         if (type == Long.TYPE || type == Long.class){
             Long val = Long.valueOf(value);
+            return (T) val;
+        }
+        if (type == Float.TYPE || type == Float.class){
+            Float val = Float.valueOf(value);
+            return (T) val;
+        }
+        if (type == Double.TYPE || type == Double.class){
+            Double val = Double.valueOf(value);
             return (T) val;
         }
         if (type == java.util.Date.class){

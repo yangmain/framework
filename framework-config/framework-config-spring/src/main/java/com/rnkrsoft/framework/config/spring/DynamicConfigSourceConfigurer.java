@@ -1,5 +1,6 @@
 package com.rnkrsoft.framework.config.spring;
 
+import com.rnkrsoft.framework.config.utils.ValueUtils;
 import com.rnkrsoft.io.buffer.ByteBuf;
 import com.rnkrsoft.message.MessageFormatter;
 import com.rnkrsoft.framework.config.annotation.DynamicFile;
@@ -89,6 +90,9 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
      */
     @Setter
     String env;
+
+    @Setter
+    String securityKey;
     /**
      * 本地配置文件根目录
      */
@@ -104,11 +108,6 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
      */
     @Setter
     String fileEncoding = "UTF-8";
-    /**
-     * 拉取参数延时秒数
-     */
-    @Setter
-    long fetchDelaySeconds = 60;
     /**
      * 拉取参数间隔秒数
      */
@@ -191,13 +190,13 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
             } else {
                 log.info("[localFileHome] uses applicationContext-config.xml config '{}'!", localFileHome);
             }
-        }
-        String ip = "localhost";
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-            ip = addr.getHostAddress();
-        } catch (UnknownHostException e) {
-            log.error("获取本机IP地址发生错误");
+
+            if (envs.containsKey("CONFIG_SECURITY_KEY")) {
+                this.securityKey = envs.get("CONFIG_SECURITY_KEY");
+                log.info("[securityKey] uses os env var config '{}'!", securityKey);
+            } else {
+                log.info("[securityKey] uses applicationContext-config.xml config '{}'!", localFileHome);
+            }
         }
         //检验参数
         verification();
@@ -232,6 +231,7 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
                                 }
                         );
                     }
+                    //自动模式是将本地参数进行初始化，再调用远程进行初始化
                     if (RuntimeMode.AUTO == runtimeMode) {
                         //记载引导参数
                         //加载location指定的Properties文件
@@ -246,15 +246,13 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
                     //从远程拉取配置
                     if (RuntimeMode.AUTO == runtimeMode || RuntimeMode.REMOTE == runtimeMode) {
                         //最终解析出的坐标
-                        log.info("load client's config [groupId, artifactId , version, env] -> [{}, {}, {}, {}]", groupId, artifactId, version, env);
+                        log.info("load remote's config [groupId, artifactId , version, env] -> [{}, {}, {}, {}]", groupId, artifactId, version, env);
                         //初始化配置中心客户端
                         initConfigCenter();
-                        //拉取配置
-                        this.configClient.fetch();
                         //转换属性
-                        convertProperties(this.runtimeProperties);
+                        convertProperties(this.configClient.getProperties());
                     }
-                    PropertySource<?> localPropertySource = new PropertiesPropertySource(LOCAL_PROPERTIES_PROPERTY_SOURCE_NAME, this.runtimeProperties);
+                    PropertySource<?> localPropertySource = new PropertiesPropertySource(LOCAL_PROPERTIES_PROPERTY_SOURCE_NAME, this.configClient.getProperties());
                     if (this.localOverride) {
                         this.propertySources.addFirst(localPropertySource);
                     } else {
@@ -283,83 +281,15 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
                 .version(version)
                 .env(env)
                 .machine(MachineUtils.getHostName())
+                .securityKey(securityKey)
                 .connectorType(connectorType)
                 .runtimeMode(runtimeMode)
                 .workHome(workHome)
                 .fileEncoding(fileEncoding)
                 .fetchIntervalSeconds(fetchIntervalSeconds)
-                .fetchDelaySeconds(fetchDelaySeconds)
                 .build();
         this.configClient = ConfigClient.getInstance();
         this.configClient.init(setting);
-    }
-
-    public void scan(Class clazz, Map<String, ParamObject> params, Map<String, FileObject> files) {
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            DynamicParam dynamicParam = field.getAnnotation(DynamicParam.class);
-            if (dynamicParam == null) {
-                continue;
-            }
-            String placeholderKey = dynamicParam.value();
-            String key = null;
-            String value = null;
-            boolean sysProp = dynamicParam.systemProperty();
-            if (placeholderKey.isEmpty()) {
-                key = clazz.getName() + "." + field.getName();
-            } else {
-                int prefixIdx = placeholderKey.indexOf(placeholderPrefix);
-                int suffixIdx = placeholderKey.indexOf(placeholderSuffix);
-                if (prefixIdx > -1 && suffixIdx > -1) {
-                    int valueSeparatorIdx = placeholderKey.lastIndexOf(valueSeparator);
-                    key = placeholderKey.substring(prefixIdx + placeholderPrefix.length(), suffixIdx);
-                    value = null;
-                    if (valueSeparatorIdx > -1) {
-                        key = placeholderKey.substring(prefixIdx + placeholderPrefix.length(), valueSeparatorIdx);
-                        value = placeholderKey.substring(valueSeparatorIdx + 1, suffixIdx);
-                    }
-                } else {
-                    throw new IllegalArgumentException(MessageFormatter.format("class：{} field :{} has placeholder '{}' is illegal!", clazz, field, placeholderKey));
-                }
-
-            }
-
-            ParamObject paramItem = params.get(key);
-            if (paramItem == null) {
-                paramItem = new ParamObject();
-                paramItem.setKey(key);
-                paramItem.setValue("");
-                params.put(key, paramItem);
-            }
-            ParamType type = dynamicParam.type();
-            String desc = dynamicParam.desc();
-            if (value != null) {
-                paramItem.setValue(value);
-            }
-            paramItem.setType(type.getCode());
-            paramItem.setSystemProperties(sysProp);
-            paramItem.setDesc(desc);
-            paramItem.setDynamic(true);
-        }
-        Method[] methods = clazz.getMethods();
-        for (Method method : methods) {
-            DynamicFile dynamicFile = method.getAnnotation(DynamicFile.class);
-            if (dynamicFile == null || dynamicFile.value() == null) {
-                continue;
-            }
-            FileObject fileItem = files.get(dynamicFile.value());
-            if (fileItem == null) {
-                fileItem = new FileObject();
-                String file = FileSystemUtils.formatPath(dynamicFile.value());
-                fileItem.setFileFullName(file);
-                files.put(file, fileItem);
-            }
-            fileItem.setEnabled(true);
-            fileItem.setCreateUid(MachineUtils.getHostName());
-            fileItem.setLastUpdateUid(MachineUtils.getHostName());
-            fileItem.setLazyDownload(false);
-            fileItem.setTransferType(FileTransferType.HTTP);
-        }
     }
 
     /**
@@ -385,10 +315,6 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
             log.warn("profile:{} is blank, so to set defalut profile!", env);
             env = "release";
         }
-        if (fetchDelaySeconds < 1) {
-            fetchDelaySeconds = 60;
-            log.warn("fetchDelaySeconds:{} < 1, so to set defalut fetchDelaySeconds 60s!", fetchDelaySeconds);
-        }
         if (fetchIntervalSeconds < 1) {
             fetchIntervalSeconds = 60;
             log.warn("fetchIntervalSeconds:{} < 1, so to set defalut fetchIntervalSeconds 60s!", fetchIntervalSeconds);
@@ -409,12 +335,10 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
         super.setFileEncoding(this.fileEncoding);
     }
 
-    @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 
-    @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
@@ -441,8 +365,12 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
      * @param defaultValue 默认值
      * @return 值
      */
-    public String getProperty(String key, String defaultValue) {
-        return runtimeProperties.getProperty(key, defaultValue);
+    public <T> T getProperty(String key, String defaultValue, Class<T> dataType) {
+        if (runtimeMode == RuntimeMode.REMOTE) {
+            return this.configClient.getProperty(key, defaultValue, dataType);
+        }else{
+            return ValueUtils.convert(runtimeProperties.getProperty(key, defaultValue), dataType);
+        }
     }
 
     /**
@@ -452,7 +380,7 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
      * @return 值
      */
     public String getProperty(String key) {
-        return runtimeProperties.getProperty(key);
+        return getProperty(key, null, String.class);
     }
 
     /**
@@ -511,7 +439,11 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
     }
 
     public Properties getProperties() {
-        return runtimeProperties;
+        if (runtimeMode == RuntimeMode.REMOTE) {
+            return this.configClient.getProperties();
+        }else{
+            return runtimeProperties;
+        }
     }
 
     @Override

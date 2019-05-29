@@ -17,23 +17,11 @@ public @interface DynamicParam {
      * @return 参数名
      */
     String value() default "";
-
     /**
      * 参数类型
      * @return 参数类型
      */
     ParamType type() default ParamType.SYSTEM;
-
-    /**
-     * 是否复制到系统属性中
-     * @return 是否复制到系统属性中
-     */
-    boolean systemProperty() default false;
-    /**
-     * 是否加密
-     * @return 是否加密
-     */
-    boolean encrypt() default false;
     /**
      * 参数描述
      * @return 参数描述

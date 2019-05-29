@@ -4,6 +4,7 @@ import com.rnkrsoft.framework.config.v1.ConnectorType;
 import com.rnkrsoft.framework.config.v1.RuntimeMode;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -28,7 +29,7 @@ public class ConfigClientSetting {
     /**
      * 中心服务器IP地址
      */
-    String host = "127.0.0.1";
+    String host = "localhost";
     /**
      * 服务器端口号
      */
@@ -58,17 +59,17 @@ public class ConfigClientSetting {
      */
     String machine;
     /**
+     * 安全密钥
+     */
+    String securityKey;
+    /**
      * 工作路径
      */
-    String workHome = "~/config";
+    String workHome = System.getProperty("user.dir") + "/config";
     /**
      * 文件编码
      */
     String fileEncoding = "UTF-8";
-    /**
-     * 拉取参数延时秒数
-     */
-    long fetchDelaySeconds = 60;
     /**
      * 拉取参数间隔秒数
      */

@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Created by rnkrsoft.com on 2018/4/24.
  */
-public class ConsoleMain {
+public class ConfigCli {
     public static void main(String[] args) throws Exception {
         String host = "localhost";
         int port = 80;
@@ -46,10 +46,6 @@ public class ConsoleMain {
             if (name.startsWith("-env=")) {
                 String value = name.substring("-env=".length());
                 env = value;
-            }
-            if (name.startsWith("-fetchDelaySeconds=")) {
-                String value = name.substring("-fetchDelaySeconds=".length());
-                fetchDelaySeconds = Integer.valueOf(value);
             }
             if (name.startsWith("-fetchIntervalSeconds=")) {
                 String value = name.substring("-fetchIntervalSeconds=".length());
@@ -89,9 +85,6 @@ public class ConsoleMain {
                 .build();
         ConfigClient configClient = ConfigClient.getInstance();
         configClient.init(setting);
-        if (fetchDelaySeconds > 0) {
-            Thread.sleep(fetchDelaySeconds * 1000);
-        }
         while (true) {
             configClient.fetch();
             Thread.sleep(fetchIntervalSeconds * 1000);

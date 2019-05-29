@@ -19,13 +19,13 @@ public class JdbcReverseMySQLTest {
     @Test
     public void testReverses() throws Exception {
         JdbcReverse jdbcReverse = new JdbcReverseMySQL();
-        List<TableMetadata> metadatas = jdbcReverse.reverses("192.168.0.111:3333", "default", "root", "root", "com.demo",new String[] {"TB", "SRV"}, null);
+        List<TableMetadata> metadatas = jdbcReverse.reverses("221.5.140.21:13333", "config4j", "evpop", "", "com.demo",new String[] {"TB", "SRV"}, null);
 
         for (TableMetadata tableMetadata : metadatas){
-            if (!tableMetadata.getTableName().equalsIgnoreCase("ORDER")){
-                continue;
-            }
-            Generator generator = new JdkEntityGenerator();
+//            if (!tableMetadata.getTableName().equalsIgnoreCase("ORDER")){
+//                continue;
+//            }
+            Generator generator = new JdkMapperGenerator();
             ByteBuf buf = generator.generate(GenerateContext.builder().tableMetadata(tableMetadata).packageName("com.demo").build());
             System.out.println(buf.asString("UTF-8"));
         }

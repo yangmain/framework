@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-config</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>framework-config-protocol</artifactId>
     <name>framework-config-protocol</name>
@@ -19,12 +19,20 @@
             <artifactId>logtrace4j</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.rnkrsoft.skeleton4j</groupId>
+            <artifactId>skeleton4j-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
     <profiles>
