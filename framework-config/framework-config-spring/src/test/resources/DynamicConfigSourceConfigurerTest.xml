@@ -15,17 +15,17 @@
 
     <bean id="dynamicPropertyPlaceholderConfigurer" class="com.rnkrsoft.framework.config.spring.DynamicConfigSourceConfigurer">
         <!--主机IP地址或者域名-->
-        <property name="host" value="localhost"/>
+        <property name="host" value="config.evpopwork.com"/>
         <!--主机服务端口-->
-        <property name="port" value="8080"/>
+        <property name="port" value="8090"/>
         <!--当前项目组织编号-->
         <property name="groupId" value="com.rnkrsoft"/>
         <!--当前项目组件编号-->
-        <property name="artifactId" value="framework-config-client"/>
+        <property name="artifactId" value="demo"/>
         <!--当前项目版本号-->
         <property name="version" value="1.0.0"/>
         <!--当前项目所在环境-->
-        <property name="env" value="DEV" />
+        <property name="env" value="UAT" />
         <!--客户端拉取配置的间隔（秒）-->
         <property name="fetchIntervalSeconds" value="4"/>
         <!--连接器类型-->

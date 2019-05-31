@@ -164,7 +164,7 @@ public class ConfigClient {
 
             } else {
                 if (setting.printLog) {
-                    log.info("delete '{}' in runtimeProperties", oldKey);
+                    log.debug("delete '{}' in runtimeProperties", oldKey);
                 }
                 //如果没有发现，说明删除了
                 tempProperties.remove(oldKey);
@@ -179,7 +179,7 @@ public class ConfigClient {
             //原来有，现在也有为更新
             if (oldParams.containsKey(newParamObject.getKey())) {
                 if (setting.printLog) {
-                    log.info("update '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
+                    log.debug("update '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
                 }
                 String val = newParamObject.getValue();
                 if (tempProperties.containsKey(newParamObject.getKey())) {
@@ -196,7 +196,7 @@ public class ConfigClient {
                 newParamObject.setDynamic(oldParamObject.isDynamic());
             } else {//原来没有，现在有为新增
                 if (setting.printLog) {
-                    log.info("add '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
+                    log.debug("add '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
                 }
                 String val = newParamObject.getValue();
                 tempProperties.setProperty(newParamObject.getKey(), val);
@@ -213,7 +213,7 @@ public class ConfigClient {
 
             } else {
                 if (setting.printLog) {
-                    log.info("delete '{}' file", oldKey);
+                    log.debug("delete '{}' file", oldKey);
                 }
             }
 
@@ -224,12 +224,12 @@ public class ConfigClient {
             String oldFileFingerprint = null;
             if (oldFiles.containsKey(newKey)) {//更新
                 if (setting.printLog) {
-                    log.info("modify '{}' file", newKey);
+                    log.debug("modify '{}' file", newKey);
                 }
                 oldFileFingerprint = oldFiles.get(newKey).getFileFingerprint();
             } else {//新增
                 if (setting.printLog) {
-                    log.info("create '{}' file", newKey);
+                    log.debug("create '{}' file", newKey);
                 }
             }
             if (!newFileObject.isLazyDownload()) {
@@ -246,7 +246,7 @@ public class ConfigClient {
                                 e.printStackTrace();
                             }
                             if (setting.printLog) {
-                                log.info("http download file  " + fileName0 + " success!");
+                                log.debug("http download file  " + fileName0 + " success!");
                             }
                         }
                     });

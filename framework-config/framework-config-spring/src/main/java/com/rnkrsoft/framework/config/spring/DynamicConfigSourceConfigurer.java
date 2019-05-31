@@ -124,6 +124,11 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
     @Setter
     int maxRetryIntervalSeconds = 0;
     /**
+     * 是否罗嗦模式
+     */
+    @Setter
+    boolean verbose = false;
+    /**
      * 配置中心
      */
     ConfigClient configClient;
@@ -287,6 +292,7 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
                 .workHome(workHome)
                 .fileEncoding(fileEncoding)
                 .fetchIntervalSeconds(fetchIntervalSeconds)
+                .printLog(verbose)
                 .build();
         this.configClient = ConfigClient.getInstance();
         this.configClient.init(setting);
@@ -298,7 +304,7 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
     void verification() {
 
         if (isBlank(host)) {
-            log.warn("host:{} is blank, so to set defalut domain!", host);
+            log.warn("host:{} is blank, so to set default domain!", host);
             host = "localhost";
         }
         if (isBlank(groupId)) {
@@ -308,19 +314,19 @@ public class DynamicConfigSourceConfigurer extends PropertySourcesPlaceholderCon
             throw new IllegalArgumentException("please set artifactId!");
         }
         if (isBlank(version)) {
-            log.warn("version:{} is blank, so to set defalut version!", version);
+            log.warn("version:{} is blank, so to set default version!", version);
             version = "1.0.0";
         }
         if (isBlank(env)) {
-            log.warn("profile:{} is blank, so to set defalut profile!", env);
+            log.warn("profile:{} is blank, so to set default profile!", env);
             env = "release";
         }
         if (fetchIntervalSeconds < 1) {
             fetchIntervalSeconds = 60;
-            log.warn("fetchIntervalSeconds:{} < 1, so to set defalut fetchIntervalSeconds 60s!", fetchIntervalSeconds);
+            log.warn("fetchIntervalSeconds:{} < 1, so to set default fetchIntervalSeconds 60s!", fetchIntervalSeconds);
         }
         if (runtimeMode == null) {
-            log.warn("runtimeMode:{} is blank, so to set defalut runtimeMode!", runtimeMode);
+            log.warn("runtimeMode:{} is blank, so to set default runtimeMode!", runtimeMode);
             runtimeMode = RuntimeMode.REMOTE;
         }
     }

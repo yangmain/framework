@@ -34,11 +34,13 @@ public class DynamicConfigSourceConfigurerTest {
 //            } catch (Exception e) {
 //                e.getCause().printStackTrace();
 //            }
-            System.out.println("param1:" + demoConfig.getParam1());
-            System.out.println("param2:" + demoConfig.getParam2());
-            System.out.println("param3:" + demoConfig.getParam3());
-            System.out.println("param4:" + demoConfig.isParam4());
-            System.out.println("log:" + demoConfig.getLog());
+//            System.out.println("param1:" + demoConfig.getParam1());
+//            System.out.println("param2:" + demoConfig.getParam2());
+//            System.out.println("param3:" + demoConfig.getParam3());
+//            System.out.println("param4:" + demoConfig.isParam4());
+//            System.out.println("log:" + demoConfig.getLog());
+            System.out.println(System.getProperty("param2"));
+            InputStream is = demoConfig.openTest();
             Thread.sleep(1000);
         }
     }

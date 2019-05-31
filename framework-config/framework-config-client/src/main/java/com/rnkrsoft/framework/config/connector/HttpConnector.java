@@ -48,7 +48,7 @@ public class HttpConnector implements Connector {
         String json = gson.toJson(request);
         String url = MessageFormatter.format("http://{}:{}/api/fetch", host, port);
         if (log.isDebugEnabled()) {
-            log.info("fetch data '{}':'{}'", json);
+            log.debug("fetch data '{}':'{}'", json);
         }
         Http http = Http.post(url)
                 .acceptCharset("UTF-8")
@@ -71,7 +71,7 @@ public class HttpConnector implements Connector {
             FetchResponse response = gson.fromJson(rsp, FetchResponse.class);
             MDC.put("sessionId", response.getId());
             if (log.isDebugEnabled()) {
-                log.info("fetch success, data : {}", gson.toJson(response));
+                log.debug("fetch success, data : {}", gson.toJson(response));
             }
             return response;
             //如果返回404
@@ -92,7 +92,7 @@ public class HttpConnector implements Connector {
         String json = gson.toJson(request);
         String url = MessageFormatter.format("http://{}:{}/api/getParam", host, port);
         if (log.isDebugEnabled()) {
-            log.info("get data '{}':'{}'", json);
+            log.debug("get data '{}':'{}'", json);
         }
         Http http = Http.post(url)
                 .acceptCharset("UTF-8")
@@ -115,7 +115,7 @@ public class HttpConnector implements Connector {
             GetParamResponse response = gson.fromJson(rsp, GetParamResponse.class);
             MDC.put("sessionId", response.getId());
             if (log.isDebugEnabled()) {
-                log.info("getParam success, data : {}", gson.toJson(response));
+                log.debug("getParam success, data : {}", gson.toJson(response));
             }
             return response;
             //如果返回404
@@ -136,7 +136,7 @@ public class HttpConnector implements Connector {
         String json = gson.toJson(request);
         String url = MessageFormatter.format("http://{}:{}/api/push", host, port);
         if (log.isDebugEnabled()) {
-            log.info("push data '{}':'{}'", url, json);
+            log.debug("push data '{}':'{}'", url, json);
         }
         Http http = Http.post(url)
                 .acceptCharset("UTF-8")
@@ -158,7 +158,7 @@ public class HttpConnector implements Connector {
             String rsp = http.body("UTF-8");
             PushResponse response = gson.fromJson(rsp, PushResponse.class);
             if (printLog) {
-                log.info("push response: {}", rsp);
+                log.debug("push response: {}", rsp);
             }
             return response;
             //如果返回404
