@@ -1,5 +1,7 @@
 package com.rnkrsoft.framework.config.client;
 
+import com.rnkrsoft.framework.config.v1.FileObject;
+import com.rnkrsoft.framework.config.v1.FileTransferType;
 import com.rnkrsoft.framework.config.v1.RuntimeMode;
 import com.rnkrsoft.framework.config.v1.ConnectorType;
 import org.junit.Test;
@@ -49,5 +51,35 @@ public class ConfigClientTest {
         t.start();
 
         Thread.sleep(30* 1000);
+    }
+
+    @Test
+    public void testDownloadFile() throws Exception {
+        final ConfigClient configClient = ConfigClient.getInstance();
+        ConfigClientSetting setting = ConfigClientSetting.builder()
+                .host("localhost")
+                .port(8080)
+                .groupId("com.rnkrsoft")
+                .artifactId("framework-config-client")
+                .version("1.0.0")
+                .env("DEV")
+                .machine("m1")
+                .desc("测试")
+                .fileEncoding("UTF-8")
+                .connectorType(ConnectorType.HTTP)
+                .runtimeMode(RuntimeMode.REMOTE)
+                .securityKey("dcdac968-8777-48e2-a4a5-ac3c29c6dd50")
+                .fetchIntervalSeconds(2)
+                .build();
+        configClient.init(setting);
+        FileObject fileObject = FileObject.builder()
+                .fileId("xxxxxx")
+                .fileFullName("/demo/demo.txt")
+                .fileFingerprint("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+                .transferType(FileTransferType.HTTP.getCode())
+                .host("localhost")
+                .port(8080)
+                .build();
+        configClient.downloadFile(fileObject, "xxxxxxxxxxxxxxxxxxxxx");
     }
 }

@@ -54,7 +54,7 @@ public class ConfigClient {
     /**
      * 配置客户端
      */
-    static ConfigClient CONFIG_CLIENT = new ConfigClient();
+    final static ConfigClient CONFIG_CLIENT = new ConfigClient();
     /**
      * 配置信息缓存
      */
@@ -115,6 +115,7 @@ public class ConfigClient {
                 fetch();
             } else if (setting.connectorType == ConnectorType.DUBBO) {
                 //初始化 DUBBO的服务
+                throw new Error("暂时不支持dubbo");
             } else {
                 throw new Error(MessageFormatter.format("not supported connectorType!"));
             }
@@ -136,17 +137,25 @@ public class ConfigClient {
                 .env(setting.env)
                 .machine(setting.machine)
                 .build();
-        FetchResponse response = connector.fetch(request);
+        FetchResponse response = null;
+        try {
+            response = connector.fetch(request);
+        } catch (Exception e) {
+            log.error("fetch config happens error!", e);
+            return;
+        }
         if (ResponseCode.valueOfCode(response.getRspCode()) != ResponseCode.SUCCESS) {
-            log.error("fetch config happens error!");
+            log.error("fetch config failed!");
             return;
         }
         if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() >= response.getUpdateTimestamp()) {
             log.info("no change!");
             return;
         }
+        //本地内存中的参数和文件
         Map<String, ParamObject> oldParams = null;
         Map<String, FileObject> oldFiles = null;
+        //如果本地缓存不为null,则可以取出缓存内容，否则初始化
         if (CONFIG_CACHE != null) {
             oldParams = CONFIG_CACHE.getParams();
             oldFiles = CONFIG_CACHE.getFiles();
@@ -154,56 +163,43 @@ public class ConfigClient {
             oldParams = new HashMap();
             oldFiles = new HashMap();
         }
+        //构建一个新的缓存对象处理本次返回的应答
         ConfigCache configCache = new ConfigCache(response, setting);
         Map<String, ParamObject> newParams = configCache.getParams();
         Map<String, FileObject> newFiles = configCache.getFiles();
+        //克隆当前运行时参数，用于后续的操作，操作完成后替换成员变量
         Properties tempProperties = PropertiesUtils.clone(runtimeProperties);
-        //对删除的参数进行处理
+        //将旧参数全部删除
         for (String oldKey : oldParams.keySet()) {
-            if (newParams.containsKey(oldKey)) {
-
-            } else {
-                if (setting.printLog) {
-                    log.debug("delete '{}' in runtimeProperties", oldKey);
-                }
-                //如果没有发现，说明删除了
-                tempProperties.remove(oldKey);
-                if (System.getProperties().containsKey(oldKey)) {
-                    System.getProperties().remove(oldKey);
-                }
+            if (setting.printLog) {
+                log.debug("delete '{}' in runtimeProperties", oldKey);
+            }
+            //删除内存中的参数
+            tempProperties.remove(oldKey);
+            //如果系统参数中包含,而且新参数中无该参数，则进行删除
+            if (System.getProperties().containsKey(oldKey) && !newParams.containsKey(oldKey)) {
+                System.getProperties().remove(oldKey);
             }
 
         }
         //对新增，更新参数进行处理
         for (ParamObject newParamObject : newParams.values()) {
+            String val = newParamObject.getValue();
+            tempProperties.remove(newParamObject.getKey());
             //原来有，现在也有为更新
             if (oldParams.containsKey(newParamObject.getKey())) {
                 if (setting.printLog) {
                     log.debug("update '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
                 }
-                String val = newParamObject.getValue();
-                if (tempProperties.containsKey(newParamObject.getKey())) {
-                    tempProperties.remove(newParamObject.getKey());
-                }
-                tempProperties.setProperty(newParamObject.getKey(), val);
-                if (newParamObject.isSystemProperties()) {
-                    if (System.getProperties().containsKey(newParamObject.getKey())) {
-                        System.getProperties().remove(newParamObject.getKey());
-                    }
-                    System.getProperties().setProperty(newParamObject.getKey(), val);
-                }
-                ParamObject oldParamObject = oldParams.get(newParamObject.getKey());
-                newParamObject.setDynamic(oldParamObject.isDynamic());
             } else {//原来没有，现在有为新增
                 if (setting.printLog) {
                     log.debug("add '{}' in runtimeProperties, value:{}", newParamObject.getKey(), newParamObject.getValue());
                 }
-                String val = newParamObject.getValue();
-                tempProperties.setProperty(newParamObject.getKey(), val);
-                if (newParamObject.isSystemProperties()) {
-                    System.getProperties().setProperty(newParamObject.getKey(), val);
-                }
-                newParamObject.setDynamic(false);
+            }
+            tempProperties.setProperty(newParamObject.getKey(), val);
+            //无论是更新还是新增都将参数为SystemProperties时放入SystemProperties
+            if (newParamObject.isSystemProperties()) {
+                System.getProperties().setProperty(newParamObject.getKey(), val);
             }
         }
         //2.拉取后异步下载文件到本地
@@ -262,9 +258,6 @@ public class ConfigClient {
             runtimeProperties.putAll(tempProperties);
         }
         CONFIG_CACHE = configCache;
-        //预置打印日志的属性
-        this.setting.printLog = getProperty("system.config.log.print", "true", Boolean.TYPE);
-
     }
 
     /**
@@ -274,6 +267,7 @@ public class ConfigClient {
      * @param oldFileFingerprint 文件签字
      */
     public void downloadFile(FileObject fileObject, String oldFileFingerprint) throws IOException {
+        //下载链接转换为http://localhost:8080/file/download.do?file=文件唯一编号&token=xxxx
         String path0 = FileSystemUtils.formatPath(fileObject.getFileFullName());
         if (!path0.startsWith("/")) {
             path0 = "/" + path0;
@@ -294,19 +288,14 @@ public class ConfigClient {
             File tempFile = transaction.getFile();
             //实现HTTP的下载方式
             String downloadUrl = fileObject.getTransferType().getCode() + "://" + fileObject.getHost() + ":" + fileObject.getPort()
-                    + "/file/download?"
-                    + "&groupId=" + setting.groupId
-                    + "&artifactId=" + setting.artifactId
-                    + "&version=" + setting.version
-                    + "&env=" + setting.env
-                    + "&machine=" + setting.machine
-                    + "&fileFullName=" + FileSystemUtils.formatPath(fileObject.getFileFullName());
-            log.info("download url: {}", downloadUrl);
+                    + "/file/download?file=" + fileObject.getFileId()
+                    + "&token=" + AES.encrypt(setting.securityKey, AES.DEFAULT_IV, Long.toString(System.currentTimeMillis()));
+            log.debug("download url: {}", downloadUrl);
 
             Http http = Http.post(downloadUrl)
                     .acceptCharset("iso-8859-1")
-                    .connectTimeout(6000)
-                    .readTimeout(5000)
+                    .connectTimeout(30 * 1000)
+                    .readTimeout(28 * 1000)
                     .useCaches(false)//不允许缓存
                     .contentType("application/octet-stream", "iso-8859-1");
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -323,13 +312,13 @@ public class ConfigClient {
             fos.close();
 
             if (setting.printLog) {
-                log.info("download file '{}'", fileObject.getFileFullName());
+                log.debug("download file '{}'", fileObject.getFileFullName());
             }
             String fileFingerprint = DigestUtils.md5Hex(newData);
             //检查新的指纹和下载文件指纹是否一致，否则可能损坏
             if (fileFingerprint.equals(fileObject.getFileFingerprint())) {
                 if (setting.printLog) {
-                    log.info("commit file '{}' fingerprint:{} is ok!", fileObject.getFileFullName(), fileFingerprint);
+                    log.debug("commit file '{}' fingerprint:{} is ok!", fileObject.getFileFullName(), fileFingerprint);
                 }
                 transaction.commit();
                 //如果存在分发路径,则使用线程池执行，避免主线程阻塞
@@ -349,7 +338,7 @@ public class ConfigClient {
                                 }
                                 FileUtils.copyFile(newFile, targetFile);
                                 if (printLog0) {
-                                    log.info("copy file '{}' to '{}' success!", filePath, copyFilePath);
+                                    log.debug("copy file '{}' to '{}' success!", filePath, copyFilePath);
                                 }
                             } catch (IOException e) {
                                 log.error("force delete file " + copyFilePath + " happens error!", e);
@@ -359,9 +348,7 @@ public class ConfigClient {
 
                 }
             } else {
-                if (setting.printLog) {
-                    log.error("error file '{}' local fingerprint:{}, remote fingerprint:{}!", fileObject.getFileFullName(), fileFingerprint, fileObject.getFileFingerprint());
-                }
+                log.error("error file '{}' local fingerprint:{}, remote fingerprint:{}!", fileObject.getFileFullName(), fileFingerprint, fileObject.getFileFingerprint());
                 transaction.rollback();
             }
         } catch (IOException e) {
@@ -419,7 +406,6 @@ public class ConfigClient {
         }
         return file.getFile().stream();
     }
-
 
 
     /**

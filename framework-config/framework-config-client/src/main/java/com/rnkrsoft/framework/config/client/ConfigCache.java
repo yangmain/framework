@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Created by rnkrsoft.com on 2018/5/8.
+ * 配置缓存对象，用于对远程获取配置进行转换，存储在本地内存中
  */
 @ToString
 @Getter

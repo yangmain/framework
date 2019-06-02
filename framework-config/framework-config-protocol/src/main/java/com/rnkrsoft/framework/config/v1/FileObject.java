@@ -13,6 +13,10 @@ import lombok.*;
 @Builder
 public class FileObject {
     /**
+     * 文件唯一编号
+     */
+    String fileId;
+    /**
      * 文件所在服务器地址
      */
     String host = "127.0.0.1";
