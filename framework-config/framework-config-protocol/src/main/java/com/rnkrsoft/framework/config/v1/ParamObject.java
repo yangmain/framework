@@ -27,6 +27,10 @@ public class ParamObject {
      */
     int type = ParamType.SYSTEM.code;
     /**
+     * 数据类型
+     */
+    int dataType = DataTypeEnum.STRING.code;
+    /**
      * 参数描述
      */
     String desc;
@@ -73,4 +77,6 @@ public class ParamObject {
     public ParamType getParamType(){
         return ParamType.valueOfCode(this.type);
     }
+
+
 }
