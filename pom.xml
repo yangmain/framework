@@ -7,11 +7,11 @@
     <!--<parent>-->
         <!--<groupId>com.rnkrsoft</groupId>-->
         <!--<artifactId>tech-stack</artifactId>-->
-        <!--<version>1.0.2-SNAPSHOT</version>-->
+        <!--<version>1.0.2</version>-->
     <!--</parent>-->
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <name>framework library</name>
     <description>氡氪网络科技基础库</description>
     <modules>
@@ -42,7 +42,7 @@
         <skeleton4j.version>1.0.2</skeleton4j.version>
         <org.hamcrest>1.3</org.hamcrest>
         <spring-data.version>2.1.4.RELEASE</spring-data.version>
-        <spring.version>4.3.22.RELEASE</spring.version>
+        <spring.version>4.3.24.RELEASE</spring.version>
         <spring-batch-infrastructure.version>3.0.6.RELEASE</spring-batch-infrastructure.version>
         <lombok.version>1.16.16</lombok.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
