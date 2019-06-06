@@ -48,7 +48,7 @@ public class HttpConnector implements Connector {
         String json = gson.toJson(request);
         String url = MessageFormatter.format("http://{}:{}/api/fetch", host, port);
         if (log.isDebugEnabled()) {
-            log.debug("fetch data '{}':'{}'", json);
+            log.debug("fetch {} request data '{}'", url, json);
         }
         Http http = Http.post(url)
                 .acceptCharset("UTF-8")
@@ -71,7 +71,7 @@ public class HttpConnector implements Connector {
             FetchResponse response = gson.fromJson(rsp, FetchResponse.class);
             MDC.put("sessionId", response.getId());
             if (log.isDebugEnabled()) {
-                log.debug("fetch success, data : {}", gson.toJson(response));
+                log.debug("fetch {} response data '{}'", url, rsp);
             }
             return response;
             //如果返回404

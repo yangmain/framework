@@ -141,14 +141,31 @@ public class ConfigClient {
         try {
             response = connector.fetch(request);
         } catch (Exception e) {
-            log.error("fetch config happens error!", e);
+            if (CONFIG_CACHE == null) {
+                log.error("fetch config happens error!", e);
+                try {
+                    CONFIG_CACHE = ConfigCache.load(setting);
+                    //对新增，更新参数进行处理
+                    for (ParamObject newParamObject : CONFIG_CACHE.getParams().values()) {
+                        String val = newParamObject.getValue();
+                        runtimeProperties.setProperty(newParamObject.getKey(), val);
+                        //无论是更新还是新增都将参数为SystemProperties时放入SystemProperties
+                        if (newParamObject.isSystemProperties()) {
+                            System.getProperties().setProperty(newParamObject.getKey(), val);
+                        }
+                    }
+                } catch (IOException e1) {
+                    log.error("fetch config happens error! load config cache", e1);
+                }
+
+            }
             return;
         }
         if (ResponseCode.valueOfCode(response.getRspCode()) != ResponseCode.SUCCESS) {
             log.error("fetch config failed!");
             return;
         }
-        if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() >= response.getUpdateTimestamp()) {
+        if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() == response.getUpdateTimestamp()) {
             log.info("no change!");
             return;
         }
@@ -258,6 +275,11 @@ public class ConfigClient {
             runtimeProperties.putAll(tempProperties);
         }
         CONFIG_CACHE = configCache;
+        try {
+            CONFIG_CACHE.save();
+        } catch (IOException e) {
+            log.error("save config happens error!", e);
+        }
     }
 
     /**

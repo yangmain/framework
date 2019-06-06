@@ -61,8 +61,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.7.RELEASE</version>
-            <scope>compile</scope>
+            <version>4.3.24.RELEASE</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -130,6 +130,28 @@
                                     <include>com.rnkrsoft.framework:framework-test-annotation</include>
                                     <include>com.rnkrsoft.framework:framework-test-core</include>
                                     <include>com.rnkrsoft.framework:framework-test-orm</include>
+                                    <include>com.rnkrsoft.framework:framework-annotation-orm</include>
+                                    <include>com.rnkrsoft.framework:framework-orm-api</include>
+                                    <include>com.rnkrsoft.framework:framework-orm-entity</include>
+                                    <include>com.rnkrsoft.framework:framework-orm-mybatis</include>
+                                    <include>com.rnkrsoft.framework:framework-orm-spring</include>
+                                    <include>com.rnkrsoft.framework:framework-orm-mongo</include>
+                                    <include>com.rnkrsoft.framework:framework-sequence-api</include>
+                                    <include>com.rnkrsoft.framework:framework-sequence-myisam</include>
+                                    <include>com.rnkrsoft.framework:framework-sequence-redis</include>
+                                    <include>com.rnkrsoft.framework:framework-config-spring</include>
+                                    <include>com.rnkrsoft.framework:framework-config-client</include>
+                                    <include>com.rnkrsoft.framework:framework-config-protocol</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-spring</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-client</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-redis</include>
+                                    <include>com.rnkrsoft.framework:framework-cache-monitor</include>
+                                    <include>com.rnkrsoft.framework:framework-orm-cache</include>
+                                    <include>com.rnkrsoft.framework:framework-messagequeue-protocol</include>
+                                    <include>com.rnkrsoft.framework:framework-messagequeue-core</include>
+                                    <include>com.rnkrsoft.framework:framework-messagequeue-activemq</include>
+                                    <include>com.rnkrsoft.framework:framework-messagequeue-aliyunmq</include>
+                                    <include>com.rnkrsoft.framework:framework-messagequeue-rabbitmq</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

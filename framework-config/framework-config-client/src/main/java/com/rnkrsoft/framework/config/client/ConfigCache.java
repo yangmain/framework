@@ -1,15 +1,23 @@
 package com.rnkrsoft.framework.config.client;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.rnkrsoft.framework.config.security.AES;
 import com.rnkrsoft.framework.config.utils.FileSystemUtils;
 import com.rnkrsoft.framework.config.v1.FetchResponse;
 import com.rnkrsoft.framework.config.v1.FileObject;
 import com.rnkrsoft.framework.config.v1.ParamObject;
+import com.rnkrsoft.io.buffer.ByteBuf;
+import com.rnkrsoft.io.file.DynamicFile;
+import com.rnkrsoft.io.file.FileTransaction;
+import com.rnkrsoft.io.file.FileWrapper;
+import com.rnkrsoft.message.MessageFormatter;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +47,14 @@ class ConfigCache {
      */
     long lastUpdateTimestamp;
 
-    public ConfigCache(FetchResponse response,  ConfigClientSetting setting) {
+    final static Gson GSON = new GsonBuilder().serializeNulls().disableHtmlEscaping().setPrettyPrinting().create();
+
+    public ConfigCache(FetchResponse response, ConfigClientSetting setting) {
         this.response = response;
+        this.setting = setting;
         for (ParamObject paramObject : response.getParams()) {
             String val = paramObject.getValue();
-            if (paramObject.isEncrypt()){
+            if (paramObject.isEncrypt()) {
                 try {
                     val = val.substring("AES/BASE64://".length());
                     val = AES.decrypt(setting.getSecurityKey(), AES.DEFAULT_IV, val);
@@ -59,13 +70,38 @@ class ConfigCache {
             files.put(FileSystemUtils.formatPath(fileKey), fileObject);
         }
         this.lastUpdateTimestamp = response.getUpdateTimestamp();
+        this.response.setId(null);
+        this.response.setUpdateTimestamp(0);
     }
 
-    public FileObject getFile(String fileName){
+    public FileObject getFile(String fileName) {
         return files.get(fileName);
     }
 
-    public ParamObject getParam(String paramName){
+    public ParamObject getParam(String paramName) {
         return params.get(paramName);
+    }
+
+    public static ConfigCache load(ConfigClientSetting setting) throws IOException {
+        DynamicFile file = DynamicFile.file(MessageFormatter.format("{}/{}/{}/{}/{}/{}.json", setting.getWorkHome(), setting.getGroupId(), setting.getArtifactId(), setting.getVersion(), setting.getEnv(), setting.getMachine()), 5);
+        FileWrapper fileWrapper = file.getFile();
+        ByteBuf byteBuf = fileWrapper.read();
+        String json = byteBuf.asString("UTF-8");
+        FetchResponse response = GSON.fromJson(json, FetchResponse.class);
+        return new ConfigCache(response, setting);
+    }
+
+    public void save() throws IOException {
+        DynamicFile file = DynamicFile.file(MessageFormatter.format("{}/{}/{}/{}/{}/{}.json", setting.getWorkHome(), setting.getGroupId(), setting.getArtifactId(), setting.getVersion(), setting.getEnv(), setting.getMachine()), 5);
+        FileTransaction fileTransaction = file.begin();
+        try {
+            String json = GSON.toJson(response);
+            fileTransaction.write(json);
+            fileTransaction.commit();
+        } catch (Exception e) {
+            log.error("持久化发生错误", e);
+            fileTransaction.rollback();
+        }
+        file.lookupMaxVersion();
     }
 }
