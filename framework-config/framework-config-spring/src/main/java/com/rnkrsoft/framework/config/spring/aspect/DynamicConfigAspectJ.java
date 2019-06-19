@@ -104,12 +104,12 @@ public class DynamicConfigAspectJ implements ApplicationContextAware {
         }
 
         String remoteVal = null;
+        Properties properties = configurer.getProperties();
         try {
             if(key.isEmpty()){
                 key = clazz.getName() + "." + field.getName();
-                remoteVal = configurer.getProperty(key);
+                remoteVal = properties.getProperty(key);
             }else{
-                Properties properties = configurer.getProperties();
                 remoteVal = placeholderHelper.replacePlaceholders(key, properties);
             }
             Object val = convert(method, remoteVal);
@@ -118,6 +118,11 @@ public class DynamicConfigAspectJ implements ApplicationContextAware {
             return val;
         } catch (Exception e) {
             log.error(MessageFormatter.format("get local or remote param value happens error, key : '{}'", key), e);
+            log.error("===========begin================get local or remote param value happens error,all params=============================================");
+            for (String paramName : properties.stringPropertyNames()){
+                log.error("---->{}:{}", paramName, properties.getProperty(paramName));
+            }
+            log.error("============end===============get local or remote param value happens error,all params=============================================");
             //如果远程不存在值，说明远程没有，则使用本地的
             Object oldValue = joinPoint.proceed();
             return oldValue;

@@ -165,10 +165,10 @@ public class ConfigClient {
             log.error("fetch config failed!");
             return;
         }
-        if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() == response.getUpdateTimestamp()) {
-            log.info("no change!");
-            return;
-        }
+//        if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() == response.getUpdateTimestamp()) {
+//            log.info("no change!");
+//            return;
+//        }
         //本地内存中的参数和文件
         Map<String, ParamObject> oldParams = null;
         Map<String, FileObject> oldFiles = null;
@@ -455,7 +455,7 @@ public class ConfigClient {
      * @return 数据
      */
     public <T> T getProperty(String name, String defaultValue, Class<T> type) {
-        String value = runtimeProperties.getProperty(name, defaultValue);
+        String value = getProperties().getProperty(name, defaultValue);
         return ValueUtils.convert(value, type);
     }
 
