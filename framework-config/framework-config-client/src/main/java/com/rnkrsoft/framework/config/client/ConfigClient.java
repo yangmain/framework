@@ -165,10 +165,6 @@ public class ConfigClient {
             log.error("fetch config failed!");
             return;
         }
-//        if (CONFIG_CACHE != null && CONFIG_CACHE.getLastUpdateTimestamp() == response.getUpdateTimestamp()) {
-//            log.info("no change!");
-//            return;
-//        }
         //本地内存中的参数和文件
         Map<String, ParamObject> oldParams = null;
         Map<String, FileObject> oldFiles = null;
