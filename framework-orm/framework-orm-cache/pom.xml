@@ -58,5 +58,10 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.logger4j</groupId>
+            <artifactId>logger4j</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

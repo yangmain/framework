@@ -19,7 +19,7 @@ public interface DemoDAO extends CacheInterface {
     @Expire
     void expire(String key);
 
-    @Presist
+    @Persist
     void presist(String key);
 
     @Ttl

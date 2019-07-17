@@ -34,7 +34,7 @@ public class CacheScannerConfigurer implements BeanDefinitionRegistryPostProcess
     @Setter
     String password;
     @Setter
-    int index = -1;
+    int index = 0;
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {

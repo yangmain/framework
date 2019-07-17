@@ -10,7 +10,7 @@ public enum CommandType {
     GETSET,
     INCR,
     KEYS,
-    PRESIST,
+    PERSIST,
     SET,
     TTL,
     TYPE,

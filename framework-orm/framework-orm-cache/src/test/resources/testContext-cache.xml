@@ -22,8 +22,8 @@
                 <value>com.rnkrsoft.framework.orm.cache.mapper</value>
             </array>
         </property>
-        <property name="host" value="192.168.0.111"/>
-        <property name="port" value="6479"/>
+        <property name="host" value="localhost"/>
+        <property name="port" value="6379"/>
         <property name="cacheInterface" value="com.rnkrsoft.framework.orm.cache.CacheInterface"/>
     </bean>
 

@@ -49,7 +49,14 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
         }
         Jedis jedis = getJedis();
         try {
-            return jedis.keys(pattern);
+            Set<String> temps = jedis.keys(pattern);
+            Set<String> results = new HashSet();
+            for (String key : temps) {
+                if (key != null && key.length() >= (prefix + "_").length()) {
+                    results.add(key.substring((prefix + "_").length()));
+                }
+            }
+            return results;
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -61,13 +68,13 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
 
 
     @Override
-    public void expire(String key, int seconds) {
+    public Long expire(String key, int seconds) {
         Jedis jedis = getJedis();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            jedis.expire(key, seconds);
+            return jedis.expire(key, seconds);
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -77,13 +84,13 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
     }
 
     @Override
-    public void presist(String key) {
+    public Long persist(String key) {
         Jedis jedis = getJedis();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            jedis.persist(key);
+            return jedis.persist(key);
         } finally {
             if (jedis != null) {
                 jedis.close();
@@ -109,13 +116,17 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
     }
 
     @Override
-    public long incr(String key) {
+    public long incr(String key, Integer increment) {
         Jedis jedis = getJedis();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            return jedis.incr(key);
+            if (increment == null || increment == 1) {
+                return jedis.incr(key);
+            } else {
+                return jedis.incrBy(key, increment);
+            }
         } catch (JedisDataException e) {
             throw new RuntimeException("key:" + key + " 数据类型不为long或int!", e);
         } finally {
@@ -127,13 +138,18 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
     }
 
     @Override
-    public long decr(String key) {
+    public long decr(String key, Integer decrement) {
         Jedis jedis = getJedis();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            return jedis.decr(key);
+            if (decrement == null || decrement == 1) {
+                return jedis.decr(key);
+            } else {
+                return jedis.decrBy(key, decrement);
+            }
+
         } catch (JedisDataException e) {
             throw new RuntimeException("key:" + key + " 数据类型不为long或int!", e);
         } finally {
@@ -144,6 +160,15 @@ public abstract class JedisRedisMap<K, V> extends RedisMap<K, V> {
         }
     }
 
+    @Override
+    public long incr(String key) {
+        return incr(key, 1);
+    }
+
+    @Override
+    public long decr(String key) {
+        return decr(key, 1);
+    }
 
     @Override
     public int size() {

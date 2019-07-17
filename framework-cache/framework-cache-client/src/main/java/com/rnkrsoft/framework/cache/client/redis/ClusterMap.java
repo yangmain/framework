@@ -61,7 +61,14 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
         JedisCluster jedisCluster = client.getJedisCluster();
         try {
             //TODO
-            return jedisCluster.hkeys(pattern);
+            Set<String> temps = jedisCluster.hkeys(pattern);
+            Set<String> results = new HashSet();
+            for (String key : temps){
+                if (key != null && key.length() >= (prefix + "_").length()){
+                    results.add(key.substring((prefix + "_").length()));
+                }
+            }
+            return results;
         } finally {
 
         }
@@ -251,25 +258,25 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
     }
 
     @Override
-    public void expire(String key, int seconds) {
+    public Long expire(String key, int seconds) {
         JedisCluster jedisCluster = client.getJedisCluster();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            jedisCluster.expire(key, seconds);
+            return jedisCluster.expire(key, seconds);
         } finally {
 
         }
     }
     @Override
-    public void presist(String key) {
+    public Long persist(String key) {
         JedisCluster jedisCluster = client.getJedisCluster();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            jedisCluster.persist(key);
+            return jedisCluster.persist(key);
         } finally {
 
         }
@@ -288,13 +295,17 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
     }
 
     @Override
-    public long incr(String key) {
+    public long incr(String key, Integer increment) {
         JedisCluster jedisCluster = client.getJedisCluster();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            return jedisCluster.incr(key);
+            if (increment == null || increment == 1){
+                return jedisCluster.incr(key);
+            }else{
+                return jedisCluster.incrBy(key, increment);
+            }
         } catch (JedisDataException e) {
             throw new RuntimeException("key:" + key + " 数据类型不为long或int!", e);
         } finally {
@@ -303,18 +314,32 @@ public class ClusterMap<K, V> extends RedisMap<K, V> {
     }
 
     @Override
-    public long decr(String key) {
+    public long decr(String key, Integer decrement) {
         JedisCluster jedisCluster = client.getJedisCluster();
         if (StringUtils.isNotBlank(prefix)) {
             key = prefix + "_" + key;
         }
         try {
-            return jedisCluster.decr(key);
+            if (decrement == null || decrement == 1){
+                return jedisCluster.decr(key);
+            }else{
+                return jedisCluster.decrBy(key, decrement);
+            }
         } catch (JedisDataException e) {
             throw new RuntimeException("key:" + key + " 数据类型不为long或int!", e);
         } finally {
 
         }
+    }
+
+    @Override
+    public long incr(String key) {
+        return incr(key, 1);
+    }
+
+    @Override
+    public long decr(String key) {
+        return decr(key, 1);
     }
 
     @Override

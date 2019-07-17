@@ -53,7 +53,7 @@ public interface CachedMap<K,V> extends Map<K,V>{
      * @param key
      * @param seconds
      */
-    void expire(String key, int seconds);
+    Long expire(String key, int seconds);
 
     /**
      * 查看剩余过期事件
@@ -66,7 +66,20 @@ public interface CachedMap<K,V> extends Map<K,V>{
      * 取消超时
      * @param key
      */
-    void presist(String key);
+    Long persist(String key);
+    /**
+     * 自增
+     * @param key
+     * @return
+     */
+    long incr(String key, Integer increment);
+
+    /**
+     * 自减
+     * @param key
+     * @return
+     */
+    long decr(String key, Integer decrement);
     /**
      * 自增1
      * @param key

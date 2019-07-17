@@ -108,7 +108,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                     Decr decrAnnotation = method.getAnnotation(Decr.class);
                     Expire expireAnnotation = method.getAnnotation(Expire.class);
                     Ttl ttlAnnotation = method.getAnnotation(Ttl.class);
-                    Presist presistAnnotation = method.getAnnotation(Presist.class);
+                    Persist persistAnnotation = method.getAnnotation(Persist.class);
                     Keys keysAnnotation = method.getAnnotation(Keys.class);
                     Type typeAnnotation = method.getAnnotation(Type.class);
                     Remove removeAnnotation = method.getAnnotation(Remove.class);
@@ -204,7 +204,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                     }
                     if (expireAnnotation != null) {
                         annotation = true;
-                        if (method.getReturnType() != Void.TYPE) {
+                        if (method.getReturnType() != Void.TYPE && method.getReturnType() != Long.TYPE && method.getReturnType() != Long.class) {
                             throw ErrorContextFactory.instance()
                                     .message("{}.{}参数返回类型为void", mapperClassName, method.getName())
                                     .solution("修改为public {} {}(String key, int second)", Void.class.getSimpleName(), method.getName())
@@ -246,7 +246,7 @@ public class CacheClassPathScanner extends ClassPathBeanDefinitionScanner {
                                     .runtimeException();
                         }
                     }
-                    if (presistAnnotation != null) {
+                    if (persistAnnotation != null) {
                         annotation = true;
                         if (method.getReturnType() != Void.TYPE) {
                             throw ErrorContextFactory.instance()

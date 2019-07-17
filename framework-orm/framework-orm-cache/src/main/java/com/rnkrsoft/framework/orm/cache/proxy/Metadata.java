@@ -11,5 +11,4 @@ public class Metadata {
     int expire;
     int decrement;
     int increment;
-    int seconds;
 }

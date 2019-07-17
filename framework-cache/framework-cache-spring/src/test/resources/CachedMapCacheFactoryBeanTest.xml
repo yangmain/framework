@@ -21,14 +21,14 @@
 		<!--可以不配置-->
 		<property name="prefix" value=""/>
 		<property name="redisType" value="AUTO"/>
-		<property name="password" value="rnkrsoft"/>
+		<property name="password" value=""/>
 		<property name="connectionTimeout" value="200"/>
 		<property name="soTimeout" value="200"/>
 		<property name="maxRedirections" value="12"/>
 		<property name="databaseIndex" value="1"/>
 		<property name="hosts">
 			<array>
-				<value>118.24.45.37:2056</value>
+				<value>localhost:6379</value>
 			</array>
 		</property>
 	</bean>
