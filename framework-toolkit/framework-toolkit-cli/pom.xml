@@ -1,22 +1,44 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.rnkrsoft.framework</groupId>
-        <artifactId>framework-toolkit</artifactId>
-        <version>1.0.2</version>
-    </parent>
+    <groupId>com.rnkrsoft.framework</groupId>
+    <version>1.0.2</version>
     <artifactId>framework-toolkit-cli</artifactId>
-    <name>framework-toolkit-cli</name>
-    <description>framework-toolkit-cli</description>
+    <name>Rnkrsoft Framework Toolkit CLI</name>
+    <description>氡氪网络科技基础架构 - 开发命令工具包</description>
     <properties>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <lombok.version>1.16.16</lombok.version>
+        <junit.version>4.12</junit.version>
         <velocity.version>1.7</velocity.version>
+        <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
+        <groundwork.version>1.0.3</groundwork.version>
+        <logger4j.version>1.0.0</logger4j.version>
+        <logtrace4j.version>1.0.1</logtrace4j.version>
+        <reflection4j.version>1.0.3</reflection4j.version>
+        <io4j.version>1.0.3</io4j.version>
     </properties>
+    <url>https://github.com/rnkrsoft/framework.git</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>https://github.com/rnkrsoft/framework.git</connection>
+        <developerConnection>https://github.com/rnkrsoft/framework.git</developerConnection>
+        <url>https://www.rnkrsoft.com</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>compile</scope>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
         <dependency>
             <groupId>jline</groupId>
@@ -29,28 +51,39 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.rnkrsoft.io4j</groupId>
-            <artifactId>io4j</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.rnkrsoft.groundwork</groupId>
             <artifactId>groundwork</artifactId>
-            <scope>compile</scope>
+            <version>${groundwork.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.logtrace4j</groupId>
             <artifactId>logtrace4j</artifactId>
-            <scope>compile</scope>
+            <version>${logtrace4j.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.reflection4j</groupId>
             <artifactId>reflection4j</artifactId>
-            <scope>compile</scope>
+            <version>${reflection4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.io4j</groupId>
+            <artifactId>io4j</artifactId>
+            <version>${io4j.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rnkrsoft.logger4j</groupId>
             <artifactId>logger4j</artifactId>
+            <version>${logger4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -65,7 +98,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                        <mainClass>com.rnkrsoft.framework.toolkit.Main</mainClass>
+                            <mainClass>com.rnkrsoft.framework.toolkit.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -123,4 +156,84 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <configuration>
+                            <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>2.5.2</version>
+                        <configuration>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
+                    <!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>oss</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>rnkrsoft</id>
+            <repositories>
+                <repository>
+                    <id>rnkrsoft</id>
+                    <url>http://nexus.rnkrsoft.com/content/repositories/public/</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>rnkrsoft</id>
+                    <url>http://nexus.rnkrsoft.com/content/repositories/open-source-snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>rnkrsoft</id>
+                    <url>http://nexus.rnkrsoft.com/content/repositories/open-source-releases/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

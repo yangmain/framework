@@ -7,7 +7,7 @@
         <version>1.0.2</version>
     </parent>
     <artifactId>framework-config-protocol</artifactId>
-    <name>framework-config-protocol</name>
+    <name>Rnkrsoft Framework Config Protocol</name>
     <description>氡氪网络科技配置协议，定义的配置中心通信协议</description>
     <licenses>
         <license>

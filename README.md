@@ -21,7 +21,6 @@
 Framework经历4年时间的成长，已经拥有完善的支持企业级开发需要的基础功能。
 
 1. 基于MyBatis拓展，支持JPA，自定义注解的ORM框架
-
 2. 基于Jedis拓展，支持注解的缓存框架
 3. 基于Mongodb拓展，支持注解的大数据存储框架
 4. 基于统一的消息队列协议构建的消息队列框架，支持ActiveMQ,RabbitMQ，AliyunMQ
