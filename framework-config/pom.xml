@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework-config</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <name>framework-config</name>
     <description>framework config</description>
     <modules>

@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
         <artifactId>framework-orm</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
     <artifactId>framework-orm-mongo</artifactId>
     <name>framework-orm-mongo</name>

@@ -3,17 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.rnkrsoft.framework</groupId>
-        <artifactId>framework-monitor</artifactId>
+        <artifactId>framework-sequence</artifactId>
         <version>1.0.2</version>
     </parent>
-    <artifactId>framework-monitor-boot-starter</artifactId>
-    <name>framework-monitor-boot-starter</name>
-    <description>framework monitor boot starter</description>
+    <artifactId>framework-sequence-snowflake</artifactId>
+    <name>framework-sequence-snowflake</name>
+    <description>基于雪花算法的序号生成</description>
     <dependencies>
         <dependency>
-            <groupId>com.rnkrsoft.framework</groupId>
-            <artifactId>framework-monitor-heartbeat</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.rnkrsoft.groundwork</groupId>
+            <artifactId>groundwork</artifactId>
         </dependency>
     </dependencies>
 </project>

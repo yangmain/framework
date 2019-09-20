@@ -4,7 +4,7 @@
     <groupId>com.rnkrsoft.framework</groupId>
     <artifactId>framework-standalone</artifactId>
     <name>Rnkrsoft Framework Community Edition</name>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
     <description>Rnkrsoft Framework Community Edition</description>
     <url>https://github.com/rnkrsoft/framework.git</url>
     <licenses>
@@ -62,6 +62,11 @@
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
             <artifactId>framework-sequence-redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rnkrsoft.framework</groupId>
+            <artifactId>framework-sequence-snowflake</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -154,6 +159,7 @@
                                     <include>com.rnkrsoft.framework:framework-sequence-api</include>
                                     <include>com.rnkrsoft.framework:framework-sequence-myisam</include>
                                     <include>com.rnkrsoft.framework:framework-sequence-redis</include>
+                                    <include>com.rnkrsoft.framework:framework-sequence-snowflake</include>
                                     <include>com.rnkrsoft.framework:framework-config-protocol</include>
                                     <include>com.rnkrsoft.framework:framework-config-client</include>
                                     <include>com.rnkrsoft.framework:framework-config-spring</include>
