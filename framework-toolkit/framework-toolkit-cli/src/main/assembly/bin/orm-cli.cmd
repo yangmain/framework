@@ -34,7 +34,7 @@ echo.
 goto error
 
 :exe
-java -Djava.ext.dirs=%ORM_HOME%\lib\ com.rnkrsoft.framework.toolkit.Main
+java -Djava.ext.dirs=%ORM_HOME%\libs\ com.rnkrsoft.framework.toolkit.Main
 
 :error
 set ERROR_CODE=1

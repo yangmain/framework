@@ -13,7 +13,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <lombok.version>1.16.16</lombok.version>
         <junit.version>4.12</junit.version>
-        <velocity.version>1.7</velocity.version>
         <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
         <groundwork.version>1.0.3</groundwork.version>
         <logger4j.version>1.0.0</logger4j.version>
@@ -79,11 +78,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -94,7 +96,8 @@
                 <configuration>
                     <descriptor>src/main/assembly/assembly.xml</descriptor>
                     <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                        <!--不打包包含依赖的jar包-->
+                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
                     </descriptorRefs>
                     <archive>
                         <manifest>
@@ -109,39 +112,6 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.rnkrsoft.framework.toolkit.Main</mainClass>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <!-- 拷贝依赖的jar包到lib目录 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                                ${project.build.directory}/lib
-                            </outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

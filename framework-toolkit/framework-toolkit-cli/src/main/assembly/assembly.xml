@@ -17,7 +17,7 @@
         </fileSet>
         <fileSet>
             <directory>src/main/assembly/help</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/help</outputDirectory>
             <fileMode>0755</fileMode>
         </fileSet>
         <fileSet>
@@ -33,7 +33,7 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>libs</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <unpack>false</unpack>
             <scope>runtime</scope>
