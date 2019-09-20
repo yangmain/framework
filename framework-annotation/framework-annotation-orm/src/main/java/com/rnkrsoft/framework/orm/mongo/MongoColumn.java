@@ -25,24 +25,24 @@ public @interface MongoColumn {
 
     /**
      * 是否允许为空
-     * @return
+     * @return 是否允许空值
      */
     boolean nullable() default true;
     /**
      * 字段默认值
-     * @return
+     * @return 字段默认值
      */
     String defaultValue() default "";
 
     /**
      * 作为条件时的逻辑模式
-     * @return
+     * @return 作为条件时的逻辑模式
      */
     LogicMode logicMode() default LogicMode.AND;
 
     /**
      * 作为条件时值模式
-     * @return
+     * @return 作为条件时值模式
      */
     ValueMode valueMode() default ValueMode.NONE;
 }

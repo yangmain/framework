@@ -33,7 +33,6 @@ public @interface PrimaryKey {
      * <li>${yyyyMMddHHmmssSSS}</li>
      * <li>固定字符串</li>
      * <li>复杂表达式 ${yyyyMMddHHmmssSSS}_${SEQ:5}_${RANDOM:8}</li>
-     * <p>
      * </ol>
      * @see PrimaryKeyFeatureConstant
      * @return 主键特征

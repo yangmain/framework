@@ -8,7 +8,18 @@
     </parent>
     <artifactId>framework-config-protocol</artifactId>
     <name>framework-config-protocol</name>
-    <description>framework config protocol</description>
+    <description>氡氪网络科技配置协议，定义的配置中心通信协议</description>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>https://github.com/rnkrsoft/framework.git</connection>
+        <developerConnection>https://github.com/rnkrsoft/framework.git</developerConnection>
+        <url>https://www.rnkrsoft.com</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>com.rnkrsoft.groundwork</groupId>
@@ -19,12 +30,9 @@
             <artifactId>logtrace4j</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.rnkrsoft.skeleton4j</groupId>
-            <artifactId>skeleton4j-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -33,8 +41,41 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
+    <developers>
+        <developer>
+            <id>rnkrsoft.com</id>
+            <name>rnkrsoft.com</name>
+            <email>devops@rnkrsoft.com</email>
+            <url>http://www.rnkrsoft.com</url>
+            <organization>rnkrsoft.com</organization>
+            <organizationUrl>http://www.rnkrsoft.com</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     <profiles>
         <profile>
             <id>release</id>

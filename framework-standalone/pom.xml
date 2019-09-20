@@ -5,12 +5,12 @@
     <artifactId>framework-standalone</artifactId>
     <name>Rnkrsoft Framework Community Edition</name>
     <version>1.0.2</version>
-    <description>Rnkrsoft Framework Community Edition</description>
+    <description>氡氪网络科技基础架构发布包</description>
     <url>https://github.com/rnkrsoft/framework.git</url>
     <licenses>
         <license>
-            <name>RNKRSOFT OPEN SOURCE SOFTWARE LICENSE TERMS 1.0</name>
-            <url>http://www.rnkrsoft.com/open-source-licenses</url>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
     <scm>
@@ -18,6 +18,7 @@
         <developerConnection>https://github.com/rnkrsoft/framework.git</developerConnection>
         <url>https://www.rnkrsoft.com</url>
     </scm>
+
     <dependencies>
         <dependency>
             <groupId>com.rnkrsoft.framework</groupId>
